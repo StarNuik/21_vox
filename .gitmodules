@@ -6,4 +6,4 @@
 	url = https://github.com/Auburns/FastNoise
 [submodule "PerlinNoise"]
 	path = PerlinNoise
-	url = ./PerlinNoise
+	url = https://github.com/Reputeless/PerlinNoise
