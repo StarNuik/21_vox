@@ -8,6 +8,7 @@ RenderEngineConfig glConfig() {
 	config.windowName = std::string("Test");
 	config.windowResizeable = false;
 	config.cursorEnabled = true;
+	config.cursorRaw = true;
 	config.glVersionMajor = 4;
 	config.glVersionMinor = 1;
 	config.glForwardCompatibility = true;
@@ -24,11 +25,13 @@ Game::Game() {
 	Locator::provideLogger(log);
 	
 	_renderer = new GLRenderer(glConfig());
+	_input = new Input();
 };
 
 Game::~Game() {
+	delete _input;
+	delete _renderer;
+
 	ILogger* log = Locator::getLogger();
 	delete log;
-
-	delete _renderer;
 };

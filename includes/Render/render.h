@@ -12,6 +12,7 @@ struct RenderEngineConfig {
 	std::string windowName;
 	bool windowResizeable;
 	bool cursorEnabled;
+	bool cursorRaw;
 	uint32 glVersionMajor;
 	uint32 glVersionMinor;
 	bool glForwardCompatibility;
@@ -23,6 +24,7 @@ class GLRenderer {
 public:
 	GLRenderer(RenderEngineConfig config);
 	~GLRenderer();
+	GLFWwindow* GetWindow();
 
 	void AddShader(std::string, Shader*);
 	void RemoveShader(std::string);

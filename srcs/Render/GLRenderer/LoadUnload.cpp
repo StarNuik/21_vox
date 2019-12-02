@@ -1,5 +1,9 @@
 #include "Render/Render.h"
 
+GLFWwindow* GLRenderer::GetWindow() {
+	return _window;
+}
+
 void GLRenderer::AddShader(std::string shaderName, Shader* shader) {
 	_shaders[shaderName] = shader;
 };

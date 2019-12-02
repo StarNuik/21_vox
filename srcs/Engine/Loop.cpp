@@ -23,9 +23,9 @@ void Game::GameLoop() {
 	while (!_finished)
 	{
 		long long start = LONG_TIME;
-		GetInput();
+		_input->Update(_renderer->GetWindow());
 		Update();
 		PhysicsUpdate();
-		Render();
+		_renderer->RenderFrame();
 	}
 };

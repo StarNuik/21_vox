@@ -28,6 +28,10 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 	}
 	glfwSetWindowAttrib(_window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
 	glfwSetInputMode(_window, GLFW_CURSOR, config.cursorEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported() && config.cursorRaw)
+	{
+		glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
 	glfwSetWindowPos(_window, config.windowPos.x, config.windowPos.y);
 	glfwMakeContextCurrent(_window);
 	// glfwSetWindowUserPointer(_window, this); //! Change to Game later
