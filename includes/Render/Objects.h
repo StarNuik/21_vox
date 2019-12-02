@@ -21,8 +21,7 @@ public:
 	void SetFloat4(std::string varName, glm::vec4 vector);
 	void SetMatrix4(std::string varName, glm::mat4 matrix);
 private:
-	uint32 _id, _vs, _fs;
-	std::string _name;
+	uint _id, _vs, _fs;
 };
 
 class Texture {
@@ -31,7 +30,7 @@ public:
 	~Texture();
 	void Use();
 private:
-	uint32 _id;
+	uint _id;
 	std::string _name;
 };
 
@@ -39,10 +38,10 @@ class Geometry {
 public:
 	Geometry();
 	~Geometry();
-	uint32 GetPolygonCount();
+	uint GetPolygonCount();
 	void Use();
 private:
-	uint32 _polygonCount, _vbo, _vao;
+	uint _polygonCount, _vbo, _vao;
 	std::string _name;
 };
 
