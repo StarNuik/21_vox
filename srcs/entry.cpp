@@ -1,6 +1,9 @@
 #include "Base.h"
+#include "Engine/Engine.h"
 
 int	main() {
-	std::cout << "Hello world!" << std::endl;
+	// Game game = Game();
+	// game.GameLoop();
+	std::cout << "Hello world!\n";
 	return (0);
 }

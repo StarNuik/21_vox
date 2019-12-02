@@ -5,14 +5,14 @@ void Game::GameLoop() {
 	while (!_finished)
 	{
 		long long start = LONG_TIME;
-		InputUpdate();
+		GetInput();
 		Update();
 		PhysicsUpdate();
-		RenderUpdate();
+		Render();
 	}
 };
 
-void Game::InputUpdate() {
+void Game::GetInput() {
 	std::cout << "Input Update\n";
 };
 
@@ -24,6 +24,6 @@ void Game::PhysicsUpdate() {
 	std::cout << "Physics Update\n";
 };
 
-void Game::RenderUpdate() {
+void Game::Render() {
 	std::cout << "Render Update\n";
 };

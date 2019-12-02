@@ -1,22 +1,25 @@
 #pragma once
 #include <vector>
-
-class Game {
-	public:
-	void InitSystems();
-	void GameLoop();
-	private:
-	void InputUpdate();
-	void Update();
-	void PhysicsUpdate();
-	void RenderUpdate();
-	private:
-	bool _finished;
-	std::vector<Entity*> _entities;
-};
+#include <iostream>
+#include "Render/Render.h"
 
 class Entity {
-	public:
+public:
 	virtual ~Entity();
 	virtual void Update();
+};
+
+class Game {
+public:
+	Game();
+	~Game();
+	void GameLoop();
+private:
+	void GetInput();
+	void Update();
+	void PhysicsUpdate();
+	void Render();
+private:
+	bool _finished;
+	std::vector<Entity*> _entities;
 };
