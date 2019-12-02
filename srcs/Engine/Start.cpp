@@ -4,7 +4,7 @@
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;
 	config.windowSize = glm::ivec2(800, 600);
-	config.windowPos = glm::ivec2(100, 100);
+	config.windowPos = glm::ivec2(500, 500);
 	config.windowName = std::string("Test");
 	config.windowResizeable = false;
 	config.cursorEnabled = true;

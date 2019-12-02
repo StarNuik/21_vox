@@ -10,7 +10,7 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 
 	if (!glfwInit()) {
 		Locator::getLogger()->LogError("Couldn't init glfw.");
-		//! Log and nice exit
+		//! Nice exit
 		exit(1);
 	}
 	_glfwOn = true;
@@ -22,33 +22,38 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 
 	_window = glfwCreateWindow(_width, _height, config.windowName.c_str(), nullptr, nullptr);
 	if (!_window) {
-		//! Log and nice exit
+		Locator::getLogger()->LogError("Couldn't initialize glfw window.");
+		//! Nice exit
 		exit(1);
 	}
 	glfwSetWindowAttrib(_window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
 	glfwSetInputMode(_window, GLFW_CURSOR, config.cursorEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 	glfwSetWindowPos(_window, config.windowPos.x, config.windowPos.y);
 	glfwMakeContextCurrent(_window);
-	glfwSetWindowUserPointer(_window, this); //! Change to Game later
+	// glfwSetWindowUserPointer(_window, this); //! Change to Game later
 
 	glewExperimental = GL_TRUE;
-	glewInit();
-	if (config.glDepthTest)
+	if (glewInit() != GLEW_OK) {
+		Locator::getLogger()->LogError("Couldn't initialize glew.");
+		//! Nice exit
+		exit(1);
+	}
+	if (config.glDepthTest) {
 		glEnable(GL_DEPTH_TEST);
-	if (config.glCullFace)
+	}
+	if (config.glCullFace) {
 		glEnable(GL_CULL_FACE);
-	
+	}
+	Locator::getLogger()->LogSuccess("Initialized GLRenderer.");
 	//! Turn on imgui here
-	//! Log renderer success
 };
 
-void GLRenderer::RegisterModel(RenderModel* model) {};
-void GLRenderer::RegisterModel() {};
-void GLRenderer::UnregisterModel(RenderModel* model) {};
-void GLRenderer::UnregisterModel() {};
-void GLRenderer::RenderFrame() {};
+
 
 GLRenderer::~GLRenderer() {
+	if (_window) {
+		glfwDestroyWindow(_window);
+	}
 	if (_glfwOn) {
 		glfwTerminate();
 	}

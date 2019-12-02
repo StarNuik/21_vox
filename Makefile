@@ -3,6 +3,7 @@ NAME = vox.out
 # Our files
 SRCS = $(wildcard srcs/*.cpp)
 SRCS += $(wildcard srcs/**/*.cpp)
+SRCS += $(wildcard srcs/**/**/*.cpp)
 INCL = -I includes/ -I ~/.brew/include/
 # INCL += $(addprefix -I ,$(wildcard includes/**))
 
@@ -46,7 +47,6 @@ fclean: clean
 	@rm -f $(NAME)
 
 binclean:
-	@echo $(INCL)
 	@rm -f $(NAME)
 
 re: fclean all

@@ -15,7 +15,7 @@ void Game::PhysicsUpdate() {
 };
 
 void Game::Render() {
-	// std::cout << "Render Update\n";
+	Locator::getRenderer()->RenderFrame();
 };
 
 void Game::GameLoop() {

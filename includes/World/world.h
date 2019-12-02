@@ -1,23 +1,18 @@
 #pragma once
 
-#include "Render/Render.h"
+#include "Render/Objects.h"
 
 class Block {
 	private:
-		Geometry geometry;
-		Texture texture;
-		Shader shader;
+		RenderModel _model;
 	public:
 		Block();
 		~Block();
-		Geometry GetGeometry();
-		Texture GetTexture();
-		Shader GetShader();
 };
 
 class Chunk {
 	private:
-		glm::vec3 position;
+		glm::vec3 _position;
 	public:
 		Chunk();
 		~Chunk();
