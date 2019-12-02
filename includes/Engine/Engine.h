@@ -22,5 +22,5 @@ private:
 private:
 	bool _finished;
 	GLRenderer* _renderer;
-	InputManager* _input;
+	Input* _input;
 };
