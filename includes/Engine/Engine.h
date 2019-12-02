@@ -21,4 +21,6 @@ private:
 	void Render();
 private:
 	bool _finished;
+	GLRenderer* _renderer;
+	InputManager* _input;
 };

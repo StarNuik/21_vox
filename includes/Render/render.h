@@ -19,36 +19,7 @@ struct RenderEngineConfig {
 	bool glCullFace;
 };
 
-class IRenderer {
-public:
-	virtual ~IRenderer() {};
-	virtual void RenderFrame() = 0;
-};
-
-class NullRenderer : public IRenderer {
-public:
-	~NullRenderer() {};
-
-	void AddShader() {};
-	void RemoveShader() {};
-	void GetShader() {};
-
-	void AddTexture() {};
-	void RemoveTexture() {};
-	void GetTexture() {};
-
-	void AddGeometry() {};
-	void RemoveGeometry() {};
-	void GetGeometry() {};
-
-	void AddModel() {};
-	void RemoveModel() {};
-	void GetModel() {};
-
-	void RenderFrame() {};
-};
-
-class GLRenderer : public IRenderer {
+class GLRenderer {
 public:
 	GLRenderer(RenderEngineConfig config);
 	~GLRenderer();

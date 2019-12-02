@@ -19,19 +19,16 @@ RenderEngineConfig glConfig() {
 Game::Game() {
 	_finished = false;
 	Locator::provideLogger(NULL);
-	Locator::provideRenderer(NULL);
 
 	ILogger* log = new TerminalLogger();
 	Locator::provideLogger(log);
 	
-	IRenderer* ren = new GLRenderer(glConfig());
-	Locator::provideRenderer(ren);
+	_renderer = new GLRenderer(glConfig());
 };
 
 Game::~Game() {
-	IRenderer* ren = Locator::getRenderer();
 	ILogger* log = Locator::getLogger();
-
-	delete ren;
 	delete log;
+
+	delete _renderer;
 };

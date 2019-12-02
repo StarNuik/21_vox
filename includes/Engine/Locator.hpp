@@ -4,15 +4,7 @@
 
 class Locator {
 public:
-	static IRenderer* getRenderer() {return _rendererService;};
 	static ILogger* getLogger() {return _loggerService;};
-	static void provideRenderer(IRenderer* rendererService) {
-		if (rendererService != NULL) {
-			_rendererService = rendererService;
-		} else {
-			_rendererService = &_nullRendererService;
-		}
-	};
 	static void provideLogger(ILogger* loggerService) {
 		if (loggerService != NULL) {
 			_loggerService = loggerService;
@@ -21,9 +13,7 @@ public:
 		}
 	};
 private:
-	static IRenderer* _rendererService;
 	static ILogger* _loggerService;
-	static NullRenderer _nullRendererService;
 	static NullLogger _nullLoggerService;
 };
 

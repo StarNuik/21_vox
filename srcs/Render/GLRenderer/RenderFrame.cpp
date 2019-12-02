@@ -35,7 +35,6 @@ void GLRenderer::RenderFrame() {
 	// }
 
 	// egl::gui.frameEnd();
-	glfwPollEvents();
 	// eventRouter(this);
 	glfwSwapBuffers(_window);
 	// tick++;
