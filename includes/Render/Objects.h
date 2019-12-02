@@ -26,7 +26,7 @@ private:
 
 class Texture {
 public:
-	Texture(std::string path);
+	Texture(std::string);
 	~Texture();
 	void Use();
 private:

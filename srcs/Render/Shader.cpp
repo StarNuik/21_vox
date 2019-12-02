@@ -14,6 +14,7 @@ void	checkShaderError(uint index, std::string shaderPath)
 		char	shader_log[max_length];
 		glGetShaderInfoLog(index, max_length, &actual_length, shader_log);
 		Locator::getLogger()->Log(std::string(shader_log));
+		//! Something is wrong here!
 		glfwTerminate();
 		exit(1);
 	}
@@ -39,6 +40,12 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	glAttachShader(_id, _vs);
 	glAttachShader(_id, _fs);
 	glLinkProgram(_id);
+};
+
+Shader::~Shader() {
+	glDeleteProgram(_id);
+	glDeleteShader(_vs);
+	glDeleteShader(_fs);
 };
 
 void Shader::Use() {
@@ -84,5 +91,3 @@ void	Shader::SetMatrix4(std::string variableName, glm::mat4 value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(_id, variableName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
-
-Shader::~Shader() {};
