@@ -1,4 +1,4 @@
-#include "Map.h"
+#include "Generation/Map.h"
 
 void MapGeneration(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*> *umap)
 {
@@ -15,12 +15,12 @@ void MapGeneration(float height, float width, std::unordered_map<glm::ivec2, Sto
     }
 }
 
-int main()
-{
-    std::unordered_map<glm::ivec2, StoredMapData*> umap;
+// int main()
+// {
+//     std::unordered_map<glm::ivec2, StoredMapData*> umap;
 
-    MapGeneration(4, 4, &umap);
-    for (auto umap)
-        std::cout << umap.first << " " << umap.second << endl;
+//     MapGeneration(4, 4, &umap);
+//     for (auto umap)
+//         std::cout << umap.first << " " << umap.second << endl;
 
-}
+// }

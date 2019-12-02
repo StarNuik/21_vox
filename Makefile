@@ -4,6 +4,7 @@ NAME = vox.out
 SRCS = $(wildcard srcs/*.cpp)
 SRCS += $(wildcard srcs/**/*.cpp)
 INCL = -I includes/ -I ~/.brew/include/
+# INCL += $(addprefix -I ,$(wildcard includes/**))
 
 # Imgui files
 SRCS += $(wildcard imgui/*.cpp)
@@ -11,8 +12,8 @@ SRCS += imgui/examples/imgui_impl_glfw.cpp imgui/examples/imgui_impl_opengl3.cpp
 INCL += -I imgui/ -I imgui/examples/
 
 # Fast Noise
-# SRCS += $(wildcard FastNoise/*.cpp)
-# INCL += -I FastNoise/
+SRCS += $(wildcard FastNoise/*.cpp)
+INCL += -I FastNoise/
 
 # Perlin Noise
 SRCS += $(wildcard PerlinNoise/*.cpp)
@@ -20,6 +21,7 @@ INCL += -I PerlinNoise/
 
 # Additional settings
 #FLAGS = -Wall -Wextra -Werror
+FLAGS = -std=c++11
 LIB = -lm -L ~/.brew/lib/ -lglfw -lglew
 FRAMEWORK = -framework OpenGL
 OBJS = $(SRCS:.cpp=.o)
@@ -44,6 +46,7 @@ fclean: clean
 	@rm -f $(NAME)
 
 binclean:
+	@echo $(INCL)
 	@rm -f $(NAME)
 
 re: fclean all
