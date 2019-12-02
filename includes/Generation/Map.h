@@ -1,23 +1,24 @@
 
-#pragma once
+#ifndef VOX_MAP_H
+#define VOX_MAP_H
 
-// #include "vox.h"
-// #include "PerlinNoise.hpp"
-// #include "FastNoise.h"
+#include "vox.h"
 
-// #include <GL/glew.h>
-// #include <GLFW/glfw3.h>
-// #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
-// #include <vector>
-// #include <unordered_map>
+#include <vector>
+#include <unordered_map>
+#include <iostream>
 
 
-// class StoredMapData
-// {
-//     private:
-//         glm::vec2 value;
-// //      std::vector<Blocks*> vec;
-//     StoredMapData(glm::vec2 _value) : value(_value)
-//     {}
-// };
+class StoredMapData
+{
+    public:
+        float value;
+//      std::vector<Blocks*> vec;
+    StoredMapData(float _value) {value = _value;};
+};
+
+#endif
