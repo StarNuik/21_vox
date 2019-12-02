@@ -1,7 +1,25 @@
 #include "Engine/Engine.h"
 #include "Utilities/Time.h"
+#include "Engine/Locator.hpp"
+
+void Game::GetInput() {
+	// std::cout << "Input Update\n";
+};
+
+void Game::Update() {
+	// std::cout << "Update\n";
+};
+
+void Game::PhysicsUpdate() {
+	// std::cout << "Physics Update\n";
+};
+
+void Game::Render() {
+	// std::cout << "Render Update\n";
+};
 
 void Game::GameLoop() {
+	Locator::getLogger()->LogSuccess("Game loop started.");
 	while (!_finished)
 	{
 		long long start = LONG_TIME;
@@ -10,20 +28,4 @@ void Game::GameLoop() {
 		PhysicsUpdate();
 		Render();
 	}
-};
-
-void Game::GetInput() {
-	std::cout << "Input Update\n";
-};
-
-void Game::Update() {
-	std::cout << "Update\n";
-};
-
-void Game::PhysicsUpdate() {
-	std::cout << "Physics Update\n";
-};
-
-void Game::Render() {
-	std::cout << "Render Update\n";
 };

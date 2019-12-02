@@ -1,6 +1,12 @@
 #pragma once
 
-#include "Base.h"
+#include "Types.h"
+#include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <vector>
 
 class Shader {
 public:
@@ -16,7 +22,7 @@ public:
 	void SetFloat4(std::string varName, glm::vec4 vector);
 	void SetMatrix4(std::string varName, glm::mat4 matrix);
 private:
-	uint _id, _vs, _fs;
+	uint32 _id, _vs, _fs;
 };
 
 class Texture {
@@ -26,43 +32,86 @@ public:
 	void Load(std::string path);
 	void Use();
 private:
-	uint _id;
+	uint32 _id;
 };
 
 class Geometry {
 public:
 	Geometry();
 	~Geometry();
-	uint GetPolygonCount();
+	uint32 GetPolygonCount();
 	void Use();
 private:
-	uint _polygonCount, _vbo, _vao;
+	uint32 _polygonCount, _vbo, _vao;
+};
+
+class RenderModel {
+public:
+	RenderModel();
+	~RenderModel();
+	void Use();
+	void SetPosition(glm::vec3 position);
+	void SetEuler(glm::vec3 eulerAngles);
+	void SetRotation(glm::quat rotation);
+	void SetScale(glm::vec3 scale);
+	glm::vec3 GetPosition();
+	glm::quat GetRotation();
+	glm::vec3 GetScale();
+private:
+	Shader* shader;
+	Texture* diffuseTexture;
+	Texture* normalTexture;
+	Geometry* geometry;
+	glm::vec3 _position, _scale;
+	glm::quat _rotation;
 };
 
 struct RenderEngineConfig {
 	glm::ivec2 windowSize;
 	glm::ivec2 windowPos;
-	uint glVersionMajor;
-	uint glVersionMinor;
-	bool glForwardCompatibility;
 	std::string windowName;
 	bool windowResizeable;
 	bool cursorEnabled;
+	uint32 glVersionMajor;
+	uint32 glVersionMinor;
+	bool glForwardCompatibility;
 	bool glDepthTest;
 	bool glCullFace;
 };
 
-class RenderEngine {
+class IRenderer {
 public:
-	RenderEngine(RenderEngineConfig config);
-	~RenderEngine();
-	void RegisterGeometry();
-	void UnregisterGeometry();
+	virtual ~IRenderer() {};
+	virtual void RegisterModel() = 0;
+	virtual void UnregisterModel() = 0;
+	virtual void RenderFrame() = 0;
+};
+
+class NullRenderer : public IRenderer {
+public:
+	~NullRenderer() {};
+	void RegisterModel() {};
+	void UnregisterModel() {};
+	void RenderFrame() {};
+};
+
+class GLRenderer : public IRenderer {
+public:
+	GLRenderer(RenderEngineConfig config);
+	~GLRenderer();
+	void RegisterModel();
+	void UnregisterModel();
+	void RegisterModel(RenderModel* model);
+	void UnregisterModel(RenderModel* model);
+	void RenderFrame();
 private:
 	bool _glfwOn;
 	bool _imguiOn;
-	uint _width;
-	uint _height;
+	uint32 _width;
+	uint32 _height;
 	GLFWwindow* _window;
-	std::vector<Geometry*> _rendered;
+	std::vector<Shader*> _shaders;
+	std::vector<Texture*> _textures;
+	std::vector<Geometry*> _geometries;
+	std::vector<RenderModel*> _rendered;
 };

@@ -2,7 +2,7 @@ NAME = vox.out
 
 # Our files
 SRCS = $(wildcard srcs/*.cpp)
-SRCS += $(wildcatd srcs/**/*.cpp)
+SRCS += $(wildcard srcs/**/*.cpp)
 INCL = -I includes/ -I ~/.brew/include/
 
 # Imgui files
@@ -10,8 +10,16 @@ SRCS += $(wildcard imgui/*.cpp)
 SRCS += imgui/examples/imgui_impl_glfw.cpp imgui/examples/imgui_impl_opengl3.cpp
 INCL += -I imgui/ -I imgui/examples/
 
+# Fast Noise
+# SRCS += $(wildcard FastNoise/*.cpp)
+# INCL += -I FastNoise/
+
+# Perlin Noise
+SRCS += $(wildcard PerlinNoise/*.cpp)
+INCL += -I PerlinNoise/
+
 # Additional settings
-FLAGS = -Wall -Wextra -Werror
+#FLAGS = -Wall -Wextra -Werror
 LIB = -lm -L ~/.brew/lib/ -lglfw -lglew
 FRAMEWORK = -framework OpenGL
 OBJS = $(SRCS:.cpp=.o)

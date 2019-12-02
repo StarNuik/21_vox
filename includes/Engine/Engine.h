@@ -21,5 +21,4 @@ private:
 	void Render();
 private:
 	bool _finished;
-	std::vector<Entity*> _entities;
 };

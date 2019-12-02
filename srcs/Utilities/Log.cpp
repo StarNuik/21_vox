@@ -1,6 +1,10 @@
 #include "Base.h"
 #include "Utilities/Log.h"
 
+TerminalLogger::TerminalLogger() {
+	LogSuccess("Initialized Logger system successfully.");
+}
+
 void TerminalLogger::Log(std::string text) {
 	std::cout << TEXT_CYAN + text + TEXT_DEFAULT << std::endl;
 }

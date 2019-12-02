@@ -1,6 +1,7 @@
 #include "Render/Render.h"
+#include "Engine/Locator.hpp"
 
-RenderEngine::RenderEngine(RenderEngineConfig config) {
+GLRenderer::GLRenderer(RenderEngineConfig config) {
 	_glfwOn = false;
 	_imguiOn = false;
 	_window = nullptr;
@@ -8,6 +9,7 @@ RenderEngine::RenderEngine(RenderEngineConfig config) {
 	_height = std::max(config.windowSize.y, 1);
 
 	if (!glfwInit()) {
+		Locator::getLogger()->LogError("Couldn't init glfw.");
 		//! Log and nice exit
 		exit(1);
 	}
@@ -39,3 +41,15 @@ RenderEngine::RenderEngine(RenderEngineConfig config) {
 	//! Turn on imgui here
 	//! Log renderer success
 };
+
+void GLRenderer::RegisterModel(RenderModel* model) {};
+void GLRenderer::RegisterModel() {};
+void GLRenderer::UnregisterModel(RenderModel* model) {};
+void GLRenderer::UnregisterModel() {};
+void GLRenderer::RenderFrame() {};
+
+GLRenderer::~GLRenderer() {
+	if (_glfwOn) {
+		glfwTerminate();
+	}
+}
