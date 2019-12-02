@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Render/render.h"
+#include "Render/Render.h"
 
 class Block {
 	private:
@@ -21,6 +21,6 @@ class Chunk {
 	public:
 		Chunk();
 		~Chunk();
-		GetPosition();
-		SetPosition();
+		glm::vec3 GetPosition();
+		glm::vec3 SetPosition();
 };

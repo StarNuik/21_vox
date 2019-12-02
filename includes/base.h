@@ -4,7 +4,6 @@
 #include <math.h>
 #include <vector>
 #include <unordered_map>
-#include <string>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
