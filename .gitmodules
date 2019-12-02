@@ -1,0 +1,9 @@
+[submodule "imgui"]
+	path = imgui
+	url = https://github.com/ocornut/imgui
+[submodule "FastNoise"]
+	path = FastNoise
+	url = https://github.com/Auburns/FastNoise
+[submodule "PerlinNoise"]
+	path = PerlinNoise
+	url = https://github.com/Reputeless/PerlinNoise
