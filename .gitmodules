@@ -4,6 +4,3 @@
 [submodule "FastNoise"]
 	path = FastNoise
 	url = https://github.com/Auburns/FastNoise
-[submodule "PerlinNoise"]
-	path = PerlinNoise
-	url = https://github.com/Reputeless/PerlinNoise
