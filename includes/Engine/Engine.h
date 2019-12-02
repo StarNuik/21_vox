@@ -24,4 +24,5 @@ private:
 	bool _finished;
 	GLRenderer* _renderer;
 	Input* _input;
+	std::vector<Entity*> _entities;
 };

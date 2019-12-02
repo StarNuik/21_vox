@@ -1,13 +1,15 @@
 #include "Engine/Engine.h"
 #include "Utilities/Time.h"
 #include "Engine/Locator.hpp"
-
-void Game::GetInput() {
-	// std::cout << "Input Update\n";
-};
+#include "Types.h"
 
 void Game::Update() {
-	// std::cout << "Update\n";
+	if (glfwWindowShouldClose(_renderer->GetWindow()) || _input->KeyPressed(GLFW_KEY_ESCAPE)) {
+		_finished = true;
+	}
+	for (Entity* entity : _entities) {
+		entity->Update();
+	}
 };
 
 void Game::PhysicsUpdate() {
@@ -22,7 +24,7 @@ void Game::GameLoop() {
 	Locator::getLogger()->LogSuccess("Game loop started.");
 	while (!_finished)
 	{
-		long long start = LONG_TIME;
+		uint64 start = LONG_TIME;
 		_input->Update(_renderer->GetWindow());
 		Update();
 		PhysicsUpdate();
