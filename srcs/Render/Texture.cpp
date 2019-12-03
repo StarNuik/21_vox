@@ -1,6 +1,7 @@
 #include "Render/Objects.h"
-#include "stb_image.h"
 #include "Engine/Locator.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 Texture::Texture(std::string path) {
 	uint channels, width, height;
