@@ -29,3 +29,7 @@ Texture::Texture(std::string path) {
 Texture::~Texture() {
 	glDeleteTextures(1, &_id);
 }
+
+void Texture::Use() {
+	glBindTexture(GL_TEXTURE_2D, _id);
+}

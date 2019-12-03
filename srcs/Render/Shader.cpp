@@ -3,17 +3,17 @@
 #include "Engine/Locator.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-void	CheckShaderError(uint index, std::string shaderPath)
+void	CheckShaderError(uint index, std::string source)
 {
 	int		params = -1;
 	glGetShaderiv(index, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE) {
-		Locator::getLogger()->LogError("[CheckShaderError]Shader [" + shaderPath + "] didn't compile.");
+		Locator::getLogger()->LogError("[CheckShaderError]\nShader didn't compile.");
 		int		max_length = 4096;
 		int		actual_length = 0;
 		char	shader_log[max_length];
 		glGetShaderInfoLog(index, max_length, &actual_length, shader_log);
-		Locator::getLogger()->Log("[CheckShaderError]\n" + std::string(shader_log));
+		Locator::getLogger()->Log(std::string(shader_log));
 		//! Something is wrong here!
 		glfwTerminate();
 		exit(1);

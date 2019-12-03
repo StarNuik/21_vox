@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include "Render/Objects.h"
+#include "Render/Camera.h"
 
 struct RenderEngineConfig {
 	glm::ivec2 windowSize;
@@ -40,6 +41,7 @@ public:
 
 	void AddModel(RenderModel*);
 	void RemoveModel(RenderModel*);
+	void SetActiveCamera(Camera*);
 	// RenderModel* GetModel(std::string);
 
 	void RenderFrame();
@@ -50,8 +52,9 @@ private:
 	uint _width;
 	uint _height;
 	GLFWwindow* _window;
-	std::unordered_map<std::string, Shader*> _shaders;
-	std::unordered_map<std::string, Texture*> _textures;
-	std::unordered_map<std::string, Geometry*> _geometries;
+	// std::unordered_map<std::string, Shader*> _shaders;
+	// std::unordered_map<std::string, Texture*> _textures;
+	// std::unordered_map<std::string, Geometry*> _geometries;
 	std::vector<RenderModel*> _rendered;
+	Camera* _activeCamera;
 };

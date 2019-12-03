@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Render/Render.h"
 #include "Input/Input.h"
+#include "World/Resources.h"
 
 class Entity {
 public:
@@ -25,4 +26,5 @@ private:
 	GLRenderer* _renderer;
 	Input* _input;
 	std::vector<Entity*> _entities;
+	ResourceLoader* _resources;
 };

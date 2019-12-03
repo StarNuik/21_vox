@@ -26,6 +26,13 @@ Game::Game() {
 	
 	_renderer = new GLRenderer(glConfig());
 	_input = new Input();
+	_resources = new ResourceLoader();
+
+	RenderModel* test = new RenderModel(_resources->GetShader("Base"), _resources->GetTexture("Stone"), _resources->GetGeometry("Cube"));
+	_renderer->AddModel(test);
+	Camera* camera = new Camera(_renderer, 90.f, 1.f, 100.f);
+	camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
+	_renderer->SetActiveCamera(camera);
 };
 
 Game::~Game() {

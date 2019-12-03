@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Types.h"
-#include <string>
+#include "Render/Camera.h"
 
 class Shader {
 public:
@@ -57,6 +57,7 @@ public:
 	glm::quat GetRotation();
 	glm::vec3 GetScale();
 	glm::mat4 GetAphineMatrix();
+	uint GetPolygonCount();
 private:
 	void Init(Shader*, Texture*, Texture*, Geometry*);
 	Shader* _shader;

@@ -35,6 +35,7 @@ Shader* RenderModel::Use(Camera* camera) {
 	_shader->SetMatrix4("view", camera->GetViewMatrix());
 	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());
 	_shader->SetFloat3("viewPos", camera->GetPosition());
+	return _shader;
 }
 
 glm::mat4 RenderModel::GetAphineMatrix() {
@@ -52,3 +53,4 @@ void RenderModel::SetScale(glm::vec3 scale) {_scale = scale;};
 glm::vec3 RenderModel::GetPosition() {return _position;};
 glm::quat RenderModel::GetRotation() {return _rotation;};
 glm::vec3 RenderModel::GetScale() {return _scale;};
+uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
