@@ -35,6 +35,12 @@ void ResourceLoader::LoadShaders() {
 };
 
 void ResourceLoader::LoadTextures() {
+	_textures["Anime"] = new Texture("./resources/Textures/Anime.png");
+	_textures["Bedrock"] = new Texture("./resources/Textures/Bedrock.png");
+	_textures["Cobblestone"] = new Texture("./resources/Textures/Cobblestone.png");
+	_textures["Dirt"] = new Texture("./resources/Textures/Dirt.png");
+	_textures["Planks"] = new Texture("./resources/Textures/Planks.png");
+	_textures["Sand"] = new Texture("./resources/Textures/Sand.png");
 	_textures["Stone"] = new Texture("./resources/Textures/Stone.png");
 };
 

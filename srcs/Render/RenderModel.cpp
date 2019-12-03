@@ -9,7 +9,23 @@ RenderModel::RenderModel(Shader* shader, Texture* diffuseTexture, Geometry* geom
 	Init(shader, diffuseTexture, nullptr, geometry);
 }
 
-RenderModel::~RenderModel() {};
+RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
+	Init(shader, diffuseTexture, normalTexture, geometry);
+	_renderer = renderer;
+	_renderer->AddModel(this);
+}
+
+RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Texture* diffuseTexture, Geometry* geometry) {
+	Init(shader, diffuseTexture, nullptr, geometry);
+	_renderer = renderer;
+	_renderer->AddModel(this);
+}
+
+RenderModel::~RenderModel() {
+	if (_renderer) {
+		_renderer->RemoveModel(this);
+	}
+};
 
 void RenderModel::Init(Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
 	_shader = shader;

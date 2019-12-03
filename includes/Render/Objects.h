@@ -48,6 +48,8 @@ class RenderModel {
 public:
 	RenderModel(Shader*, Texture*, Geometry*);
 	RenderModel(Shader*, Texture*, Texture*, Geometry*);
+	RenderModel(GLRenderer*, Shader*, Texture*, Geometry*);
+	RenderModel(GLRenderer*, Shader*, Texture*, Texture*, Geometry*);
 	~RenderModel();
 	Shader* Use(Camera* camera);
 	void SetPosition(glm::vec3);
@@ -66,4 +68,5 @@ private:
 	Geometry* _geometry;
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
+	GLRenderer* _renderer;
 };
