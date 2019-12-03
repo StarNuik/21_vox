@@ -11,6 +11,7 @@
 #include <math.h>
 
 #include "BiomeDefine.h"
+#include "Engine/Engine.h"
 #define FREQ 1
 #define EXP 1.5
 
@@ -39,5 +40,7 @@ class MapGeneration
     float Noise(const glm::vec3 &x);
 
     void Generation(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*> &umap);
+
+    void SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*> umap);
 };
 
