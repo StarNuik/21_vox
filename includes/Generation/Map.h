@@ -8,19 +8,26 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <math.h>
 
+#include "BiomeDefine.h"
+#define FREQ 1
+#define EXP 1.5
 
 class StoredMapData
 {
     public:
-        float value;
+        float elevation;
+        int biom;
 //      std::vector<Blocks*> vec;
-    StoredMapData(float _value) {value = _value;};
+    StoredMapData(float _value) {elevation = _value;};
 };
 
 class MapGeneration
 {
     public:
+
+    int BiomeDefinition(float e, float m);
 
     template <typename T> inline T _Lerp(const T &v0, const T &v1, float t)
     {
