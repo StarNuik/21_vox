@@ -5,7 +5,7 @@
 #include "Input/Input.h"
 #include "World/Resources.h"
 
-#define MS_PER_UPDATE 0.05f
+#define FIXED_DELTA (1.f / 60.f)
 
 class Entity {
 public:

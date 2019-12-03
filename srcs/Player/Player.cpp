@@ -1,5 +1,7 @@
 #include "Player/Player.h"
 #include "Engine/Locator.hpp"
+#include <glm/gtx/euler_angles.hpp>
+// #include <glm/gtx/quaternion.hpp>
 
 Player::Player(Game* game) {
 	_game = game;
@@ -22,25 +24,29 @@ Player::~Player() {
 void Player::Update() {
 	Input* input = _game->GetInput();
 
-	glm::vec3 dir_vector(0.f);
-	if (input->KeyPressed(GLFW_KEY_SPACE)) {
-		dir_vector += glm::vec3(0.f, 1.f, 0.f);
-	}
-	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-		dir_vector += glm::vec3(0.f, -1.f , 0.f);
-	}
+	glm::ivec2 mousePos = input->MousePos();
+	_rotation = glm::quat(-glm::vec3(glm::radians((float)mousePos.y), glm::radians((float)mousePos.x), 0.f));
+	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);
+	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f);
+	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f);
 	if (input->KeyPressed(GLFW_KEY_W)) {
-		dir_vector += glm::vec3(0.f, 0.f, -1.f);
+		_position += forward * FIXED_DELTA;
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
-		dir_vector += glm::vec3(0.f, 0.f , 1.f);
+		_position -= forward * FIXED_DELTA;
 	}
-	if (input->KeyPressed(GLFW_KEY_A)) {
-		dir_vector += glm::vec3(-1.f, 0.f, 0.f);
+	if (input->KeyPressed(GLFW_KEY_SPACE)) {
+		_position += up * FIXED_DELTA;
+	}
+	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+		_position -= up * FIXED_DELTA;
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
-		dir_vector += glm::vec3(1.f, 0.f , 0.f);
+		_position += right * FIXED_DELTA;
 	}
-	_position = _position + dir_vector * MS_PER_UPDATE;
+	if (input->KeyPressed(GLFW_KEY_A)) {
+		_position -= right * FIXED_DELTA;
+	}
+	_camera->SetRotation(_rotation);
 	_camera->SetPosition(_position);
 }
