@@ -1,6 +1,7 @@
 #include "Engine/Engine.h"
 #include "Engine/Locator.hpp"
 #include "Player/Player.h"
+#include "Generation/Map.h"
 
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;

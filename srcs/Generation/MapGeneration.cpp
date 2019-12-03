@@ -94,7 +94,7 @@ void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, Store
     {
         RenderModel* m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
         _game->GetRenderer()->AddModel(m);
-        m->SetPosition(glm::vec3(pair.first.x, pair.second->elevation, pair.first.y));
+        m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f), pair.first.y));
     }
     // m->SetPosition(glm::vec3(umap))
 }
