@@ -84,3 +84,18 @@ void MapGeneration::Generation(float height, float width, std::unordered_map<glm
         }
     }
 }
+
+void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*> umap)
+{
+    
+    Game* _game = game;
+    ResourceLoader* r = _game->GetResources();
+    for (auto pair : umap)
+    {
+        RenderModel* m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
+        _game->GetRenderer()->AddModel(m);
+        m->SetPosition(glm::vec3(pair.first.x, pair.second->elevation, pair.first.y));
+    }
+    // m->SetPosition(glm::vec3(umap))
+}
+

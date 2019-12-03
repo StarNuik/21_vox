@@ -1,6 +1,7 @@
 #include "Engine/Engine.h"
 #include "Engine/Locator.hpp"
 #include "Player/Player.h"
+#include "Generation/Map.h"
 
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;
@@ -28,10 +29,15 @@ Game::Game() {
 	_renderer = new GLRenderer(glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader();
-
+	
 	Entity* player = new Player(this);
+
 	AddEntity(player);
-	// RenderModel* test = new RenderModel(_resources->GetShader("Base"), _resources->GetTexture("Stone"), _resources->GetGeometry("Cube"));
+
+	std::unordered_map<glm::ivec2, StoredMapData*> umap;
+	MapGeneration* mp = new MapGeneration;
+	mp->Generation(16.f, 16.f, umap);
+	mp->SpawnObject(this, umap);
 	// _renderer->AddModel(test);
 	// Camera* camera = new Camera(_renderer, 90.f, 1.f, 100.f);
 	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
@@ -41,7 +47,6 @@ Game::Game() {
 Game::~Game() {
 	delete _input;
 	delete _renderer;
-
 	ILogger* log = Locator::getLogger();
 	delete log;
 };
