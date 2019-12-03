@@ -36,7 +36,7 @@ private:
 
 class Geometry {
 public:
-	Geometry();
+	Geometry(std::string);
 	~Geometry();
 	uint GetPolygonCount();
 	void Use();
@@ -62,6 +62,8 @@ private:
 	Shader* shader;
 	Texture* diffuseTexture;
 	Texture* normalTexture;
+	Texture* thirdTexture;
+	Texture* fourthTexture;
 	Geometry* geometry;
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;

@@ -21,7 +21,7 @@ void Game::Render() {
 };
 
 void Game::GameLoop() {
-	Locator::getLogger()->LogSuccess("Game loop started.");
+	Locator::getLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{
 		uint64 start = LONG_TIME;

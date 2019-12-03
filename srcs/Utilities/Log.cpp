@@ -4,7 +4,7 @@
 
 
 TerminalLogger::TerminalLogger() {
-	LogSuccess("Initialized Logger system successfully.");
+	LogSuccess("[TerminalLogger::TerminalLogger]\nInitialized Logger system successfully.");
 }
 
 void TerminalLogger::Log(std::string text) {

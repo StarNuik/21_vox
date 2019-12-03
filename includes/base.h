@@ -13,6 +13,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-typedef unsigned int uint;
-typedef unsigned char uchar;
+#define TINYOBJLOADER_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 

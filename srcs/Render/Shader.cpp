@@ -3,17 +3,17 @@
 #include "Engine/Locator.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-void	checkShaderError(uint index, std::string shaderPath)
+void	CheckShaderError(uint index, std::string shaderPath)
 {
 	int		params = -1;
 	glGetShaderiv(index, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE) {
-		Locator::getLogger()->LogError("Shader [" + shaderPath + "] didn't compile.");
+		Locator::getLogger()->LogError("[CheckShaderError]Shader [" + shaderPath + "] didn't compile.");
 		int		max_length = 4096;
 		int		actual_length = 0;
 		char	shader_log[max_length];
 		glGetShaderInfoLog(index, max_length, &actual_length, shader_log);
-		Locator::getLogger()->Log(std::string(shader_log));
+		Locator::getLogger()->Log("[CheckShaderError]\n" + std::string(shader_log));
 		//! Something is wrong here!
 		glfwTerminate();
 		exit(1);
@@ -27,19 +27,20 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	_vs = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(_vs, 1, &vsSource, nullptr);
 	glCompileShader(_vs);
-	checkShaderError(_vs, vsSource);
+	CheckShaderError(_vs, vsSource);
 	delete vsSource;
 
 	_fs = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(_fs, 1, &fsSource, nullptr);
 	glCompileShader(_fs);
-	checkShaderError(_fs, fsSource);
+	CheckShaderError(_fs, fsSource);
 	delete fsSource;
 
 	_id = glCreateProgram();
 	glAttachShader(_id, _vs);
 	glAttachShader(_id, _fs);
 	glLinkProgram(_id);
+	Locator::getLogger()->LogSuccess("[Shader::Shader]\nLoaded: [" + vertexPath + ", " + fragmentPath);
 };
 
 Shader::~Shader() {

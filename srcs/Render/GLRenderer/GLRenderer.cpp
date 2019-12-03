@@ -9,7 +9,7 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 	_height = std::max(config.windowSize.y, 1);
 
 	if (!glfwInit()) {
-		Locator::getLogger()->LogError("Couldn't init glfw.");
+		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
 		//! Nice exit
 		exit(1);
 	}
@@ -22,7 +22,7 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 
 	_window = glfwCreateWindow(_width, _height, config.windowName.c_str(), nullptr, nullptr);
 	if (!_window) {
-		Locator::getLogger()->LogError("Couldn't initialize glfw window.");
+		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
 		//! Nice exit
 		exit(1);
 	}
@@ -38,7 +38,7 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
-		Locator::getLogger()->LogError("Couldn't initialize glew.");
+		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
 		//! Nice exit
 		exit(1);
 	}
@@ -48,7 +48,7 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 	if (config.glCullFace) {
 		glEnable(GL_CULL_FACE);
 	}
-	Locator::getLogger()->LogSuccess("Initialized GLRenderer.");
+	Locator::getLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
 

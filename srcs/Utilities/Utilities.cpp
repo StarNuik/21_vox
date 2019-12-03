@@ -8,7 +8,7 @@ char* Utilities::ReadFile(std::string path)
 
 	file.open(path);
 	if (!file.is_open()) {
-		Locator::getLogger()->LogError("Couldn't open file: " + path);
+		Locator::getLogger()->LogError("[Utilities::ReadFile]\nCouldn't open file: " + path);
 	}
 	file.seekg(0, std::ios::end);
 	const int len = file.tellg();
