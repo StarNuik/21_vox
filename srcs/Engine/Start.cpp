@@ -4,8 +4,8 @@
 
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;
-	config.windowSize = glm::ivec2(1920, 1080);
-	config.windowPos = glm::ivec2(100, 100);
+	config.windowSize = glm::ivec2(1500, 900);
+	config.windowPos = glm::ivec2(900, 100);
 	config.windowName = std::string("Test");
 	config.windowResizeable = false;
 	config.cursorEnabled = true;
@@ -31,11 +31,6 @@ Game::Game() {
 
 	Entity* player = new Player(this);
 	AddEntity(player);
-	// RenderModel* test = new RenderModel(_resources->GetShader("Base"), _resources->GetTexture("Stone"), _resources->GetGeometry("Cube"));
-	// _renderer->AddModel(test);
-	// Camera* camera = new Camera(_renderer, 90.f, 1.f, 100.f);
-	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
-	// _renderer->SetActiveCamera(camera);
 };
 
 Game::~Game() {

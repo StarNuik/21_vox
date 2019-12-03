@@ -11,8 +11,7 @@ Player::Player(Game* game) {
 	_game->GetRenderer()->SetActiveCamera(_camera);
 
 	ResourceLoader* r = _game->GetResources();
-	RenderModel* model = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
-	_game->GetRenderer()->AddModel(model);
+	RenderModel* model = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
 }
 
 Player::~Player() {
