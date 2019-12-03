@@ -16,9 +16,9 @@ void Game::PhysicsUpdate() {
 	// std::cout << "Physics Update\n";
 };
 
-void Game::Render() {
-	_renderer->RenderFrame();
-};
+// void Game::Render() {
+// 	_renderer->RenderFrame();
+// };
 
 void Game::GameLoop() {
 	Locator::getLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
@@ -31,3 +31,20 @@ void Game::GameLoop() {
 		_renderer->RenderFrame();
 	}
 };
+
+void Game::AddEntity(Entity* entity) {
+	_entities.push_back(entity);
+};
+
+void Game::RemoveEntity(Entity* entity) {
+	std::vector<Entity*>::iterator pos;
+	pos = std::find(_entities.begin(), _entities.end(), entity);
+	if (pos != _entities.end())
+	{
+		_entities.erase(pos);
+	}
+};
+
+GLRenderer* Game::GetRenderer() {return _renderer;};
+Input* Game::GetInput() {return _input;};
+ResourceLoader* Game::GetResources() {return _resources;};

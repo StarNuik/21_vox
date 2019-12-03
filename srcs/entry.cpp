@@ -9,7 +9,7 @@ void testGeometry();
 int	main() {
 	Game game = Game();
 	// Locator::getLogger()->Log("Hi");
-	// game.GameLoop();
+	game.GameLoop();
     // Geometry* g = new Geometry(std::string("resources/Models/Box.obj"));
 //	std::unordered_map<glm::ivec2, StoredMapData*> umap;
 //	MapGeneration* mp = new MapGeneration;

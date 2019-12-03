@@ -5,10 +5,12 @@
 #include "Input/Input.h"
 #include "World/Resources.h"
 
+#define MS_PER_UPDATE 0.05f
+
 class Entity {
 public:
-	virtual ~Entity();
-	virtual void Update();
+	virtual ~Entity() {};
+	virtual void Update() = 0;
 };
 
 class Game {
@@ -16,11 +18,14 @@ public:
 	Game();
 	~Game();
 	void GameLoop();
+	void AddEntity(Entity*);
+	void RemoveEntity(Entity*);
+	GLRenderer* GetRenderer();
+	Input* GetInput();
+	ResourceLoader* GetResources();
 private:
-	void GetInput();
 	void Update();
 	void PhysicsUpdate();
-	void Render();
 private:
 	bool _finished;
 	GLRenderer* _renderer;

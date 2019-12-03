@@ -27,34 +27,19 @@ public:
 	~GLRenderer();
 	GLFWwindow* GetWindow();
 
-	// void AddShader(std::string, Shader*);
-	// void RemoveShader(std::string);
-	// Shader* GetShader(std::string);
-
-	// void AddTexture(std::string, Texture*);
-	// void RemoveTexture(std::string);
-	// Texture* GetTexture(std::string);
-
-	// void AddGeometry(std::string, Geometry*);
-	// void RemoveGeometry(std::string);
-	// Geometry* GetGeometry(std::string);
-
 	void AddModel(RenderModel*);
 	void RemoveModel(RenderModel*);
 	void SetActiveCamera(Camera*);
-	// RenderModel* GetModel(std::string);
-
-	void RenderFrame();
+	Camera* GetActiveCamera();
 	glm::ivec2 GetWindowSize();
+	
+	void RenderFrame();
 private:
 	bool _glfwOn;
 	bool _imguiOn;
 	uint _width;
 	uint _height;
 	GLFWwindow* _window;
-	// std::unordered_map<std::string, Shader*> _shaders;
-	// std::unordered_map<std::string, Texture*> _textures;
-	// std::unordered_map<std::string, Geometry*> _geometries;
 	std::vector<RenderModel*> _rendered;
 	Camera* _activeCamera;
 };

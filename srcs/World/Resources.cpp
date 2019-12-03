@@ -39,5 +39,5 @@ void ResourceLoader::LoadTextures() {
 };
 
 void ResourceLoader::LoadGeometries() {
-	_geometries["Cube"] = new Geometry("./resources/Models/Box.obj");
+	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
 };
