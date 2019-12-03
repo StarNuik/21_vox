@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Base.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+// #include <glm/gtx/quaternion.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Types.h"
@@ -32,7 +32,6 @@ public:
 	void Use();
 private:
 	uint _id;
-	std::string _name;
 };
 
 class Geometry {
@@ -43,7 +42,6 @@ public:
 	void Use();
 private:
 	uint _polygonCount, _vbo, _vao;
-	std::string _name;
 };
 
 class RenderModel {
@@ -51,22 +49,20 @@ public:
 	RenderModel(Shader*, Texture*, Geometry*);
 	RenderModel(Shader*, Texture*, Texture*, Geometry*);
 	~RenderModel();
-	void Use();
-	void SetPosition(glm::vec3 position);
-	void SetEuler(glm::vec3 eulerAngles);
-	void SetRotation(glm::quat rotation);
-	void SetScale(glm::vec3 scale);
+	Shader* Use(Camera* camera);
+	void SetPosition(glm::vec3);
+	void SetRotation(glm::quat);
+	void SetScale(glm::vec3);
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
 	glm::vec3 GetScale();
+	glm::mat4 GetAphineMatrix();
 private:
-	Shader* shader;
-	Texture* diffuseTexture;
-	Texture* normalTexture;
-	Texture* thirdTexture;
-	Texture* fourthTexture;
-	Geometry* geometry;
+	void Init(Shader*, Texture*, Texture*, Geometry*);
+	Shader* _shader;
+	Texture* _diffuseTexture;
+	Texture* _normalTexture;
+	Geometry* _geometry;
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
-	std::string _name;
 };
