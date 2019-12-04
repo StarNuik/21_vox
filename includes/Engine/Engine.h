@@ -25,7 +25,6 @@ public:
 	ResourceLoader* GetResources();
 private:
 	void Update();
-	void PhysicsUpdate();
 private:
 	bool _finished;
 	GLRenderer* _renderer;
