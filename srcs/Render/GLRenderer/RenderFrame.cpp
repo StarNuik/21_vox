@@ -12,6 +12,7 @@ void GLRenderer::RenderFrame() {
 		Shader* modelShader = model->Use(_activeCamera);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	_game->GetUI()->Draw();
 	// Shader inUseShader;
 	// if (gui.wireframe)
 	// 	inUseShader = textureShader;

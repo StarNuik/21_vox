@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include "Render/Objects.h"
 #include "Render/Camera.h"
+#include "Engine/Engine.h"
+
+class Game;
 
 struct RenderEngineConfig {
 	glm::ivec2 windowSize;
@@ -23,7 +26,7 @@ struct RenderEngineConfig {
 
 class GLRenderer {
 public:
-	GLRenderer(RenderEngineConfig config);
+	GLRenderer(Game*, RenderEngineConfig config);
 	~GLRenderer();
 	GLFWwindow* GetWindow();
 
@@ -42,4 +45,5 @@ private:
 	GLFWwindow* _window;
 	std::vector<RenderModel*> _rendered;
 	Camera* _activeCamera;
+	Game* _game;
 };

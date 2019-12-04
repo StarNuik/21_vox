@@ -26,12 +26,14 @@ Game::Game() {
 	ILogger* log = new TerminalLogger();
 	Locator::provideLogger(log);
 	
-	_renderer = new GLRenderer(glConfig());
+	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader();
 
 	Entity* player = new Player(this);
 	AddEntity(player);
+
+	_ui = new UIController(this);
 
 	// _world = new World(this);
 	Shard* testShard = new Shard(this, glm::ivec3(0));

@@ -23,6 +23,12 @@ Player::~Player() {
 void Player::Update() {
 	Input* input = _game->GetInput();
 
+	if (input->KeyPressed(GLFW_KEY_1)) {
+		_game->GetUI()->SetState(true);
+	}
+	if (input->KeyPressed(GLFW_KEY_2)) {
+		_game->GetUI()->SetState(false);
+	}
 	glm::ivec2 mousePos = input->MousePos();
 	_rotation = glm::quat(-glm::vec3(glm::radians((float)mousePos.y), glm::radians((float)mousePos.x), 0.f));
 	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
