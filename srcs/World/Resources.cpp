@@ -30,6 +30,10 @@ Geometry* ResourceLoader::GetGeometry(std::string name) {
 	return _geometries[name];
 }
 
+Block* ResourceLoader::GetBlock(uint type) {
+	return _blocks[type];
+}
+
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
 };
@@ -46,4 +50,14 @@ void ResourceLoader::LoadTextures() {
 
 void ResourceLoader::LoadGeometries() {
 	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
+};
+
+void ResourceLoader::LoadBlocks() {
+	_blocks[BLOCK_TYPE::AIR] = nullptr;
+	_blocks[BLOCK_TYPE::BEDROCK] = new Block(_textures["Bedrock"]);
+	_blocks[BLOCK_TYPE::COBBLESTONE] = new Block(_textures["Cobblestone"]);
+	_blocks[BLOCK_TYPE::DIRT] = new Block(_textures["Dirt"]);
+	_blocks[BLOCK_TYPE::PLANKS] = new Block(_textures["Planks"]);
+	_blocks[BLOCK_TYPE::SAND] = new Block(_textures["Sand"]);
+	_blocks[BLOCK_TYPE::STONE] = new Block(_textures["Stone"]);
 };

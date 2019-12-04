@@ -1,6 +1,7 @@
 #include "Engine/Engine.h"
 #include "Engine/Locator.hpp"
 #include "Player/Player.h"
+#include "World/World.h"
 
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;
@@ -31,6 +32,8 @@ Game::Game() {
 
 	Entity* player = new Player(this);
 	AddEntity(player);
+
+	Shard* testShard = new Shard(this, glm::ivec3(0));
 };
 
 Game::~Game() {

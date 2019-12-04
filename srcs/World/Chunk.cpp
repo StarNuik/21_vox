@@ -1,9 +1,9 @@
 #include "World/World.h"
 
-Chunk::Chunk(glm::ivec2 pos) {
+Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = true;
 	for (int i = 0; i < 16; i++) {
-		_shards[i] = new Shard(glm::ivec3(pos.x, i * 16, pos.y));
+		_shards[i] = new Shard(game, glm::ivec3(pos.x, i, pos.y));
 	}
 };
 

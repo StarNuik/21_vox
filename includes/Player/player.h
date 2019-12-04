@@ -9,6 +9,8 @@ class Command {
 
 };
 
+#define SPEED 5.f
+
 class Player : public Entity{
 public:
 	Player(Game* game);

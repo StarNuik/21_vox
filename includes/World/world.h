@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/gtx/hash.hpp>
+// #include "Types.h"
+
+class Game;
 
 enum BLOCK_TYPE {
 	AIR = 0,
@@ -27,7 +31,7 @@ private:
 
 class Shard {
 public:
-	Shard(glm::ivec3);
+	Shard(Game*, glm::ivec3);
 	~Shard();
 	void SetActive(bool);
 	void UpdateGeometry();
@@ -35,6 +39,7 @@ public:
 	void SetBlock(glm::ivec3, BLOCK_TYPE);
 private:
 	bool _state;
+	Game* _game;
 	BLOCK_TYPE _blocks[16][16][16];
 	std::vector<RenderModel*> _models;
 	RenderModel* _debugModels[16][16][16];
@@ -42,7 +47,7 @@ private:
 
 class Chunk {
 public:
-	Chunk(glm::ivec2);
+	Chunk(Game*, glm::ivec2);
 	~Chunk();
 	void SetActive(bool);
 	Block* GetBlock(glm::ivec3);

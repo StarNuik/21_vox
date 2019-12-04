@@ -6,6 +6,9 @@
 #include "World/Resources.h"
 
 #define FIXED_DELTA (1.f / 60.f)
+#define FRAME_MS (int)(FIXED_DELTA * 1000)
+
+class ResourceLoader;
 
 class Entity {
 public:

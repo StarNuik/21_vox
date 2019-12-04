@@ -15,7 +15,7 @@ World::~World() {
 void World::ActivateChunk(glm::ivec2 pos) {
 	Chunk* chunk = _chunks[pos];
 	if (!chunk) {
-		_chunks[pos] = new Chunk(pos);
+		_chunks[pos] = new Chunk(_game, pos);
 		chunk = _chunks[pos];
 	}
 	chunk->SetActive(true);

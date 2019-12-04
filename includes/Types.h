@@ -16,3 +16,7 @@ class Texture;
 class Geometry;
 class Camera;
 class GLRenderer;
+class Block;
+class Shard;
+class Chunk;
+class World;
