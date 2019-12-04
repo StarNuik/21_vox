@@ -33,6 +33,7 @@ Game::Game() {
 	Entity* player = new Player(this);
 	AddEntity(player);
 
+	// _world = new World(this);
 	Shard* testShard = new Shard(this, glm::ivec3(0));
 };
 

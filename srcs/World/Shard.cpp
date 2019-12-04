@@ -6,7 +6,6 @@ Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	_game = game;
 	// Generate self here
 	//! THIS IS DEBUG CODE
-	// Locator::getLogger()->LogWarning("1");
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {

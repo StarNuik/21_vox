@@ -34,4 +34,5 @@ private:
 	Input* _input;
 	std::vector<Entity*> _entities;
 	ResourceLoader* _resources;
+	World* _world;
 };
