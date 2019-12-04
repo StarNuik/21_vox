@@ -92,10 +92,14 @@ void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, Store
     ResourceLoader* r = _game->GetResources();
     for (auto pair : umap)
     {
-        RenderModel* m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
+      RenderModel* m;
+      if (pair.second->biom == 5)
+        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
+      else
+        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
         _game->GetRenderer()->AddModel(m);
         m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f) - 15, pair.first.y));
         // if (pair.second->elevation > 0.9 || pair.second->elevation < -0.0000001)
-          // std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
+          std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->biom << std::endl;
     }
 }
