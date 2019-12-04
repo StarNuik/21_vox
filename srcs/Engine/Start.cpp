@@ -2,6 +2,7 @@
 #include "Engine/Locator.hpp"
 #include "Player/Player.h"
 #include "Generation/Map.h"
+#include "World/World.h"
 
 RenderEngineConfig glConfig() {
 	RenderEngineConfig config;
@@ -41,6 +42,9 @@ Game::Game() {
 	// Camera* camera = new Camera(_renderer, 90.f, 1.f, 100.f);
 	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
 	// _renderer->SetActiveCamera(camera);
+
+	// _world = new World(this);
+	Shard* testShard = new Shard(this, glm::ivec3(0));
 };
 
 Game::~Game() {

@@ -6,6 +6,9 @@
 #include "World/Resources.h"
 
 #define FIXED_DELTA (1.f / 60.f)
+#define FRAME_MS (int)(FIXED_DELTA * 1000)
+
+class ResourceLoader;
 
 class Entity {
 public:
@@ -25,11 +28,11 @@ public:
 	ResourceLoader* GetResources();
 private:
 	void Update();
-	void PhysicsUpdate();
 private:
 	bool _finished;
 	GLRenderer* _renderer;
 	Input* _input;
 	std::vector<Entity*> _entities;
 	ResourceLoader* _resources;
+	World* _world;
 };

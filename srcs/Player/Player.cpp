@@ -7,7 +7,7 @@ Player::Player(Game* game) {
 	_game = game;
 	_position = glm::vec3(0.f, 0.f, 3.f);
 	_rotation = glm::identity<glm::quat>();
-	_camera = new Camera(_game->GetRenderer(), 90.f, 1.f, 100.f);
+	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 100.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
 
 	ResourceLoader* r = _game->GetResources();
@@ -25,9 +25,9 @@ void Player::Update() {
 
 	glm::ivec2 mousePos = input->MousePos();
 	_rotation = glm::quat(-glm::vec3(glm::radians((float)mousePos.y), glm::radians((float)mousePos.x), 0.f));
-	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);
-	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f);
-	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f);
+	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
+	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
+	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
 	if (input->KeyPressed(GLFW_KEY_W)) {
 		_position += forward * FIXED_DELTA;
 	}
