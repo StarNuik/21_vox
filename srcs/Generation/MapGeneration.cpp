@@ -70,13 +70,13 @@ void MapGeneration::Generation(float height, float width, std::unordered_map<glm
               // + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
               // + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
               // + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
-            float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny));
-            //   + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-            //   + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-            //   + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
-            //   + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-            //   + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
-            // m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
+            float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
+              + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
+              + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
+              + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
+              + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
+              + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
+            m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
             // umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
             umap[pos] = new StoredMapData((round(e * 32) / 32)); // терассы
             // std::cout << umap[pos]->elevation << std::endl;

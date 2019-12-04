@@ -16,6 +16,7 @@
 #include "OpenSimplexNoise/OpenSimplexNoise.h"
 #define FREQ 1
 #define EXP 0.6
+// #define EXP 1
 
 class StoredMapData
 {
