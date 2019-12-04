@@ -64,20 +64,21 @@ void MapGeneration::Generation(float height, float width, std::unordered_map<glm
         {
             float nx = x / width - 0.5f, ny = y / height - 0.5f;
             glm::ivec2 pos = glm::ivec2(x, y);
-            float e = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
-              + 0.50f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-              + 0.25f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-              + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
-              + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-              + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
-            float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
-              + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-              + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-              + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
-              + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-              + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
-            m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
-            umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
+            float e = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny));
+              // + 0.50f * SimplexNoise::noise(2.f * nx, 2.f * ny));
+              // + 0.25f * SimplexNoise::noise(4.f * nx, 4.f * ny)
+              // + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
+              // + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
+              // + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
+            float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny));
+            //   + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
+            //   + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
+            //   + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
+            //   + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
+            //   + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
+            // m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
+            // umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
+            umap[pos] = new StoredMapData((round(e * 32) / 32)); // терассы
             // std::cout << umap[pos]->elevation << std::endl;
             // umap[pos] = new StoredMapData(pow(e, EXP));
             umap[pos]->biom = BiomeDefinition(e, m);
@@ -93,13 +94,15 @@ void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, Store
     for (auto pair : umap)
     {
       RenderModel* m;
-      if (pair.second->biom == 5)
+      if (pair.second->biom == OCEAN)
+        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Anime"), r->GetGeometry("Box"));
+      else if (pair.second->biom == BEACH)
         m = new RenderModel(r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
       else
         m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
         _game->GetRenderer()->AddModel(m);
         m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f) - 15, pair.first.y));
-        // if (pair.second->elevation > 0.9 || pair.second->elevation < -0.0000001)
-          std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->biom << std::endl;
+        // if (pair.second->elevation < 0.5 || pair.second->elevation < -0.0000001)
+          // std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
     }
 }
