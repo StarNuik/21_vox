@@ -7,7 +7,7 @@ Player::Player(Game* game) {
 	_game = game;
 	_position = glm::vec3(0.f, 0.f, 3.f);
 	_rotation = glm::identity<glm::quat>();
-	_camera = new Camera(_game->GetRenderer(), 90.f, 1.f, 100.f);
+	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 100.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
 
 	ResourceLoader* r = _game->GetResources();
