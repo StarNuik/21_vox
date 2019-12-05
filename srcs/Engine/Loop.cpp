@@ -18,14 +18,15 @@ void Game::GameLoop() {
 	Locator::getLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{
-		uint64 start = LONG_TIME;
+		int64 start = LONG_TIME;
 		_input->Update(_renderer->GetWindow());
 		Update();
 		// PhysicsUpdate();
 		_renderer->RenderFrame();
-		uint64 end = LONG_TIME;
+		int64 end = LONG_TIME;
 
 		if ((end - start) - FRAME_MS > 0)
 			usleep(((end - start) - FRAME_MS) * 1000);
+		_lastFrameTime = end - start;
 	}
 };

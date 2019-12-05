@@ -9,9 +9,6 @@ Player::Player(Game* game) {
 	_rotation = glm::identity<glm::quat>();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 100.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
-
-	ResourceLoader* r = _game->GetResources();
-	RenderModel* model = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
 }
 
 Player::~Player() {

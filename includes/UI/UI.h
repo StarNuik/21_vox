@@ -16,6 +16,12 @@ public:
 private:
 	void StartFrame();
 	void EndFrame();
+	void Main();
+	void Render();
+	void Engine();
+	void Player();
+	void World();
+	void Resources();
 	Game* _game;
 	bool _uiOn;
 };

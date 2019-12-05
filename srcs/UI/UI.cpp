@@ -24,8 +24,7 @@ void UIController::EndFrame() {
 void UIController::Draw() {
 	StartFrame();
 	if (_uiOn) {
-		ImGui::Begin("Testing.");
-		ImGui::End();
+		Main();
 	}
 	EndFrame();
 }

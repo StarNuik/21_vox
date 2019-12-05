@@ -29,6 +29,7 @@ public:
 	Input* GetInput();
 	ResourceLoader* GetResources();
 	UIController* GetUI();
+	uint GetLastFrameTime();
 private:
 	void Update();
 private:
@@ -39,4 +40,5 @@ private:
 	ResourceLoader* _resources;
 	World* _world;
 	UIController* _ui;
+	uint _lastFrameTime;
 };
