@@ -5,12 +5,14 @@
 #include "Input/Input.h"
 #include "World/Resources.h"
 #include "UI/UI.h"
+#include "Generation/Map.h"
 
 #define FIXED_DELTA (1.f / 60.f)
 #define FRAME_MS (int)(FIXED_DELTA * 1000)
 
 class ResourceLoader;
 class UIController;
+class MapGeneration;
 
 class Entity {
 public:
@@ -30,6 +32,8 @@ public:
 	ResourceLoader* GetResources();
 	UIController* GetUI();
 	uint GetLastFrameTime();
+	MapGeneration* GetGeneration();
+	MapGeneration* _mpGen;
 private:
 	void Update();
 private:

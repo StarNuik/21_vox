@@ -18,6 +18,8 @@
 #define EXP 0.6
 // #define EXP 1
 
+class Game;
+
 class StoredMapData
 {
     public:
@@ -30,6 +32,11 @@ class StoredMapData
 class MapGeneration
 {
     public:
+        MapGeneration() {};
+        ~MapGeneration() {};
+        float a;
+        std::unordered_map<glm::ivec2, StoredMapData*>* umap;
+
         int BiomeDefinition(float e, float m);
 
         float random (glm::vec2 st) 
@@ -44,7 +51,7 @@ class MapGeneration
         
         float _Hash(const float n);
         float Noise(const glm::vec3 &x);
-        void Generation(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*> &umap);
-        void SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*> umap);
+        void Generation(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*>* umap);
+        void SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*>* umap);
 };
 
