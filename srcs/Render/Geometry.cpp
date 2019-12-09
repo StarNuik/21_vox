@@ -5,7 +5,7 @@
 #include "Types.h"
 #include <string>
 
-std::vector<float> ReadGeometry(std::string path) {
+std::vector<float> Geometry::ReadGeometry(std::string path) {
 	//? Code copied from https://github.com/syoyo/tinyobjloader
 
 	std::vector<float> res;
@@ -46,14 +46,22 @@ std::vector<float> ReadGeometry(std::string path) {
 		}
 		index_offset += fv;
 	}
+	Locator::getLogger()->LogSuccess("[Geometry::ReadGeometry]\nLoaded: " + path);
 	return res;
 }
 
-#include <stdio.h>
 Geometry::Geometry(std::string path) {
+	std::vector<float> buffer = ReadGeometry(path);
+	Init(buffer);
+}
+
+Geometry::Geometry(std::vector<float> buffer) {
+	Init(buffer);
+}
+
+void Geometry::Init(std::vector<float> buffer) {
 	const int numOfFloats = 8;
 
-	std::vector<float> buffer = ReadGeometry(path);
 	_polygonCount = buffer.size() / 24;
 	glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);
@@ -73,8 +81,7 @@ Geometry::Geometry(std::string path) {
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	Locator::getLogger()->LogSuccess("[Geometry::Geometry]\nLoaded: " + path);
-}
+};
 
 Geometry::~Geometry() {
 	glDeleteBuffers(1, &_vbo);
@@ -88,3 +95,75 @@ uint Geometry::GetPolygonCount() {
 void Geometry::Use() {
 	glBindVertexArray(_vao);
 }
+
+float* Geometry::FaceTop() {
+	return new float[48] {
+		-.5f,  1.f,  .0f,  0.f,  1.f, 0.f, 1.f, 0.f,
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 1.f, 0.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 1.f, 0.f,
+
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 1.f, 0.f,
+		.5f,   1.f,  .0f,  1.f,  1.f, 0.f, 1.f, 0.f,
+		-.5f,  1.f,  .0f,  0.f,  1.f, 0.f, 1.f, 0.f
+	};
+};
+
+float* Geometry::FaceBottom() {
+	return new float[48] {
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, -1.f, 0.f,
+		.5f,   .0f, -1.f,  1.f,  0.f, 0.f, -1.f, 0.f,
+		-.5f,  .0f, -1.f,  0.f,  0.f, 0.f, -1.f, 0.f,
+
+		.5f,   .0f, -1.f,  1.f,  0.f, 0.f, -1.f, 0.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, -1.f, 0.f,
+		.5f,   .0f,  .0f,  1.f,  1.f, 0.f, -1.f, 0.f
+	};
+};
+
+float* Geometry::FaceRight() {
+	return new float[48] {
+		.5f,   1.f,  .0f,  0.f,  0.f, 1.f, 0.f, 0.f,
+		.5f,   .0f, -1.f,  1.f,  1.f, 1.f, 0.f, 0.f,
+		.5f,   .0f,  .0f,  0.f,  1.f, 1.f, 0.f, 0.f,
+
+		.5f,   .0f, -1.f,  1.f,  1.f, 1.f, 0.f, 0.f,
+		.5f,   1.f,  .0f,  0.f,  0.f, 1.f, 0.f, 0.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 1.f, 0.f, 0.f
+	};
+};
+
+float* Geometry::FaceLeft() {
+	return new float[48] {
+		-.5f,  .0f, -1.f,  1.f,  1.f, -1.f, 0.f, 0.f,
+		-.5f,  1.f, -1.f,  1.f,  0.f, -1.f, 0.f, 0.f,
+		-.5f,  1.f,  .0f,  0.f,  0.f, -1.f, 0.f, 0.f,
+
+		-.5f,  1.f,  .0f,  0.f,  0.f, -1.f, 0.f, 0.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, -1.f, 0.f, 0.f,
+		-.5f,  .0f, -1.f,  1.f,  1.f, -1.f, 0.f, 0.f
+	};
+};
+
+float* Geometry::FaceFront() {
+	return new float[48] {
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, 0.f, 1.f,
+		-.5f,  1.f,  .0f,  0.f,  0.f, 0.f, 0.f, 1.f,
+		.5f,   1.f,  .0f,  1.f,  0.f, 0.f, 0.f, 1.f,
+
+		.5f,   1.f,  .0f,  1.f,  0.f, 0.f, 0.f, 1.f,
+		.5f,   .0f,  .0f,  1.f,  1.f, 0.f, 0.f, 1.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, 0.f, 1.f
+	};
+};
+
+float* Geometry::FaceBack() {
+	return new float[48] {
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 0.f, -1.f,
+		-.5f,  .0f, -1.f,  0.f,  1.f, 0.f, 0.f, -1.f,
+		.5f,   .0f, -1.f,  1.f,  1.f, 0.f, 0.f, -1.f,
+
+		.5f,   .0f, -1.f,  1.f,  1.f, 0.f, 0.f, -1.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 0.f, -1.f,
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 0.f, -1.f		
+	};
+};

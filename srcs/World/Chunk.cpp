@@ -28,7 +28,7 @@ Block* Chunk::GetBlock(glm::ivec3 pos) {
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
 
-void Chunk::SetBlock(glm::ivec3 pos, BLOCK_TYPE type) {
+void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
 	int y = pos.y / 16;
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
 }

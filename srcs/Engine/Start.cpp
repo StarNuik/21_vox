@@ -45,9 +45,12 @@ Game::Game() {
 	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
 	// _renderer->SetActiveCamera(camera);
 
+	_world = new World(this);
+	// RenderModel* monkey = new RenderModel(_renderer, _resources->GetShader("Base"), _resources->GetTexture("Planks"), _resources->GetGeometry("Monkey"));
+	// Shard* testShard = new Shard(this, glm::ivec3(0));
 	// _world = new World(this);
 	Shard* testShard = new Shard(this, glm::ivec3(0));
-	std::cout << _mpGen->a << std::endl;
+//	std::cout << _mpGen->a << std::endl;
 	// std::cout << this->GetGeneration() << std::endl;
 };
 
