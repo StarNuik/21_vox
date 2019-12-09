@@ -6,12 +6,17 @@ Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	_game = game;
 	// Generate self here
 	//! THIS IS DEBUG CODE
+	// for (int x = 0; x < 16; x++)
+	// 	for (int y = 0; y < 16; y++)
+	// 		for (int z = 0; z < 16; z++) {
+	// 			_blocks[x][y][z] = BLOCK_TYPE::STONE;
+	// 		}
+	ResourceLoader* r = _game->GetResources();
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {
-				_blocks[x][y][z] = BLOCK_TYPE::STONE;
-				ResourceLoader* r = _game->GetResources();
-				_debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
+				_blocks[x][y][z] = BLOCK_TYPE::PLANKS;
+				_debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Planks"), r->GetGeometry("Box"));
 				_debugModels[x][y][z]->SetPosition(glm::vec3(globalPos.x * 16 + x, globalPos.y * 16 + y, globalPos.z * 16 + z));
 			}
 }

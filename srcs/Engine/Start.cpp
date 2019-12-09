@@ -27,7 +27,7 @@ Game::Game() {
 	ILogger* log = new TerminalLogger();
 	Locator::provideLogger(log);
 	
-	_renderer = new GLRenderer(glConfig());
+	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader();
 
@@ -42,6 +42,8 @@ Game::Game() {
 	// Camera* camera = new Camera(_renderer, 90.f, 1.f, 100.f);
 	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
 	// _renderer->SetActiveCamera(camera);
+
+	_ui = new UIController(this);
 
 	// _world = new World(this);
 	Shard* testShard = new Shard(this, glm::ivec3(0));

@@ -1,7 +1,8 @@
 #include "Render/Render.h"
 #include "Engine/Locator.hpp"
 
-GLRenderer::GLRenderer(RenderEngineConfig config) {
+GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
+	_game = game;
 	_glfwOn = false;
 	_imguiOn = false;
 	_window = nullptr;
@@ -48,6 +49,17 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 	if (config.glCullFace) {
 		glEnable(GL_CULL_FACE);
 	}
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(_window, true);
+	ImGui_ImplOpenGL3_Init("#version 400 core");
+	_imguiOn = true;
+
 	Locator::getLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
@@ -55,6 +67,11 @@ GLRenderer::GLRenderer(RenderEngineConfig config) {
 
 
 GLRenderer::~GLRenderer() {
+	if (_imguiOn) {
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
 	if (_window) {
 		glfwDestroyWindow(_window);
 	}

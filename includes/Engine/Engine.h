@@ -4,11 +4,13 @@
 #include "Render/Render.h"
 #include "Input/Input.h"
 #include "World/Resources.h"
+#include "UI/UI.h"
 
 #define FIXED_DELTA (1.f / 60.f)
 #define FRAME_MS (int)(FIXED_DELTA * 1000)
 
 class ResourceLoader;
+class UIController;
 
 class Entity {
 public:
@@ -26,6 +28,8 @@ public:
 	GLRenderer* GetRenderer();
 	Input* GetInput();
 	ResourceLoader* GetResources();
+	UIController* GetUI();
+	uint GetLastFrameTime();
 private:
 	void Update();
 private:
@@ -35,4 +39,6 @@ private:
 	std::vector<Entity*> _entities;
 	ResourceLoader* _resources;
 	World* _world;
+	UIController* _ui;
+	uint _lastFrameTime;
 };
