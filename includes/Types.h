@@ -20,3 +20,16 @@ class Block;
 class Shard;
 class Chunk;
 class World;
+class Game;
+
+enum class BlockType {
+	Air = 0,
+	Bedrock,
+	Cobblestone,
+	Dirt,
+	Planks,
+	Sand,
+	Stone,
+	First = Air,
+	Last = Stone
+};

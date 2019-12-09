@@ -1,4 +1,5 @@
 #include "World/Resources.h"
+#include "World/World.h"
 
 ResourceLoader::ResourceLoader() {
 	LoadShaders();
@@ -30,8 +31,8 @@ Geometry* ResourceLoader::GetGeometry(std::string name) {
 	return _geometries[name];
 }
 
-Block* ResourceLoader::GetBlock(uint type) {
-	return _blocks[type];
+Block* ResourceLoader::GetBlock(BlockType type) {
+	return _blocks[(int)type];
 }
 
 void ResourceLoader::LoadShaders() {
@@ -50,14 +51,15 @@ void ResourceLoader::LoadTextures() {
 
 void ResourceLoader::LoadGeometries() {
 	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
+	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 };
 
 void ResourceLoader::LoadBlocks() {
-	_blocks[BLOCK_TYPE::AIR] = nullptr;
-	_blocks[BLOCK_TYPE::BEDROCK] = new Block(_textures["Bedrock"]);
-	_blocks[BLOCK_TYPE::COBBLESTONE] = new Block(_textures["Cobblestone"]);
-	_blocks[BLOCK_TYPE::DIRT] = new Block(_textures["Dirt"]);
-	_blocks[BLOCK_TYPE::PLANKS] = new Block(_textures["Planks"]);
-	_blocks[BLOCK_TYPE::SAND] = new Block(_textures["Sand"]);
-	_blocks[BLOCK_TYPE::STONE] = new Block(_textures["Stone"]);
+	_blocks[(int)BlockType::Air] = nullptr;
+	_blocks[(int)BlockType::Bedrock] = new Block(_textures["Bedrock"]);
+	_blocks[(int)BlockType::Cobblestone] = new Block(_textures["Cobblestone"]);
+	_blocks[(int)BlockType::Dirt] = new Block(_textures["Dirt"]);
+	_blocks[(int)BlockType::Planks] = new Block(_textures["Planks"]);
+	_blocks[(int)BlockType::Sand] = new Block(_textures["Sand"]);
+	_blocks[(int)BlockType::Stone] = new Block(_textures["Stone"]);
 };

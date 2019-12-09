@@ -34,7 +34,7 @@ Block* World::GetBlock(glm::ivec3 pos) {
 	return _chunks[chunkPos]->GetBlock(glm::ivec3(pos.x % 16, pos.y, pos.z % 16));
 }
 
-void World::SetBlock(glm::ivec3 pos, BLOCK_TYPE type) {
+void World::SetBlock(glm::ivec3 pos, BlockType type) {
 	// Test if chunk exists
 	glm::ivec2 chunkPos(pos.x / 16, pos.z / 16);
 	_chunks[chunkPos]->SetBlock(glm::ivec3(pos.x % 16, pos.y, pos.z % 16), type);

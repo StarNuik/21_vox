@@ -36,6 +36,7 @@ Game::Game() {
 	_ui = new UIController(this);
 
 	// _world = new World(this);
+	// RenderModel* monkey = new RenderModel(_renderer, _resources->GetShader("Base"), _resources->GetTexture("Planks"), _resources->GetGeometry("Monkey"));
 	Shard* testShard = new Shard(this, glm::ivec3(0));
 };
 

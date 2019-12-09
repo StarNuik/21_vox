@@ -46,14 +46,22 @@ std::vector<float> ReadGeometry(std::string path) {
 		}
 		index_offset += fv;
 	}
+	Locator::getLogger()->LogSuccess("[Geometry::ReadGeometry]\nLoaded: " + path);
 	return res;
 }
 
-#include <stdio.h>
 Geometry::Geometry(std::string path) {
+	std::vector<float> buffer = ReadGeometry(path);
+	Init(buffer);
+}
+
+Geometry::Geometry(std::vector<float> buffer) {
+	Init(buffer);
+}
+
+void Geometry::Init(std::vector<float> buffer) {
 	const int numOfFloats = 8;
 
-	std::vector<float> buffer = ReadGeometry(path);
 	_polygonCount = buffer.size() / 24;
 	glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);
@@ -73,8 +81,7 @@ Geometry::Geometry(std::string path) {
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	Locator::getLogger()->LogSuccess("[Geometry::Geometry]\nLoaded: " + path);
-}
+};
 
 Geometry::~Geometry() {
 	glDeleteBuffers(1, &_vbo);
@@ -88,3 +95,5 @@ uint Geometry::GetPolygonCount() {
 void Geometry::Use() {
 	glBindVertexArray(_vao);
 }
+
+float* Geometry::FaceBottom() {return new float[16] {0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 7.f, 8.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f};};

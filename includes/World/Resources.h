@@ -12,7 +12,7 @@ public:
 	Shader* GetShader(std::string);
 	Texture* GetTexture(std::string);
 	Geometry* GetGeometry(std::string);
-	Block* GetBlock(uint);
+	Block* GetBlock(BlockType);
 private:
 	void LoadShaders();
 	void LoadTextures();

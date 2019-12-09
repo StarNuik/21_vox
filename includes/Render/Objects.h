@@ -36,10 +36,18 @@ private:
 class Geometry {
 public:
 	Geometry(std::string);
+	Geometry(std::vector<float>);
 	~Geometry();
 	uint GetPolygonCount();
 	void Use();
+	static float* FaceTop();
+	static float* FaceBottom();
+	static float* FaceRight();
+	static float* FaceLeft();
+	static float* FaceForward();
+	static float* FaceBack();
 private:
+	void Init(std::vector<float>);
 	uint _polygonCount, _vbo, _vao;
 };
 
