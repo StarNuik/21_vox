@@ -44,8 +44,9 @@ public:
 	static float* FaceBottom();
 	static float* FaceRight();
 	static float* FaceLeft();
-	static float* FaceForward();
+	static float* FaceFront();
 	static float* FaceBack();
+	static std::vector<float> ReadGeometry(std::string);
 private:
 	void Init(std::vector<float>);
 	uint _polygonCount, _vbo, _vao;

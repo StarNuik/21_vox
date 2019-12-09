@@ -5,7 +5,7 @@
 #include "Types.h"
 #include <string>
 
-std::vector<float> ReadGeometry(std::string path) {
+std::vector<float> Geometry::ReadGeometry(std::string path) {
 	//? Code copied from https://github.com/syoyo/tinyobjloader
 
 	std::vector<float> res;
@@ -96,4 +96,74 @@ void Geometry::Use() {
 	glBindVertexArray(_vao);
 }
 
-float* Geometry::FaceBottom() {return new float[16] {0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 7.f, 8.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f};};
+float* Geometry::FaceTop() {
+	return new float[48] {
+		-.5f,  1.f,  .0f,  0.f,  1.f, 0.f, 1.f, 0.f,
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 1.f, 0.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 1.f, 0.f,
+
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 1.f, 0.f,
+		.5f,   1.f,  .0f,  1.f,  1.f, 0.f, 1.f, 0.f,
+		-.5f,  1.f,  .0f,  0.f,  1.f, 0.f, 1.f, 0.f
+	};
+};
+
+float* Geometry::FaceBottom() {
+	return new float[48] {
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, -1.f, 0.f,
+		.5f,   .0f, -1.f,  1.f,  0.f, 0.f, -1.f, 0.f,
+		-.5f,  .0f, -1.f,  0.f,  0.f, 0.f, -1.f, 0.f,
+
+		.5f,   .0f, -1.f,  1.f,  0.f, 0.f, -1.f, 0.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, -1.f, 0.f,
+		.5f,   .0f,  .0f,  1.f,  1.f, 0.f, -1.f, 0.f
+	};
+};
+
+float* Geometry::FaceRight() {
+	return new float[48] {
+		.5f,   1.f,  .0f,  0.f,  0.f, 1.f, 0.f, 0.f,
+		.5f,   .0f, -1.f,  1.f,  1.f, 1.f, 0.f, 0.f,
+		.5f,   .0f,  .0f,  0.f,  1.f, 1.f, 0.f, 0.f,
+
+		.5f,   .0f, -1.f,  1.f,  1.f, 1.f, 0.f, 0.f,
+		.5f,   1.f,  .0f,  0.f,  0.f, 1.f, 0.f, 0.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 1.f, 0.f, 0.f
+	};
+};
+
+float* Geometry::FaceLeft() {
+	return new float[48] {
+		-.5f,  .0f, -1.f,  1.f,  1.f, -1.f, 0.f, 0.f,
+		-.5f,  1.f, -1.f,  1.f,  0.f, -1.f, 0.f, 0.f,
+		-.5f,  1.f,  .0f,  0.f,  0.f, -1.f, 0.f, 0.f,
+
+		-.5f,  1.f,  .0f,  0.f,  0.f, -1.f, 0.f, 0.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, -1.f, 0.f, 0.f,
+		-.5f,  .0f, -1.f,  1.f,  1.f, -1.f, 0.f, 0.f
+	};
+};
+
+float* Geometry::FaceFront() {
+	return new float[48] {
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, 0.f, 1.f,
+		-.5f,  1.f,  .0f,  0.f,  0.f, 0.f, 0.f, 1.f,
+		.5f,   1.f,  .0f,  1.f,  0.f, 0.f, 0.f, 1.f,
+
+		.5f,   1.f,  .0f,  1.f,  0.f, 0.f, 0.f, 1.f,
+		.5f,   .0f,  .0f,  1.f,  1.f, 0.f, 0.f, 1.f,
+		-.5f,  .0f,  .0f,  0.f,  1.f, 0.f, 0.f, 1.f
+	};
+};
+
+float* Geometry::FaceBack() {
+	return new float[48] {
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 0.f, -1.f,
+		-.5f,  .0f, -1.f,  0.f,  1.f, 0.f, 0.f, -1.f,
+		.5f,   .0f, -1.f,  1.f,  1.f, 0.f, 0.f, -1.f,
+
+		.5f,   .0f, -1.f,  1.f,  1.f, 0.f, 0.f, -1.f,
+		.5f,   1.f, -1.f,  1.f,  0.f, 0.f, 0.f, -1.f,
+		-.5f,  1.f, -1.f,  0.f,  0.f, 0.f, 0.f, -1.f		
+	};
+};

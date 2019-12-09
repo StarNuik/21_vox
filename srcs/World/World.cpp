@@ -1,8 +1,15 @@
 #include "World/World.h"
+#include "Engine/Locator.hpp"
+#include "Utilities/Time.h"
 
 World::World(Game* game) {
 	_game = game;
-	ActivateChunk(glm::ivec2(0));
+	int64 start = LONG_TIME;
+	for (int x = -1; x <= 1; x++)
+		for (int z = -1; z <= 1; z++)
+			ActivateChunk(glm::ivec2(x, z));
+	int64 end = LONG_TIME;
+	Locator::getLogger()->LogSuccess("[World::World]\nGenerated chunk in: " + std::to_string(end - start) + " ms.");
 }
 
 World::~World() {

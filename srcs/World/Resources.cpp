@@ -1,3 +1,4 @@
+#include "Types.h"
 #include "World/Resources.h"
 #include "World/World.h"
 
@@ -23,8 +24,8 @@ Shader* ResourceLoader::GetShader(std::string name) {
 	return _shaders[name];
 }
 
-Texture* ResourceLoader::GetTexture(std::string name) {
-	return _textures[name];
+Texture* ResourceLoader::GetTexture(BlockType type) {
+	return _textures[(int)type];
 }
 
 Geometry* ResourceLoader::GetGeometry(std::string name) {
@@ -40,13 +41,13 @@ void ResourceLoader::LoadShaders() {
 };
 
 void ResourceLoader::LoadTextures() {
-	_textures["Anime"] = new Texture("./resources/Textures/Anime.png");
-	_textures["Bedrock"] = new Texture("./resources/Textures/Bedrock.png");
-	_textures["Cobblestone"] = new Texture("./resources/Textures/Cobblestone.png");
-	_textures["Dirt"] = new Texture("./resources/Textures/Dirt.png");
-	_textures["Planks"] = new Texture("./resources/Textures/Planks.png");
-	_textures["Sand"] = new Texture("./resources/Textures/Sand.png");
-	_textures["Stone"] = new Texture("./resources/Textures/Stone.png");
+	_textures[(int)BlockType::Air] = new Texture("./resources/Textures/Anime.png");
+	_textures[(int)BlockType::Bedrock] = new Texture("./resources/Textures/Bedrock.png");
+	_textures[(int)BlockType::Cobblestone] = new Texture("./resources/Textures/Cobblestone.png");
+	_textures[(int)BlockType::Dirt] = new Texture("./resources/Textures/Dirt.png");
+	_textures[(int)BlockType::Planks] = new Texture("./resources/Textures/Planks.png");
+	_textures[(int)BlockType::Sand] = new Texture("./resources/Textures/Sand.png");
+	_textures[(int)BlockType::Stone] = new Texture("./resources/Textures/Stone.png");
 };
 
 void ResourceLoader::LoadGeometries() {
@@ -55,11 +56,11 @@ void ResourceLoader::LoadGeometries() {
 };
 
 void ResourceLoader::LoadBlocks() {
-	_blocks[(int)BlockType::Air] = nullptr;
-	_blocks[(int)BlockType::Bedrock] = new Block(_textures["Bedrock"]);
-	_blocks[(int)BlockType::Cobblestone] = new Block(_textures["Cobblestone"]);
-	_blocks[(int)BlockType::Dirt] = new Block(_textures["Dirt"]);
-	_blocks[(int)BlockType::Planks] = new Block(_textures["Planks"]);
-	_blocks[(int)BlockType::Sand] = new Block(_textures["Sand"]);
-	_blocks[(int)BlockType::Stone] = new Block(_textures["Stone"]);
+	// _blocks[(int)BlockType::Air] = nullptr;
+	// _blocks[(int)BlockType::Bedrock] = new Block(_textures["Bedrock"]);
+	// _blocks[(int)BlockType::Cobblestone] = new Block(_textures["Cobblestone"]);
+	// _blocks[(int)BlockType::Dirt] = new Block(_textures["Dirt"]);
+	// _blocks[(int)BlockType::Planks] = new Block(_textures["Planks"]);
+	// _blocks[(int)BlockType::Sand] = new Block(_textures["Sand"]);
+	// _blocks[(int)BlockType::Stone] = new Block(_textures["Stone"]);
 };

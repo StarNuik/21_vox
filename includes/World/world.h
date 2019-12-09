@@ -25,11 +25,12 @@ public:
 	Shard(Game*, glm::ivec3);
 	~Shard();
 	void SetActive(bool);
-	void UpdateGeometry();
+	void UpdateGeometry(glm::ivec3);
 	Block* GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, BlockType);
 private:
 	bool HasType(BlockType);
+	// std::vector<float> GenerateBlock(int, int, int);
 	bool _state;
 	Game* _game;
 	bool _blockTypePresent[(int)BlockType::Stone + 1] = {false};
