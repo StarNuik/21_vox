@@ -16,16 +16,6 @@ Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	ResourceLoader* r = _game->GetResources();
 	MapGeneration* mp = _game->GetGeneration();
 	mp->Generation(globalPos.x + 1, globalPos.y + 1, mp->umap);
-	// for (auto pair : (*mp->umap))
-	// {
-	// 	std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
-	// }
-	// std::cout << (*mp->umap)[glm::ivec2(globalPos.x, globalPos.y)]->elevation << std::endl;
-	// std::cout << mp->umap->at(glm::ivec2(globalPos.x, globalPos.y))->elevation << std::endl;
-	// mp->Generation(globalPos.x, globalPos.y, mp->umap);
-	// std::cout << mp->umap << std::endl;
-	// for (auto pair : *(mp->umap))
-	 	// std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {
