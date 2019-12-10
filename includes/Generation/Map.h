@@ -38,7 +38,7 @@ class MapGeneration
 
         int BiomeDefinition(float e, float m);
         
-        void Generation(float height, float width);
+        void Generation(float height, float width, glm::ivec2 pos);
 
         void SpawnObject(Game *game);
     private:

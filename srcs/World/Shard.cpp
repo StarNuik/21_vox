@@ -6,42 +6,32 @@
 Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	_state = true;
 	_game = game;
-	// Generate self here
-	//! THIS IS DEBUG CODE
-	// for (int x = 0; x < 16; x++)
-	// 	for (int y = 0; y < 16; y++)
-	// 		for (int z = 0; z < 16; z++) {
-	// 			_blocks[x][y][z] = BLOCK_TYPE::STONE;
-	// 		}
-//	/ ResourceLoader* r = _game->GetResources();
-//	// for (int x = 0; x < 16; x++)
-//	// 	for (int y = 0; y < 16; y++)
-//	// 		for (int z = 0; z < 16; z++) {
-//	// 			int r = rand();
-//	// 			if (r % 3 == 0)
-//	// 				SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
-//	// 			if (r % 7 == 0)
-					// SetBlock(glm::ivec3(1, 1, 1), BlockType::Planks);
-//				// if (rand() % 2)
-//					// _blocks[x][y][z] = BlockType::Planks;
-//				// _debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Planks"), r->GetGeometry("Box"));
-//				// _debugModels[x][y][z]->SetPosition(glm::vec3(globalPos.x * 16 + x, globalPos.y * 16 + y, globalPos.z * 16 + z));
-//			// }
-	ResourceLoader* r = _game->GetResources();
+
 	MapGeneration* mp = _game->GetGeneration();
-	mp->Generation(globalPos.x + 1, globalPos.y + 1);
+	mp->Generation((globalPos.x + 1) * 16, (globalPos.y + 1) * 16, globalPos);
+	// globalPos = glm::ivec3(1, 1, 1);
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {
+				int elevation = (int)floorf((*mp->umap)[glm::ivec2(x + globalPos.x * 16, y + globalPos.y * 16)]->elevation);
 				// if (y < 10)
 					// SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
 				// else -- для биомов
 				// {
 
 				// }
-				SetBlock((glm::ivec3(x, (int)floorf((*mp->umap)[glm::ivec2(globalPos.x, globalPos.y)]->elevation * 10),
-										z)), BlockType::Stone);
+				SetBlock((glm::ivec3(x + globalPos.x * 16, elevation + globalPos.y * 16,
+										z + globalPos.z * 16)), BlockType::Stone);
 			}
+	mp->Generation((globalPos.x + 2) * 16, (globalPos.y + 2) * 16, globalPos);
+	globalPos = glm::ivec3(1, 1, 1);
+	for (int x = 0; x < 16; x++)
+		for (int y = 0; y < 16; y++)
+			for (int z = 0; z < 16; z++) {
+			int elevation = (int)floorf((*mp->umap)[glm::ivec2(x + globalPos.x * 16, y + globalPos.y * 16)]->elevation);
+				SetBlock((glm::ivec3(globalPos.x * 16 + x, elevation + globalPos.y * 16,
+										globalPos.z * 16 + z)), BlockType::Stone);
+			}		
 	UpdateGeometry(globalPos);
 }
 

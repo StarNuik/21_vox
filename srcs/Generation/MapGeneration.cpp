@@ -56,11 +56,13 @@ float MapGeneration::Noise(const glm::vec3 &x)
                     LERP(_Hash(n + 170.f), _Hash(n + 171.f), f.x), f.y), f.z);
 }
 
-void MapGeneration::Generation(float height, float width)
+void MapGeneration::Generation(float height, float width, glm::ivec2 pos)
 {
-    for (int y = 0; y < height; y++)
+  if (pos.x == 2)
+    std::cout << "YESSSS" << std::endl;
+    for (int y = pos.y * 16; y < height ; y++)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = pos.x * 16; x < width; x++)
         {
             float nx = x / width - 0.5f, ny = y / height - 0.5f;
             glm::ivec2 pos = glm::ivec2(x, y);
@@ -78,11 +80,13 @@ void MapGeneration::Generation(float height, float width)
               + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
             m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
             // umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
-            (*umap)[pos] = new StoredMapData((round(e * 32) / 32)); // терассы
+            (*umap)[pos] = new StoredMapData((round((e * 10) * 32) / 32)); // терассы
             (*umap)[pos]->biom = BiomeDefinition(e, m);
+            std::cout << pos.x << " " << pos.y << std::endl;
         }
     }
 }
+
 
 void MapGeneration::SpawnObject(Game *game)
 {
@@ -109,3 +113,18 @@ MapGeneration::MapGeneration()
 {
   umap = new std::unordered_map<glm::ivec2, StoredMapData*>();
 }
+
+// // // globalPos = glm::ivec3(1, 1, 1);
+// 	for (int x = 0; x < 16; x++)
+// 		for (int y = 0; y < 16; y++)
+// 			for (int z = 0; z < 16; z++) {
+// 				int elevation = (int)floorf((*mp->umap)[glm::ivec2(x + globalPos.x * 16, y + globalPos.y * 16)]->elevation);
+// 				// if (y < 10)
+// 					// SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
+// 				// else -- для биомов
+// 				// {
+
+// 				// }
+// 				SetBlock((glm::ivec3(x + globalPos.x * 16, elevation + globalPos.y * 16,
+// 										z + globalPos.z * 16)), BlockType::Stone);
+// 			}
