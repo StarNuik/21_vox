@@ -16,6 +16,7 @@ RenderEngineConfig glConfig() {
 	config.glForwardCompatibility = true;
 	config.glDepthTest = true;
 	config.glCullFace = false;
+	config.glCullCounterClockwise = false;
 	return config;
 }
 
@@ -45,15 +46,16 @@ void Game::InitSystems() {
 
 #include "World/Shard.h"
 void Game::InitWorld() {
-	// for (int x = -1; x <= 1; x++)
-	// 	for (int z = -1; z <= 1; z++)
-	// 		_world->GenerateChunk(glm::ivec2(x, z));
-	// for (int x = -1; x <= 1; x++)
-	// 	for (int z = -1; z <= 1; z++)
-	// 		_world->ActivateChunk(glm::ivec2(x, z));
+	const int border = 3;
+	for (int x = -border; x <= border; x++)
+		for (int z = -border; z <= border; z++)
+			_world->GenerateChunk(glm::ivec2(x, z));
+	for (int x = -border; x <= border; x++)
+		for (int z = -border; z <= border; z++)
+			_world->ActivateChunk(glm::ivec2(x, z));
 
-	_world->GenerateChunk(glm::ivec2(0));
-	_world->ActivateChunk(glm::ivec2(0));
+	// _world->GenerateChunk(glm::ivec2(0));
+	// _world->ActivateChunk(glm::ivec2(0));
 
 	// Shard* s = new Shard(this, glm::ivec3(0));
 	// s->SetActive(true);

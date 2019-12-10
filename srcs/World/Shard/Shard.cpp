@@ -1,4 +1,5 @@
 // #include "World/World.h"
+#include "Types.h"
 #include "Engine/Locator.hpp"
 #include "Utilities/Time.h"
 #include "World/Shard.h"
@@ -17,11 +18,13 @@ void Shard::Generate() {
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {
-				int r = rand();
-				// if (r % 53 == 0)
-				// 	SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
-				if (r % 4000 == 0)
-					SetBlock(glm::ivec3(x, y, z), BlockType::Planks);
+				if (_position.y < 7)
+					SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
+				else if (_position.y < 8) {
+					int r = rand();
+					if (r % 16 == 0)
+						SetBlock(glm::ivec3(x, y, z), BlockType::Dirt);
+				}
 			}
 }
 
@@ -41,6 +44,7 @@ void Shard::SetActive(bool state) {
 }
 
 BlockType Shard::GetBlock(glm::ivec3 pos) {
+	// Locator::getLogger()->LogWarning("[Returning block: " + std::to_string((uint)_blocks[pos.x][pos.y][pos.z]) + " ][");
 	return _blocks[pos.x][pos.y][pos.z];
 }
 

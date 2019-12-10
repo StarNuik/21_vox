@@ -1,45 +1,7 @@
 #include "Types.h"
 #include "World/Shard.h"
 #include "Render/Objects.h"
-
-// void Shard::UpdateGeometry() {
-	// //? Remove models from renderer
-	// for (RenderModel* model : _models) {
-	// 	_game->GetRenderer()->RemoveModel(model);
-	// 	delete model;
-	// }
-	// _models.clear();
-	// //? Recalculate the model
-	// std::vector<float> vertexBuffer;
-	// for (int t = (int)BlockType::First + 1; t <= (int)BlockType::Last; t++) {
-	// 	if (!_blockTypePresent[t]) {
-	// 		continue;
-	// 	}
-	// 	for (int x = 0; x < 16; x++)
-	// 		for (int y = 0; y < 16; y++)
-	// 			for (int z = 0; z < 16; z++) {
-	// 				if ((int)_blocks[x][y][z] == t) {
-	// 					std::vector<float> cube = GenerateBlock(globalPos + glm::ivec3(x, y, z));
-	// 					for (int i = 0; i < cube.size(); i += 8) {
-	// 						cube[i + 0] += x;
-	// 						cube[i + 1] += y;
-	// 						cube[i + 2] += z;
-	// 					}
-	// 					vertexBuffer.reserve(cube.size());
-	// 					vertexBuffer.insert(vertexBuffer.end(), cube.begin(), cube.end());
-	// 				}
-	// 			}
-	// 	Geometry* g = new Geometry(vertexBuffer);
-	// 	ResourceLoader* r = _game->GetResources();
-	// 	RenderModel* model = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture((BlockType)t), g);
-	// 	model->SetPosition(globalPos * 16);
-	// 	_models.push_back(model);
-	// }
-	// if (_state) {
-	// 	// Add model to renderer
-	// }
-	
-// }
+#include "Engine/Locator.hpp"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();
@@ -82,11 +44,9 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
-				// std::vector<float> block = GenerateBlock(w, _position * 16 + glm::ivec3(x, y, z));
-				std::vector<float> block = Geometry::ReadGeometry("resources/Models/Box.obj");
+				std::vector<float> block = GenerateBlock(w, _position * 16 + glm::ivec3(x, y, z));
 				if (block.size() == 0)
 					continue;
-				printf("%zu\n", block.size() / 8);
 				for (int i = 0; i < block.size(); i += 8) {
 					block[i + 0] += (float)x;
 					block[i + 1] += (float)y;
@@ -109,42 +69,42 @@ std::vector<float> Shard::GenerateBlock(World* w, glm::ivec3 globalBlockPos) {
 	if (w->GetBlock(globalBlockPos + glm::ivec3(1, 0, 0)) == BlockType::Air) {
 		float *buffer = Geometry::FaceRight();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	//? Left face
 	if (w->GetBlock(globalBlockPos + glm::ivec3(-1, 0, 0)) == BlockType::Air) {
 		float *buffer = Geometry::FaceLeft();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	//? Top face
 	if (w->GetBlock(globalBlockPos + glm::ivec3(0, 1, 0)) == BlockType::Air) {
 		float *buffer = Geometry::FaceTop();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	//? Bottom face
 	if (w->GetBlock(globalBlockPos + glm::ivec3(0, -1, 0)) == BlockType::Air) {
 		float *buffer = Geometry::FaceBottom();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	//? Front face
 	if (w->GetBlock(globalBlockPos + glm::ivec3(0, 0, 1)) == BlockType::Air) {
 		float *buffer = Geometry::FaceFront();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	//? Back face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(0, 0, -1)) == BlockType::Air) {
+	if ((uint)w->GetBlock(globalBlockPos + glm::ivec3(0, 0, -1)) == (uint)BlockType::Air) {
 		float *buffer = Geometry::FaceBack();
 		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
 		delete buffer;
 	}
 	return res;

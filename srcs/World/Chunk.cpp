@@ -1,3 +1,4 @@
+#include "Types.h"
 #include "World/World.h"
 #include "World/Shard.h"
 
@@ -27,12 +28,10 @@ void Chunk::SetActive(bool state) {
 	}
 }
 
-// #include <stdio.h>
 BlockType Chunk::GetBlock(glm::ivec3 pos) {
 	int y = pos.y / 16;
-	if (y < 0 || y >= 16)
+	if (pos.y < 0 || pos.y >= 256)
 		return BlockType::Air;
-	// printf("Hihi\n");
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
 

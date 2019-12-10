@@ -1,3 +1,4 @@
+#include "Types.h"
 #include "World/World.h"
 #include "Engine/Locator.hpp"
 
@@ -37,12 +38,18 @@ void World::DeactivateChunk(glm::ivec2 pos) {
 }
 
 BlockType World::GetBlock(glm::ivec3 globalPos) {
-	glm::ivec2 chunkPos(globalPos.x / 16, globalPos.z / 16);
+	//* Maybe optimize this
+	glm::ivec2 chunkPos(floorf(globalPos.x / 16.f), floorf(globalPos.z / 16.f));
 	Chunk* chunk = this->_chunks[chunkPos];
-	if (!chunk)
+	if (!chunk) {
 		return BlockType::Air;
-	else
-		return _chunks[chunkPos]->GetBlock(glm::ivec3(globalPos.x % 16, globalPos.y, globalPos.z % 16));
+	} else {
+		int x = globalPos.x % 16;
+		int z = globalPos.z % 16;
+		x = x < 0 ? 15 - x : x;
+		z = z < 0 ? 15 - z : z;
+		return _chunks[chunkPos]->GetBlock(glm::ivec3(x, globalPos.y, z));
+	}
 }
 
 void World::SetBlock(glm::ivec3 globalPos, BlockType type) {

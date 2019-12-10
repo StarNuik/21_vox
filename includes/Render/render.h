@@ -22,6 +22,7 @@ struct RenderEngineConfig {
 	bool glForwardCompatibility;
 	bool glDepthTest;
 	bool glCullFace;
+	bool glCullCounterClockwise;
 };
 
 class GLRenderer {
