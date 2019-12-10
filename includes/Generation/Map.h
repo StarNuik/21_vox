@@ -20,26 +20,33 @@
 
 class Game;
 
-class StoredMapData
+struct StoredMapData
 {
-    public:
-        float elevation;
-        int biom;
-//      std::vector<Blocks*> vec;
+    float elevation;
+    int biom;
+    
     StoredMapData(float _value) {elevation = _value;};
 };
 
 class MapGeneration
 {
     public:
-        MapGeneration() {};
-        ~MapGeneration() {};
-        float a;
+        MapGeneration();
+        ~MapGeneration() {};    
+    public:
         std::unordered_map<glm::ivec2, StoredMapData*>* umap;
 
         int BiomeDefinition(float e, float m);
+        
+        void Generation(float height, float width);
 
-        float random (glm::vec2 st) 
+        void SpawnObject(Game *game);
+    private:
+        float _Hash(const float n);
+        
+        float Noise(const glm::vec3 &x);
+
+         float random (glm::vec2 st) 
         {
             return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
         }
@@ -48,10 +55,5 @@ class MapGeneration
         {
             return v0 + (v1 - v0) * std::max(0.f, std::min(1.f, t));
         };
-        
-        float _Hash(const float n);
-        float Noise(const glm::vec3 &x);
-        void Generation(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*>* umap);
-        void SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*>* umap);
 };
 

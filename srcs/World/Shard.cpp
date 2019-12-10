@@ -1,6 +1,7 @@
 #include "World/World.h"
 #include "Engine/Locator.hpp"
 #include "Utilities/Time.h"
+#include "Types.h"
 
 Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	_state = true;
@@ -20,7 +21,7 @@ Shard::Shard(Game* game, glm::ivec3 globalPos) {
 //	// 			if (r % 3 == 0)
 //	// 				SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
 //	// 			if (r % 7 == 0)
-//	// 				SetBlock(glm::ivec3(x, y, z), BlockType::Planks);
+					// SetBlock(glm::ivec3(1, 1, 1), BlockType::Planks);
 //				// if (rand() % 2)
 //					// _blocks[x][y][z] = BlockType::Planks;
 //				// _debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Planks"), r->GetGeometry("Box"));
@@ -28,15 +29,20 @@ Shard::Shard(Game* game, glm::ivec3 globalPos) {
 //			// }
 	ResourceLoader* r = _game->GetResources();
 	MapGeneration* mp = _game->GetGeneration();
-	mp->Generation(globalPos.x + 1, globalPos.y + 1, mp->umap);
+	mp->Generation(globalPos.x + 1, globalPos.y + 1);
 	for (int x = 0; x < 16; x++)
 		for (int y = 0; y < 16; y++)
 			for (int z = 0; z < 16; z++) {
-//				_blocks[x][y][z] = BLOCK_TYPE::PLANKS;
-//				_debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Planks"), r->GetGeometry("Box"));
-//				_debugModels[x][y][z]->SetPosition(glm::vec3(globalPos.x * 16 + x, (*mp->umap)[glm::ivec2(globalPos.x, globalPos.y)]->elevation * 16.f + y, globalPos.z * 16 + z));
+				// if (y < 10)
+					// SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
+				// else -- для биомов
+				// {
+
+				// }
+				SetBlock((glm::ivec3(x, (int)floorf((*mp->umap)[glm::ivec2(globalPos.x, globalPos.y)]->elevation * 10),
+										z)), BlockType::Stone);
 			}
-//	UpdateGeometry(globalPos);
+	UpdateGeometry(globalPos);
 }
 
 Shard::~Shard() {

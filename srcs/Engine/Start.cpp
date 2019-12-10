@@ -31,8 +31,11 @@ Game::Game() {
 	_input = new Input();
 	_resources = new ResourceLoader();
 
-	this->_mpGen = new MapGeneration();
-	this->_mpGen->umap = new std::unordered_map<glm::ivec2, StoredMapData*>();
+	_mpGen = new MapGeneration();
+	// this->_mpGen->umap = new std::unordered_map<glm::ivec2, StoredMapData*>();
+	// _mpGen->Generation(16.f, 16.f);
+	// _mpGen->SpawnObject(this);
+	std::cout << _mpGen << std::endl;
 	std::cout << _mpGen->umap << std::endl;
 
 	_ui = new UIController(this);
@@ -45,7 +48,7 @@ Game::Game() {
 	// camera->SetPosition(glm::vec3(0.f, 2.f, 3.f));
 	// _renderer->SetActiveCamera(camera);
 
-	_world = new World(this);
+	// _world = new World(this);
 	// RenderModel* monkey = new RenderModel(_renderer, _resources->GetShader("Base"), _resources->GetTexture("Planks"), _resources->GetGeometry("Monkey"));
 	// Shard* testShard = new Shard(this, glm::ivec3(0));
 	// _world = new World(this);

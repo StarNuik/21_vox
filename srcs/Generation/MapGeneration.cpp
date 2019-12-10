@@ -56,7 +56,7 @@ float MapGeneration::Noise(const glm::vec3 &x)
                     LERP(_Hash(n + 170.f), _Hash(n + 171.f), f.x), f.y), f.z);
 }
 
-void MapGeneration::Generation(float height, float width, std::unordered_map<glm::ivec2, StoredMapData*>* umap)
+void MapGeneration::Generation(float height, float width)
 {
     for (int y = 0; y < height; y++)
     {
@@ -79,14 +79,12 @@ void MapGeneration::Generation(float height, float width, std::unordered_map<glm
             m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
             // umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
             (*umap)[pos] = new StoredMapData((round(e * 32) / 32)); // терассы
-            // std::cout << umap[pos]->elevation << std::endl;
-            // umap[pos] = new StoredMapData(pow(e, EXP));
             (*umap)[pos]->biom = BiomeDefinition(e, m);
         }
     }
 }
 
-void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, StoredMapData*>* umap)
+void MapGeneration::SpawnObject(Game *game)
 {
     
     Game* _game = game;
@@ -94,33 +92,20 @@ void MapGeneration::SpawnObject(Game *game, std::unordered_map<glm::ivec2, Store
     for (auto pair : *umap)
     {
       RenderModel* m;
-      if (pair.second->biom == OCEAN)
-        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Anime"), r->GetGeometry("Box"));
-      else if (pair.second->biom == BEACH)
-        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
-      else
-        m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
+      // if (pair.second->biom == OCEAN)
+        m = new RenderModel(r->GetShader("Base"), r->GetTexture(BlockType::Sand), r->GetGeometry("Box"));
+      // else if (pair.second->biom == BEACH)
+        // m = new RenderModel(r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
+      // else
+        // m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
         _game->GetRenderer()->AddModel(m);
         m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f) - 15, pair.first.y));
-        // if (pair.second->elevation < 0.5 || pair.second->elevation < -0.0000001)
-          // std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
+        if (pair.second->elevation < 0.5 || pair.second->elevation < -0.0000001)
+          std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
     }
-    // for (auto pair : *umap)
-    // {
-    //   RenderModel* m;
-    //     // for (int x = 0; x < 16; x++)
-    //     //   for (int y = 0; y < 16; y++)
-    //     //     for (int z = 0; z < 16; z++)
-    //         // {
-    //           if (pair.second->biom == OCEAN)
-    //             m = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Anime"), r->GetGeometry("Box"));
-    //           else if (pair.second->biom == BEACH)
-    //             m = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
-    //           else
-    //             m = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
-    //           m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f) - 15, pair.first.y * 16.f));
-    //         // }
-    //     // if (pair.second->elevation < 0.5 || pair.second->elevation < -0.0000001)
-    //       // std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
-    // }
+}
+
+MapGeneration::MapGeneration()
+{
+  umap = new std::unordered_map<glm::ivec2, StoredMapData*>();
 }
