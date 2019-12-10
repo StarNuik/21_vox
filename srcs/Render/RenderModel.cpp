@@ -70,3 +70,4 @@ glm::vec3 RenderModel::GetPosition() {return _position;};
 glm::quat RenderModel::GetRotation() {return _rotation;};
 glm::vec3 RenderModel::GetScale() {return _scale;};
 uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
+Geometry* RenderModel::GetGeometry() {return _geometry;};

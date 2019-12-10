@@ -43,7 +43,21 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-void Game::InitWorld() {};
+#include "World/Shard.h"
+void Game::InitWorld() {
+	// for (int x = -1; x <= 1; x++)
+	// 	for (int z = -1; z <= 1; z++)
+	// 		_world->GenerateChunk(glm::ivec2(x, z));
+	// for (int x = -1; x <= 1; x++)
+	// 	for (int z = -1; z <= 1; z++)
+	// 		_world->ActivateChunk(glm::ivec2(x, z));
+
+	_world->GenerateChunk(glm::ivec2(0));
+	_world->ActivateChunk(glm::ivec2(0));
+
+	// Shard* s = new Shard(this, glm::ivec3(0));
+	// s->SetActive(true);
+};
 
 Game::~Game() {
 	delete _input;
