@@ -20,11 +20,11 @@ void Shard::Generate() {
 			for (int z = 0; z < 16; z++) {
 				if (_position.y < 7)
 					SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
-				else if (_position.y < 8) {
-					int r = rand();
-					if (r % 16 == 0)
-						SetBlock(glm::ivec3(x, y, z), BlockType::Dirt);
-				}
+				// else if (_position.y < 8) {
+				// 	int r = rand();
+				// 	if (r % 16 == 0)
+				// 		SetBlock(glm::ivec3(x, y, z), BlockType::Dirt);
+				// }
 			}
 }
 
