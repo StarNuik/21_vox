@@ -22,23 +22,28 @@ RenderEngineConfig glConfig() {
 Game::Game() {
 	_finished = false;
 	Locator::provideLogger(NULL);
+	_renderer = nullptr;
+	_input = nullptr;
+	_resources = nullptr;
+	_world = nullptr;
+	_ui = nullptr;
+};
 
+void Game::InitSystems() {
 	ILogger* log = new TerminalLogger();
 	Locator::provideLogger(log);
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader();
+	_ui = new UIController(this);
+	_world = new World(this);
 
 	Entity* player = new Player(this);
 	AddEntity(player);
-
-	_ui = new UIController(this);
-
-	_world = new World(this);
-	// RenderModel* monkey = new RenderModel(_renderer, _resources->GetShader("Base"), _resources->GetTexture("Planks"), _resources->GetGeometry("Monkey"));
-	// Shard* testShard = new Shard(this, glm::ivec3(0));
 };
+
+void Game::InitWorld() {};
 
 Game::~Game() {
 	delete _input;

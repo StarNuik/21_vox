@@ -2,31 +2,26 @@
 #include "Engine/Locator.hpp"
 #include "Utilities/Time.h"
 
+
 Shard::Shard(Game* game, glm::ivec3 globalPos) {
 	_state = true;
 	_game = game;
+	_world = _game->GetWorld();
+	//!!!!!! NULLLLLLLLLLLLLLLLLLLLLLLLLLLL
+	std::cout << _world << std::endl;
 	// Generate self here
 	//! THIS IS DEBUG CODE
-	// for (int x = 0; x < 16; x++)
-	// 	for (int y = 0; y < 16; y++)
-	// 		for (int z = 0; z < 16; z++) {
-	// 			_blocks[x][y][z] = BLOCK_TYPE::STONE;
-	// 		}
-	// ResourceLoader* r = _game->GetResources();
-	// for (int x = 0; x < 16; x++)
-	// 	for (int y = 0; y < 16; y++)
-	// 		for (int z = 0; z < 16; z++) {
-	// 			int r = rand();
-	// 			if (r % 3 == 0)
-	// 				SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
-	// 			if (r % 7 == 0)
-	// 				SetBlock(glm::ivec3(x, y, z), BlockType::Planks);
-				// if (rand() % 2)
-					// _blocks[x][y][z] = BlockType::Planks;
-				// _debugModels[x][y][z] = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture("Planks"), r->GetGeometry("Box"));
-				// _debugModels[x][y][z]->SetPosition(glm::vec3(globalPos.x * 16 + x, globalPos.y * 16 + y, globalPos.z * 16 + z));
-			// }
-	UpdateGeometry(globalPos);
+	for (int x = 0; x < 16; x++)
+		for (int y = 0; y < 16; y++)
+			for (int z = 0; z < 16; z++) {
+				int r = rand();
+				if (r % 3 == 0)
+					SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
+				if (r % 7 == 0)
+					SetBlock(glm::ivec3(x, y, z), BlockType::Planks);
+			}
+	//! Gen first, update later
+	// UpdateGeometry(globalPos);
 }
 
 Shard::~Shard() {
@@ -59,9 +54,7 @@ void Shard::UpdateGeometry(glm::ivec3 globalPos) {
 	}
 	_models.clear();
 	//? Recalculate the model
-	std::vector<float> cube = Geometry::ReadGeometry("./resources/Models/Box.obj");
-	std::vector<float> arr;
-	std::vector<float> temp;
+	std::vector<float> vertexBuffer;
 	for (int t = (int)BlockType::First + 1; t <= (int)BlockType::Last; t++) {
 		if (!_blockTypePresent[t]) {
 			continue;
@@ -70,19 +63,17 @@ void Shard::UpdateGeometry(glm::ivec3 globalPos) {
 			for (int y = 0; y < 16; y++)
 				for (int z = 0; z < 16; z++) {
 					if ((int)_blocks[x][y][z] == t) {
-						temp = cube;
-						
-						for (int i = 0; i < 288; i += 8) {
-							temp[i + 0] += x;
-							temp[i + 1] += y;
-							temp[i + 2] += z;
+						std::vector<float> cube = GenerateBlock(globalPos + glm::ivec3(x, y, z));
+						for (int i = 0; i < cube.size(); i += 8) {
+							cube[i + 0] += x;
+							cube[i + 1] += y;
+							cube[i + 2] += z;
 						}
-						arr.reserve(temp.size());
-						arr.insert(arr.end(), temp.begin(), temp.end());
-						temp.clear();
+						vertexBuffer.reserve(cube.size());
+						vertexBuffer.insert(vertexBuffer.end(), cube.begin(), cube.end());
 					}
 				}
-		Geometry* g = new Geometry(arr);
+		Geometry* g = new Geometry(vertexBuffer);
 		ResourceLoader* r = _game->GetResources();
 		RenderModel* model = new RenderModel(_game->GetRenderer(), r->GetShader("Base"), r->GetTexture((BlockType)t), g);
 		model->SetPosition(globalPos * 16);
@@ -93,12 +84,44 @@ void Shard::UpdateGeometry(glm::ivec3 globalPos) {
 	// }
 }
 
-// std::vector<float> GenerateBlock(int x, int y, int z) {
-	
-// }
+std::vector<float> Shard::GenerateBlock(glm::ivec3 globalBlockPos) {
+	std::vector<float> res;
 
-Block* Shard::GetBlock(glm::ivec3 pos) {
-	return _game->GetResources()->GetBlock(_blocks[pos.x][pos.y][pos.z]);
+	//? Right face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(1, 0, 0)) == BlockType::Air) {
+		float *buffer = Geometry::FaceRight();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	//? Left face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(-1, 0, 0)) == BlockType::Air) {
+		float *buffer = Geometry::FaceLeft();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	//? Top face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(0, -1, 0)) == BlockType::Air) {
+		float *buffer = Geometry::FaceTop();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	//? Bottom face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(0, 1, 0)) == BlockType::Air) {
+		float *buffer = Geometry::FaceBottom();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	//? Front face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(0, 0, 1)) == BlockType::Air) {
+		float *buffer = Geometry::FaceFront();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	//? Back face
+	if (_world->GetBlock(globalBlockPos + glm::ivec3(0, 0, -1)) == BlockType::Air) {
+		float *buffer = Geometry::FaceBack();
+		res.insert(res.end(), buffer, buffer + 48 * sizeof(float));
+	}
+	return res;
+}
+
+BlockType Shard::GetBlock(glm::ivec3 pos) {
+	return _blocks[pos.x][pos.y][pos.z];
 }
 
 void Shard::SetBlock(glm::ivec3 pos, BlockType type) {

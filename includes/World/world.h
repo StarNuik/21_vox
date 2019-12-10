@@ -26,13 +26,15 @@ public:
 	~Shard();
 	void SetActive(bool);
 	void UpdateGeometry(glm::ivec3);
-	Block* GetBlock(glm::ivec3);
+	BlockType GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, BlockType);
 private:
 	bool HasType(BlockType);
-	// std::vector<float> GenerateBlock(int, int, int);
+	std::vector<float> GenerateBlock(glm::ivec3);
 	bool _state;
 	Game* _game;
+	World* _world;
+	//! Maybe change to ammount of blocks
 	bool _blockTypePresent[(int)BlockType::Stone + 1] = {false};
 	BlockType _blocks[16][16][16] = {BlockType::Air};
 	std::vector<RenderModel*> _models;
@@ -44,8 +46,9 @@ public:
 	Chunk(Game*, glm::ivec2);
 	~Chunk();
 	void SetActive(bool);
-	Block* GetBlock(glm::ivec3);
+	BlockType GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, BlockType);
+	void UpdateGeometry(glm::ivec2);
 private:
 	bool _state;
 	Shard* _shards[16];
@@ -57,7 +60,7 @@ public:
 	~World();
 	void ActivateChunk(glm::ivec2);
 	void DeactivateChunk(glm::ivec2);
-	Block* GetBlock(glm::ivec3);
+	BlockType GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, BlockType);
 private:
 	Game* _game;

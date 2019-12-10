@@ -19,3 +19,4 @@ Input* Game::GetInput() {return _input;};
 ResourceLoader* Game::GetResources() {return _resources;};
 UIController* Game::GetUI() {return _ui;};
 uint Game::GetLastFrameTime() {return _lastFrameTime;};
+World* Game::GetWorld() {return _world;};

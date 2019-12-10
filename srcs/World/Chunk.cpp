@@ -23,7 +23,9 @@ void Chunk::SetActive(bool state) {
 	}
 }
 
-Block* Chunk::GetBlock(glm::ivec3 pos) {
+BlockType Chunk::GetBlock(glm::ivec3 pos) {
+	if (pos.y < 0 || pos.y > 16)
+		return BlockType::Air;
 	int y = pos.y / 16;
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
@@ -31,4 +33,13 @@ Block* Chunk::GetBlock(glm::ivec3 pos) {
 void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
 	int y = pos.y / 16;
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
+}
+
+void Chunk::UpdateGeometry(glm::ivec2 chunkPos) {
+	for (int i = 0; i < 16; i++) {
+		Shard* shard = _shards[i];
+		if (!shard)
+			continue;
+		shard->UpdateGeometry(glm::ivec3(chunkPos.x * 16, i * 16, chunkPos.y * 16));
+	}
 }
