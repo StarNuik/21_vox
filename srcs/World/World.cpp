@@ -1,15 +1,9 @@
+#include "Types.h"
 #include "World/World.h"
 #include "Engine/Locator.hpp"
-#include "Utilities/Time.h"
 
 World::World(Game* game) {
 	_game = game;
-	int64 start = LONG_TIME;
-	for (int x = -1; x <= 1; x++)
-		for (int z = -1; z <= 1; z++)
-			ActivateChunk(glm::ivec2(x, z));
-	int64 end = LONG_TIME;
-	Locator::getLogger()->LogSuccess("[World::World]\nGenerated chunk in: " + std::to_string(end - start) + " ms.");
 }
 
 World::~World() {
@@ -19,11 +13,19 @@ World::~World() {
 	}
 }
 
+void World::GenerateChunk(glm::ivec2 pos) {
+	Chunk* chunk = _chunks[pos];
+	if (chunk)
+		return;
+	chunk = new Chunk(_game, pos);
+	chunk->Generate();
+	_chunks[pos] = chunk;
+}
+
 void World::ActivateChunk(glm::ivec2 pos) {
 	Chunk* chunk = _chunks[pos];
 	if (!chunk) {
-		_chunks[pos] = new Chunk(_game, pos);
-		chunk = _chunks[pos];
+		return;
 	}
 	chunk->SetActive(true);
 }
@@ -35,14 +37,31 @@ void World::DeactivateChunk(glm::ivec2 pos) {
 	}
 }
 
-Block* World::GetBlock(glm::ivec3 pos) {
-	// Test if chunk exists
-	glm::ivec2 chunkPos(pos.x / 16, pos.z / 16);
-	return _chunks[chunkPos]->GetBlock(glm::ivec3(pos.x % 16, pos.y, pos.z % 16));
+BlockType World::GetBlock(glm::ivec3 globalPos) {
+	//* Maybe optimize this
+	glm::ivec2 chunkPos(floorf(globalPos.x / 16.f), floorf(globalPos.z / 16.f));
+	Chunk* chunk = this->_chunks[chunkPos];
+	if (!chunk) {
+		return BlockType::Air;
+	} else {
+		int x = globalPos.x % 16;
+		int z = globalPos.z % 16;
+		x = x < 0 ? 15 - x : x;
+		z = z < 0 ? 15 - z : z;
+		return _chunks[chunkPos]->GetBlock(glm::ivec3(x, globalPos.y, z));
+	}
 }
 
-void World::SetBlock(glm::ivec3 pos, BlockType type) {
-	// Test if chunk exists
-	glm::ivec2 chunkPos(pos.x / 16, pos.z / 16);
-	_chunks[chunkPos]->SetBlock(glm::ivec3(pos.x % 16, pos.y, pos.z % 16), type);
+void World::SetBlock(glm::ivec3 globalPos, BlockType type) {
+	glm::ivec2 chunkPos(globalPos.x / 16, globalPos.z / 16);
+	Chunk* chunk = _chunks[chunkPos];
+	if (chunk)
+		chunk->SetBlock(glm::ivec3(globalPos.x % 16, globalPos.y, globalPos.z % 16), type);
+}
+
+void World::PlayerSetBlock(glm::ivec3 globalPos, BlockType type) {
+	glm::ivec2 chunkPos(globalPos.x / 16, globalPos.z / 16);
+	Chunk* chunk = _chunks[chunkPos];
+	if (chunk)
+		chunk->PlayerSetBlock(glm::ivec3(globalPos.x % 16, globalPos.y, globalPos.z % 16), type);
 }

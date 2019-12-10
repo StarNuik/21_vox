@@ -48,6 +48,10 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	}
 	if (config.glCullFace) {
 		glEnable(GL_CULL_FACE);
+		if (config.glCullCounterClockwise)
+			glFrontFace(GL_CCW);
+		else
+			glFrontFace(GL_CW);
 	}
 
 	IMGUI_CHECKVERSION();

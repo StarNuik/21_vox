@@ -24,6 +24,8 @@ class Game {
 public:
 	Game();
 	~Game();
+	void InitSystems();
+	void InitWorld();
 	void GameLoop();
 	void AddEntity(Entity*);
 	void RemoveEntity(Entity*);
@@ -31,12 +33,13 @@ public:
 	Input* GetInput();
 	ResourceLoader* GetResources();
 	UIController* GetUI();
+	World* GetWorld();
 	uint GetLastFrameTime();
 	MapGeneration* GetGeneration();
 	MapGeneration* _mpGen;
 private:
 	void Update();
-private:
+
 	bool _finished;
 	GLRenderer* _renderer;
 	Input* _input;

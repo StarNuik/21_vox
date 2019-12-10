@@ -68,6 +68,7 @@ public:
 	glm::vec3 GetScale();
 	glm::mat4 GetAphineMatrix();
 	uint GetPolygonCount();
+	Geometry* GetGeometry();
 private:
 	void Init(Shader*, Texture*, Texture*, Geometry*);
 	Shader* _shader;

@@ -17,29 +17,46 @@ RenderEngineConfig glConfig() {
 	config.glForwardCompatibility = true;
 	config.glDepthTest = true;
 	config.glCullFace = false;
+	config.glCullCounterClockwise = false;
 	return config;
 }
 
 Game::Game() {
 	_finished = false;
 	Locator::provideLogger(NULL);
+	_renderer = nullptr;
+	_input = nullptr;
+	_resources = nullptr;
+	_world = nullptr;
+	_ui = nullptr;
+};
 
+void Game::InitSystems() {
 	ILogger* log = new TerminalLogger();
 	Locator::provideLogger(log);
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader();
-
-	_mpGen = new MapGeneration();
-
 	_ui = new UIController(this);
+	_world = new World(this);
+	_mpGen = new MapGeneration();
 
 	Entity* player = new Player(this);
 	AddEntity(player);
+};
 
-	// _world = new World(this);
-	Shard* testShard = new Shard(this, glm::ivec3(0));
+#include "World/Shard.h"
+void Game::InitWorld() {
+	const int border = 3;
+	for (int x = -border; x <= border; x++)
+		for (int z = -border; z <= border; z++)
+			_world->GenerateChunk(glm::ivec2(x, z));
+	for (int x = -border; x <= border; x++)
+		for (int z = -border; z <= border; z++)
+			_world->ActivateChunk(glm::ivec2(x, z));
+
+
 
 };
 
