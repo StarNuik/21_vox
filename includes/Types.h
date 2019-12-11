@@ -21,6 +21,7 @@ class Shard;
 class Chunk;
 class World;
 class Game;
+class VertexBuffers;
 
 enum class BlockType {
 	Air = 0,
@@ -30,6 +31,17 @@ enum class BlockType {
 	Planks,
 	Sand,
 	Stone,
+	OreCoal,
+	OreDiamond,
+	OreGold,
+	OreIron,
+	OreRedstone,
+	CraftingTable,
+	Grass,
+	Leaves,
+	Log,
+	Dandelion,
 	First = Air,
-	Last = Stone
+	Last = Dandelion,
+	Size = Last + 1
 };

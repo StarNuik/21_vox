@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include "Types.h"
 #include "Render/Render.h"
 #include "Input/Input.h"
 #include "World/Resources.h"

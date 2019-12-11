@@ -16,13 +16,16 @@ public:
 private:
 	bool HasType(BlockType);
 	uint CountType(BlockType);
-	std::vector<float> GenerateBlock(World*, glm::ivec3);
 	RenderModel* GenerateModelOfType(BlockType);
+	std::vector<float> GenerateGeometryFor(BlockType, World*, glm::ivec3);
+	std::vector<float> GenerateBlock(World*, glm::ivec3);
+	std::vector<float> GenerateMultisideBlock(World*, glm::ivec3);
+	std::vector<float> GenerateFlower(World*, glm::ivec3);
 
 	bool _state;
 	glm::ivec3 _position;
 	Game* _game;
 	BlockType _blocks[16][16][16] = {BlockType::Air};
-	uint _blockTypePresent[(uint)BlockType::Stone + 1] = {0};
+	uint _blockTypePresent[(uint)BlockType::Last] = {0};
 	std::vector<RenderModel*> _models;
 };

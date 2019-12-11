@@ -7,8 +7,10 @@ void GLRenderer::RenderFrame() {
 	for (int i = 0; i < _rendered.size(); i++) {
 		RenderModel* model = _rendered[i];
 		Shader* modelShader = model->Use(_activeCamera);
+		modelShader->SetInt("tick", _tick);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 	_game->GetUI()->Draw();
 	glfwSwapBuffers(_window);
+	_tick++;
 };

@@ -47,18 +47,13 @@ void Game::InitSystems() {
 };
 
 void Game::InitWorld() {
-	const int border = 2;
+	const int border = 4;
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->GenerateChunk(glm::ivec2(x, z));
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->ActivateChunk(glm::ivec2(x, z));
-	// _world->GenerateChunk(glm::ivec2(0));
-	// _world->ActivateChunk(glm::ivec2(0));
-
-
-
 };
 
 Game::~Game() {
