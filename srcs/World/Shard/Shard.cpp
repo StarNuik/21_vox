@@ -22,7 +22,7 @@ void Shard::Generate() {
 			for (int z = 0; z < 16; z++) {
 //				int elevation = (int)floorf((*mp->umap)[glm::ivec2(x, z)]->elevation);
 //				SetBlock(glm::ivec3(x, elevation, z), BlockType::Stone);
-				 SetBlock(glm::ivec3(x + _position.x * 16, elevation + _position.y * 16, z + _position.z * 16), BlockType::Stone);
+				//  SetBlock(glm::ivec3(x + _position.x * 16, elevation + _position.y * 16, z + _position.z * 16), BlockType::Stone);
 				 if (_position.y < 7)
 					 SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
 				 else if (_position.y < 8) {
@@ -30,6 +30,7 @@ void Shard::Generate() {
 					 if (r % 16 == 0)
 						 SetBlock(glm::ivec3(x, y, z), BlockType::Dirt);
 				}
+		}
 }
 
 void Shard::SetActive(bool state) {

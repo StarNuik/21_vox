@@ -34,11 +34,11 @@ class MapGeneration
         MapGeneration();
         ~MapGeneration() {};    
     public:
-        std::unordered_map<glm::ivec2, StoredMapData*>* umap;
+        std::unordered_map<glm::ivec2, StoredMapData*> umap;
 
         int BiomeDefinition(float e, float m);
         
-        void Generation(float height, float width, glm::ivec2 pos);
+        std::unordered_map<glm::ivec2, StoredMapData*> Generation(float height, float width, glm::ivec2 pos);
 
         void SpawnObject(Game *game);
     private:
