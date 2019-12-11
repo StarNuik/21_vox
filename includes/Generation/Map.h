@@ -14,9 +14,10 @@
 #include "Engine/Engine.h"
 #include <cstdint>
 #include "OpenSimplexNoise/OpenSimplexNoise.h"
+#include "FastNoise.h"
 #define FREQ 1
 #define EXP 0.6
-// #define EXP 1
+// #define EXP 2.8
 
 class Game;
 
