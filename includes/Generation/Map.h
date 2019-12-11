@@ -16,7 +16,7 @@
 #include "OpenSimplexNoise/OpenSimplexNoise.h"
 #include "FastNoise.h"
 #define FREQ 1
-#define EXP 0.6
+#define EXP 0.1
 // #define EXP 2.8
 
 class Game;
@@ -39,9 +39,12 @@ class MapGeneration
 
         int BiomeDefinition(float e, float m);
         
-        std::unordered_map<glm::ivec2, StoredMapData*> Generation(float height, float width, glm::ivec2 pos);
+        std::unordered_map<glm::ivec2, StoredMapData*> BasicGeneration(float height, float width, glm::ivec2 pos);
 
-        void SpawnObject(Game *game);
+        std::unordered_map<glm::ivec2, StoredMapData*>  LandGeneration(float height, float width, glm::ivec2 pos);
+
+        std::unordered_map<glm::ivec2, StoredMapData*>  HighLandGeneration(float height, float width, glm::ivec2 pos);
+
     private:
         float _Hash(const float n);
         

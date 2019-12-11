@@ -2,7 +2,6 @@
 #include "World/World.h"
 #include "World/Shard.h"
 #include "Engine/Engine.h"
-#include "FastNoise.h"
 
 Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = false;
@@ -20,24 +19,33 @@ Chunk::~Chunk() {
 };
 
 void Chunk::Generate() {
+	// for (int y = 0; y < 16; y++) {
+		// _shards[y]->Generate();
+	// }
 	World* w = _game->GetWorld();
-	// MapGeneration* mp = _game->GetGeneration();
-	// std::unordered_map<glm::ivec2, StoredMapData*> umap = mp->Generation(16, 16, _position);
-	// int width = (_position.x != 0 ? (16 * _position.x - 16) : 0);
-	// int height = (_position.y != 0 ? (16 * _position.y - 16) : 0);
-	FastNoise noise;
-	noise.SetNoiseType(FastNoise::Perlin);
-	noise.SetFrequency(0.1);
-
+	MapGeneration* mp = _game->GetGeneration();
+	std::unordered_map<glm::ivec2, StoredMapData*> umap = mp->BasicGeneration(16, 16, _position);
+	std::unordered_map<glm::ivec2, StoredMapData*> landMap = mp->LandGeneration(16, 16, _position);
+	std::unordered_map<glm::ivec2, StoredMapData*> highLandMap = mp->HighLandGeneration(16, 16, _position);
+	// for (auto pair : umap)
+	// 	std::cout << "Biom: " << pair.second->biom << std::endl;
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
-			for (int y = 0; y < 60; y++) {
+
+			glm::ivec2 map_pos = glm::ivec2(_position.x * 16 + x, _position.y * 16 + z);
+			int h = (int)floorf((umap)[map_pos]->elevation);
+			int firstLayerBorder = h + 40;
+
+			for (int y = 0; y < firstLayerBorder; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
 			}
-			int h = (noise.GetNoise(_position.x * 16 + x, _position.y * 16 + z) + 1.f) * 0.5f * 10.f;
-			for (int y = 60; y < 60 + h; y++) {
-				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Grass);
+
+			// h = (int)floorf((highLandMap)[map_pos]->elevation);
+			h = (int)floorf((landMap)[map_pos]->elevation);
+			for (int y = firstLayerBorder; y < 60 + h; y++) {
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
 			}
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 60, _position.y * 16 + z), BlockType::Dirt);
 		}
 	}
 }
