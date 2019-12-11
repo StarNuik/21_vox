@@ -45,7 +45,7 @@ void Chunk::Generate() {
 			for (int y = firstLayerBorder; y < 60 + h; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
 			}
-			w->SetBlock(glm::ivec3(_position.x * 16 + x, firstLayerBorder, _position.y * 16 + z), BlockType::Dirt);
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 60, _position.y * 16 + z), BlockType::Dirt);
 		}
 	}
 }
