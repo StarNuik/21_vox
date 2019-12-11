@@ -56,59 +56,90 @@ float MapGeneration::Noise(const glm::vec3 &x)
                     LERP(_Hash(n + 170.f), _Hash(n + 171.f), f.x), f.y), f.z);
 }
 
-std::unordered_map<glm::ivec2, StoredMapData*>  MapGeneration::Generation(float height, float width, glm::ivec2 pos)
+std::unordered_map<glm::ivec2, StoredMapData*>  MapGeneration::HighLandGeneration(float height, float width, glm::ivec2 pos)
+{
+  FastNoise noise;
+	noise.SetNoiseType(FastNoise::Perlin);
+	noise.SetFrequency(0.01);
+  float globalX = pos.x * 16, globalY = pos.y * 16;
+  for (int x = 0; x < 16; x++){
+    for (int y = 0; y < 16; y++){
+      float nx = globalX + x, ny = globalY + y;
+      glm::ivec2 position = glm::ivec2(pos.x * 16 + x, pos.y * 16 + y);
+      float e = 1.f * (noise.GetNoise(nx, ny));
+      float e1 = 0.50f * (noise.GetNoise(2.f * nx, 2.f * ny));
+      float e2 = 0.25f * (noise.GetNoise(4.f * nx, 4.f * ny));
+      // float e3 = 0.13f * (noise.GetNoise(8.f * nx, 8.f * ny));
+      // float e4 = 0.06f * (noise.GetNoise(16.f * nx, 16.f * ny));
+      // float e5 = 0.03f * (noise.GetNoise(32.f * nx, 32.f * ny));
+      // umap[position] = new StoredMapData((round(((e * 0.5f + 0.5f) * 10 * 32) / 32)));
+      // e += e1 + e2 + e3 + e4 + e5;
+      e += e1 + e2;
+      e = (e * 0.5f + 0.5f) * 10;
+      float mountainPeaks = pow(e, 2.2f);
+      float terrace = round(mountainPeaks * 32.f) / 32.f;
+      // std::cout << mountainPeaks << std::endl;
+      std::cout << terrace * 10 << std::endl;
+      umap[position] = new StoredMapData(terrace);
+      // umap[position] = new StoredMapData(mountainPeaks * 10);
+    }
+  }
+  return umap;
+}
+
+std::unordered_map<glm::ivec2, StoredMapData*>  MapGeneration::LandGeneration(float height, float width, glm::ivec2 pos)
 {
 	FastNoise noise;
 	noise.SetNoiseType(FastNoise::Perlin);
 	noise.SetFrequency(0.1);
+  float globalX = pos.x * 16, globalY = pos.y * 16;
   for (int x = 0; x < 16; x++){
     for (int y = 0; y < 16; y++){
+      float nx = globalX + x, ny = globalY + y;
       glm::ivec2 position = glm::ivec2(pos.x * 16 + x, pos.y * 16 + y);
-      float e = (noise.GetNoise((pos.x * 16 + x), (pos.y * 16 + y)));
-      // umap[position] = new StoredMapData((e * 0.5f + 0.5f) * 10.f);
-      umap[position] = new StoredMapData((round(((e * 0.5f + 0.5f) * 10 * 32) / 32)));
+      float e = 0.5f * (noise.GetNoise(2.f * nx, 2.f * ny));
+      e = (e * 0.5f + 0.5f) * 10.f;
+      float terrace = round(e * 32.f) / 32.f;
+      umap[position] = new StoredMapData(terrace);
     }
   }
-  // float e = (1.0f * Noise(glm::vec3(1.f * nx, 1.f * ny, 1.f)));
-  // float m = (1.0f * Noise(glm::vec3(1.f * nx, 1.f * ny, 1.f)));
-  // float e = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny));
-  //   // + 0.50f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-  //   // + 0.25f * SimplexNoise::noise(4.f * nx, 4.f * ny));
-  //   // + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
-  //   // + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-  //   // + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
-  // float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
-  //   + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-  //   + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-  //   + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
-  //   + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-  //   + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
-  // m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
+  return umap;
+}
+
+std::unordered_map<glm::ivec2, StoredMapData*>  MapGeneration::BasicGeneration(float height, float width, glm::ivec2 pos)
+{
+	FastNoise noise;
+	noise.SetNoiseType(FastNoise::Perlin);
+	noise.SetFrequency(0.1);
+  float globalX = pos.x * 16, globalY = pos.y * 16;
+  for (int x = 0; x < 16; x++){
+    for (int y = 0; y < 16; y++){
+      float nx = globalX + x, ny = globalY + y;
+      glm::ivec2 position = glm::ivec2(pos.x * 16 + x, pos.y * 16 + y);
+      float e = 1.f * (noise.GetNoise(1.f * nx, 1.f * ny));
+      float e1 = 0.50f * (noise.GetNoise(2.f * nx, 2.f * ny));
+      // float e2 = 0.25f * (noise.GetNoise(4.f * nx, 4.f * ny));
+      // float e3 = 0.13f * (noise.GetNoise(8.f * nx, 8.f * ny));
+      // float e4 = 0.06f * (noise.GetNoise(16.f * nx, 16.f * ny));
+      // float e5 = 0.03f * (noise.GetNoise(32.f * nx, 32.f * ny));
+      e += e1;
+      float m = 1.f * (noise.GetNoise(1.f * nx, 1.f * ny));
+      float m1 = 0.75f * (noise.GetNoise(2.f * nx, 2.f * ny));
+      float m2 = 0.33f * (noise.GetNoise(4.f * nx, 4.f * ny));
+      // float m3 = 0.33f * (noise.GetNoise(8.f * nx, 8.f * ny));
+      // float m4 = 0.33f * (noise.GetNoise(16.f * nx, 16.f * ny));
+      // float m5 = 0.50f * (noise.GetNoise(32.f * nx, 32.f * ny));
+      m += m1 + m2 + m2;//+ m3 + m4 + m5;
+      m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
+      // umap[position] = new StoredMapData((e * 0.5f + 0.5f) * 10.f);
+      umap[position] = new StoredMapData((round(((e * 0.5f + 0.5f) * 10 * 32) / 32))); // терассы
+      umap[position]->biom = BiomeDefinition(e, m);
+    }
+  }
   // (umap)[position] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
   // (umap)[position] = new StoredMapData((round((e * 16) / 16))); // терассы
   // (umap)[position]->biom = BiomeDefinition(e, m);
   return umap;
-}
-
-void MapGeneration::SpawnObject(Game *game)
-{
-    
-    Game* _game = game;
-    ResourceLoader* r = _game->GetResources();
-    // for (auto pair : *umap)
-    // {
-    //   RenderModel* m;
-    //   // if (pair.second->biom == OCEAN)
-    //     m = new RenderModel(r->GetShader("Base"), r->GetTexture(BlockType::Sand), r->GetGeometry("Box"));
-    //   // else if (pair.second->biom == BEACH)
-    //     // m = new RenderModel(r->GetShader("Base"), r->GetTexture("Sand"), r->GetGeometry("Box"));
-    //   // else
-    //     // m = new RenderModel(r->GetShader("Base"), r->GetTexture("Stone"), r->GetGeometry("Box"));
-    //     _game->GetRenderer()->AddModel(m);
-    //     m->SetPosition(glm::vec3(pair.first.x, floorf(pair.second->elevation * 7.f) - 15, pair.first.y));
-    //     if (pair.second->elevation < 0.5 || pair.second->elevation < -0.0000001)
-    //       std::cout << "| x: " << pair.first.x << "| y: " << pair.first.y << "| z: " << pair.second->elevation << std::endl;
-    // }
 }
 
 MapGeneration::MapGeneration()
