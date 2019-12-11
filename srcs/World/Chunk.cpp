@@ -2,6 +2,7 @@
 #include "World/World.h"
 #include "World/Shard.h"
 #include "Engine/Engine.h"
+#include "FastNoise.h"
 
 Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = false;
@@ -19,27 +20,24 @@ Chunk::~Chunk() {
 };
 
 void Chunk::Generate() {
-	// for (int y = 0; y < 16; y++) {
-		// _shards[y]->Generate();
-	// }
 	World* w = _game->GetWorld();
-	MapGeneration* mp = _game->GetGeneration();
-	std::unordered_map<glm::ivec2, StoredMapData*> umap = mp->Generation(16, 16, _position);
-	int width = (_position.x != 0 ? (16 * _position.x - 16) : 0);
-	int height = (_position.y != 0 ? (16 * _position.y - 16) : 0);
+	// MapGeneration* mp = _game->GetGeneration();
+	// std::unordered_map<glm::ivec2, StoredMapData*> umap = mp->Generation(16, 16, _position);
+	// int width = (_position.x != 0 ? (16 * _position.x - 16) : 0);
+	// int height = (_position.y != 0 ? (16 * _position.y - 16) : 0);
+	FastNoise noise;
+	noise.SetNoiseType(FastNoise::Perlin);
+	noise.SetFrequency(0.1);
 
-	
-	int h = rand() % 30;
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
-				// std::cout << width + x << " X|Y " << height + z << std::endl;
-				// std::cout << (*mp->umap)[glm::ivec2(width + x, height + z)] << " be" << std::endl;
 			// int h = (int)floorf((umap)[glm::ivec2(width + x, height + z)]->elevation) + 1;
 			for (int y = 0; y < 60; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
 			}
+			int h = (noise.GetNoise(_position.x * 16 + x, _position.y * 16 + z) + 1.f) * 0.5f * 10.f;
 			for (int y = 60; y < 60 + h; y++) {
-				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Grass);
 			}
 		}
 	}

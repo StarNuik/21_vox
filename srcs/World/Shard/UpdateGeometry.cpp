@@ -17,11 +17,14 @@ void Shard::UpdateGeometry() {
 		delete model;
 	}
 	_models.clear();
+	//! Otherwise _models.push_back(model) segfaults
+	_models = std::vector<RenderModel*>();
 	//? For every block type
 	for (uint t = (uint)BlockType::First + 1; t <= (uint)BlockType::Last; t++) {
 		if (!HasType((BlockType)t))
 			continue;
 		RenderModel* model = GenerateModelOfType((BlockType)t);
+		_models.reserve(sizeof(RenderModel*));
 		_models.push_back(model);
 	}
 	//? If shard is active, add models to the renderer
@@ -44,7 +47,8 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
-				std::vector<float> block = GenerateBlock(w, _position * 16 + glm::ivec3(x, y, z));
+				// std::vector<float> block = GenerateBlock(w, _position * 16 + glm::ivec3(x, y, z));
+				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z));
 				if (block.size() == 0)
 					continue;
 				for (int i = 0; i < block.size(); i += 8) {
@@ -62,50 +66,18 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 	return (model);
 };
 
-std::vector<float> Shard::GenerateBlock(World* w, glm::ivec3 globalBlockPos) {
-	std::vector<float> res;
-
-	//? Right face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(1, 0, 0)) == BlockType::Air) {
-		float *buffer = Geometry::FaceRight();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
+std::vector<float> Shard::GenerateGeometryFor(BlockType type, World* w, glm::ivec3 p) {
+	switch (type) {
+		case BlockType::CraftingTable:
+		case BlockType::Grass:
+		case BlockType::Log:
+			return (GenerateMultisideBlock(w, p));
+			break;
+		case BlockType::Dandelion:
+			return (GenerateFlower(w, p));
+			break;
+		default:
+			return (GenerateBlock(w, p));
+			break;
 	}
-	//? Left face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(-1, 0, 0)) == BlockType::Air) {
-		float *buffer = Geometry::FaceLeft();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
-	}
-	//? Top face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(0, 1, 0)) == BlockType::Air) {
-		float *buffer = Geometry::FaceTop();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
-	}
-	//? Bottom face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(0, -1, 0)) == BlockType::Air) {
-		float *buffer = Geometry::FaceBottom();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
-	}
-	//? Front face
-	if (w->GetBlock(globalBlockPos + glm::ivec3(0, 0, 1)) == BlockType::Air) {
-		float *buffer = Geometry::FaceFront();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
-	}
-	//? Back face
-	if ((uint)w->GetBlock(globalBlockPos + glm::ivec3(0, 0, -1)) == (uint)BlockType::Air) {
-		float *buffer = Geometry::FaceBack();
-		res.reserve(48 * sizeof(float));
-		res.insert(res.end(), buffer, buffer + 48);
-		delete buffer;
-	}
-	return res;
 }

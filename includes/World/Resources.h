@@ -6,6 +6,8 @@
 #include "Render/Objects.h"
 #include "World/World.h"
 
+class VertexBuffers;
+
 class ResourceLoader {
 public:
 	ResourceLoader();
@@ -23,4 +25,5 @@ private:
 	std::unordered_map<uint, Texture*> _textures;
 	std::unordered_map<std::string, Geometry*> _geometries;
 	std::unordered_map<uint, Block*> _blocks;
+	VertexBuffers _vbs();
 };

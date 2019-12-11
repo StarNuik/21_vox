@@ -8,6 +8,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_window = nullptr;
 	_width = std::max(config.windowSize.x, 1);
 	_height = std::max(config.windowSize.y, 1);
+	_tick = 0;
 
 	if (!glfwInit()) {
 		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");

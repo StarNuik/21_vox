@@ -12,6 +12,7 @@ public:
 	Shader(std::string vertexPath, std::string fragmentPath);
 	~Shader();
 	void Use();
+	void SetInt(std::string varName, int x);
 	void SetFloat(std::string varName, float x);
 	void SetFloat2(std::string varName, float x, float y);
 	void SetFloat3(std::string varName, float x, float y, float z);
@@ -40,12 +41,6 @@ public:
 	~Geometry();
 	uint GetPolygonCount();
 	void Use();
-	static float* FaceTop();
-	static float* FaceBottom();
-	static float* FaceRight();
-	static float* FaceLeft();
-	static float* FaceFront();
-	static float* FaceBack();
 	static std::vector<float> ReadGeometry(std::string);
 private:
 	void Init(std::vector<float>);
@@ -78,4 +73,31 @@ private:
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
 	GLRenderer* _renderer;
+};
+
+class VertexBuffers {
+public:
+	enum BufferType {
+		Top = 0,
+		Bottom,
+		Right,
+		Left,
+		Front,
+		Back,
+		MultiTop,
+		MultiBottom,
+		MultiRight,
+		MultiLeft,
+		MultiFront,
+		MultiBack,
+		Flower,
+		First = Top,
+		Last = Flower,
+		Size = Last + 1
+	};
+	static void Init();
+	static void Destroy();
+	static float* GetBuffer(BufferType);
+private:
+	static float* _buffers[Size];
 };
