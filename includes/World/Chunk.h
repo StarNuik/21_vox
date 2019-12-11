@@ -15,5 +15,7 @@ public:
 	void PlayerSetBlock(glm::ivec3, BlockType);
 private:
 	bool _state;
+	Game* _game;
+	glm::ivec2 _position;
 	Shard* _shards[16];
 };

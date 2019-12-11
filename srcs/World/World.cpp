@@ -18,8 +18,8 @@ void World::GenerateChunk(glm::ivec2 pos) {
 	if (chunk)
 		return;
 	chunk = new Chunk(_game, pos);
-	chunk->Generate();
 	_chunks[pos] = chunk;
+	chunk->Generate();
 }
 
 void World::ActivateChunk(glm::ivec2 pos) {

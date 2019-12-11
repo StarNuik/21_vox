@@ -58,32 +58,40 @@ float MapGeneration::Noise(const glm::vec3 &x)
 
 void MapGeneration::Generation(float height, float width, glm::ivec2 pos)
 {
-  if (pos.x == 2)
-    std::cout << "YESSSS" << std::endl;
-    for (int y = pos.y * 16; y < height ; y++)
+  int start_w = (pos.x != 0 ? width * pos.x - width : 0);
+  int start_h = (pos.y != 0 ? height * pos.y - height : 0);
+  int end_w = (start_w == 0 ? width : width * pos.x);
+  int end_h = (start_h == 0 ? height : height * pos.y);
+
+  // std::cout << "Generation: " << std::endl;
+  // std::cout << pos.y << " Y|X " << pos.x << std::endl;
+  // std::cout << start_h << "  |Y|  " << height * pos.y << std::endl;
+  // std::cout << start_w << "  |X|  " << width * pos.x << std::endl;
+  // std::cout << "Origin: " << std::endl;
+    for (int y = start_h; y < end_h; y++)
     {
-        for (int x = pos.x * 16; x < width; x++)
-        {
-            float nx = x / width - 0.5f, ny = y / height - 0.5f;
-            glm::ivec2 pos = glm::ivec2(x, y);
-            float e = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny));
-              // + 0.50f * SimplexNoise::noise(2.f * nx, 2.f * ny));
-              // + 0.25f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-              // + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
-              // + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-              // + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
-            float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
-              + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
-              + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
-              + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
-              + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
-              + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
-            m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
-            // umap[pos] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
-            (*umap)[pos] = new StoredMapData((round((e * 10) * 32) / 32)); // терассы
-            (*umap)[pos]->biom = BiomeDefinition(e, m);
-            std::cout << pos.x << " " << pos.y << std::endl;
-        }
+      for (int x = start_w; x < end_w; x++)
+      {
+        float nx = x / width - 0.5f, ny = y / height - 0.5f;
+        glm::ivec2 position = glm::ivec2(x, y);
+        float e = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
+          + 0.50f * SimplexNoise::noise(2.f * nx, 2.f * ny)
+          + 0.25f * SimplexNoise::noise(4.f * nx, 4.f * ny));
+          // + 0.13f * SimplexNoise::noise(8.f * nx, 8.f * ny)
+          // + 0.06f * SimplexNoise::noise(16.f * nx, 16.f * ny)
+          // + 0.03f * SimplexNoise::noise(32.f * nx, 32.f * ny));
+        float m = (1.0f * SimplexNoise::noise(1.f * nx, 1.f * ny)
+          + 0.75f * SimplexNoise::noise(2.f * nx, 2.f * ny)
+          + 0.33f * SimplexNoise::noise(4.f * nx, 4.f * ny)
+          + 0.33f * SimplexNoise::noise(8 * nx, 8 * ny)
+          + 0.33f * SimplexNoise::noise(16.f * nx, 16.f * ny)
+          + 0.50f * SimplexNoise::noise(32.f * nx, 32.f * ny, 1.f));
+        m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
+        // (*umap)[position] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
+        (*umap)[position] = new StoredMapData((round((e * 10 * 32) / 32))); // терассы
+
+        (*umap)[position]->biom = BiomeDefinition(e, m);
+      }
     }
 }
 

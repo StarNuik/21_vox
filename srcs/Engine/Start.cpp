@@ -46,7 +46,6 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#include "World/Shard.h"
 void Game::InitWorld() {
 	const int border = 3;
 	for (int x = -border; x <= border; x++)
@@ -55,6 +54,8 @@ void Game::InitWorld() {
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->ActivateChunk(glm::ivec2(x, z));
+	// _world->GenerateChunk(glm::ivec2(0));
+	// _world->ActivateChunk(glm::ivec2(0));
 
 
 
