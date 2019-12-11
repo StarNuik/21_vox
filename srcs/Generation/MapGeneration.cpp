@@ -161,18 +161,3 @@ MapGeneration::MapGeneration()
 {
   umap = std::unordered_map<glm::ivec2, StoredMapData*>();
 }
-
-// // // globalPos = glm::ivec3(1, 1, 1);
-// 	for (int x = 0; x < 16; x++)
-// 		for (int y = 0; y < 16; y++)
-// 			for (int z = 0; z < 16; z++) {
-// 				int elevation = (int)floorf((*mp->umap)[glm::ivec2(x + globalPos.x * 16, y + globalPos.y * 16)]->elevation);
-// 				// if (y < 10)
-// 					// SetBlock(glm::ivec3(x, y, z), BlockType::Stone);
-// 				// else -- для биомов
-// 				// {
-
-// 				// }
-// 				SetBlock((glm::ivec3(x + globalPos.x * 16, elevation + globalPos.y * 16,
-// 										z + globalPos.z * 16)), BlockType::Stone);
-// 			}
