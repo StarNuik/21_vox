@@ -94,8 +94,8 @@ MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
   float e = 0.5f * (noise.GetNoise(2.f * nx, 2.f * ny));
   e = (e * 0.5f + 0.5f) * 10.f;
-  float terrace = round(e * _terraceValue) / _terraceValue;
- 
+  float terrace = round(e * terraceValue) / terraceValue;
+
   StoredMapData block;
   block.elevation = terrace;
   return block;
@@ -170,8 +170,8 @@ FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {retur
 
 float MapGeneration::GetExpValue() {return _exp;};
 
-void MapGeneration::SetExpValue(float value) {_exp = value;};
-
 float MapGeneration::GetTeracceValue() {return _terraceValue;};
+
+void MapGeneration::SetExpValue(float value) {_exp = value;};
 
 void MapGeneration::SetTerraceValue(float value) {_terraceValue = value;};
