@@ -15,7 +15,7 @@ void UIController::MainUI() {
 		ResourcesUI();
 	}
 	ImGui::End();
-	ImGui::ShowDemoWindow();
+	// ImGui::ShowDemoWindow();
 }
 
 
