@@ -95,7 +95,7 @@ MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos
   float e = 0.5f * (noise.GetNoise(2.f * nx, 2.f * ny));
   e = (e * 0.5f + 0.5f) * 10.f;
   float terrace = round(e * 32.f) / 32.f;
-
+ 
   StoredMapData block;
   block.elevation = terrace;
   return block;
@@ -157,7 +157,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(MapGeneration::Generation
 
 MapGeneration::MapGeneration()
 {
+
   // _noises[Basic]->SetFrequency(0.01);
   // _noises[]
-  // umap = std::unordered_map<glm::ivec2, StoredMapData*>();
 }

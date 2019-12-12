@@ -45,8 +45,6 @@ class MapGeneration
 
         StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
 
-        // std::unordered_map<glm::ivec2, StoredMapData*> umap;
-
         FastNoise& GetNoise(GenerationType);
     private:
 
