@@ -27,25 +27,22 @@ void UIController::GenerationUI() {
 	const float fstep = 0.1f;
 	const int istep = 1;
 	DataGeneration& data = _dataGeneration;
+	MapGeneration* map = _game->GetGeneration();
 
 	float exp = data.exp;
 	float terrace = data.terrace;
-	// ImGui::PushID(69);
 	ImGui::InputScalar("Exp", ImGuiDataType_Float, &exp, &fstep, "%.3f");
-	// ImGui::PopID();
-	ImGui::PushID(68);
-	ImGui::InputScalar("Terrace##abc", ImGuiDataType_Float, &terrace, &fstep, "%.3f");
-	ImGui::PopID();
+	ImGui::InputScalar("Terrace", ImGuiDataType_Float, &terrace, &fstep, "%.2f");
 	if (exp != data.exp)
 		_game->GetGeneration()->SetExpValue(exp);
 	if (terrace != data.terrace)
-		_game->GetGeneration()->SetTerraceValue(exp);
+		_game->GetGeneration()->SetTerraceValue(terrace);
 
 	ImGui::Separator();
 	for (int i = MapGeneration::First; i < MapGeneration::Size; i++)
 	{
-		char buf[32];
-		sprintf(buf, "Noise %d", i);
+		char buf[80];
+		sprintf(buf, "%s", map->GetNoiseName((MapGeneration::GenerationType)i).c_str());
 		if (ImGui::Selectable(buf, data.selectedNoise == i)) {
 			data.SwitchNoise(_game, i);
 		}
@@ -80,5 +77,8 @@ void UIController::GenerationUI() {
 		noise.SetNoiseType((FastNoise::NoiseType)noiseType);
 
 	ImGui::Separator();
-	if (ImGui::Button("Regenerate world")) {}
+	if (ImGui::Button("Regenerate world")) {
+		_game->DestroyWorld();
+		_game->InitWorld();
+	}
 };

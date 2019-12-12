@@ -71,6 +71,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 };
 
 GLRenderer::~GLRenderer() {
+	std::cout << "NOooo" << std::endl;
 	if (_imguiOn) {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

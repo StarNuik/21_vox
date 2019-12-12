@@ -27,6 +27,7 @@ public:
 	~Game();
 	void InitSystems();
 	void InitWorld();
+	void DestroyWorld();
 	void GameLoop();
 	void AddEntity(Entity*);
 	void RemoveEntity(Entity*);

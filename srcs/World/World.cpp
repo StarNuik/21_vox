@@ -22,6 +22,16 @@ void World::GenerateChunk(glm::ivec2 pos) {
 	chunk->Generate();
 }
 
+void World::DestroyChunk(glm::ivec2 pos) {
+	Chunk* chunk = _chunks[pos];
+	if (!chunk)
+		return;
+	chunk->SetActive(false);
+	_chunks[pos] = nullptr;
+	_chunks.erase(pos);
+	delete chunk;
+}
+
 void World::ActivateChunk(glm::ivec2 pos) {
 	Chunk* chunk = _chunks[pos];
 	if (!chunk) {

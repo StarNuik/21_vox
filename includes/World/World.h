@@ -23,6 +23,7 @@ public:
 	World(Game*);
 	~World();
 	void GenerateChunk(glm::ivec2);
+	void DestroyChunk(glm::ivec2);
 	void ActivateChunk(glm::ivec2);
 	void DeactivateChunk(glm::ivec2);
 	BlockType GetBlock(glm::ivec3 globalPosition);

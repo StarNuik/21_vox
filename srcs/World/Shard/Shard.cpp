@@ -11,6 +11,10 @@ Shard::Shard(Game* game, glm::ivec3 pos) {
 }
 
 Shard::~Shard() {
+	for (RenderModel* model : _models) {
+		delete model->GetGeometry();
+		delete model;
+	}
 	SetActive(false);
 };
 

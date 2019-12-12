@@ -46,8 +46,10 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
+#define WORLD_RADIUS 2
+
 void Game::InitWorld() {
-	const int border = 2;
+	const int border = WORLD_RADIUS;
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->GenerateChunk(glm::ivec2(x, z));
@@ -56,7 +58,18 @@ void Game::InitWorld() {
 			_world->ActivateChunk(glm::ivec2(x, z));
 };
 
+void Game::DestroyWorld() {
+	const int border = WORLD_RADIUS;
+	for (int x = -border; x <= border; x++)
+		for (int z = -border; z <= border; z++)
+			_world->DestroyChunk(glm::ivec2(x, z));
+}
+
 Game::~Game() {
+	delete _mpGen;
+	delete _world;
+	delete _ui;
+	delete _resources;
 	delete _input;
 	delete _renderer;
 
