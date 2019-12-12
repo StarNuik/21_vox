@@ -24,16 +24,16 @@ class MapGeneration
 {
     public:
         MapGeneration();
-        ~MapGeneration() {};    
+        ~MapGeneration() {};
     public:
-    
+
         struct StoredMapData
         {
             float elevation;
             int biom;
             StoredMapData() {};
         };
-    
+
         enum GenerationType{
             Basic = 0,
             Land,
@@ -45,13 +45,11 @@ class MapGeneration
 
         StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
 
-        // std::unordered_map<glm::ivec2, StoredMapData*> umap;
-
         FastNoise& GetNoise(GenerationType);
     private:
 
-        FastNoise* _noises[Size];
-        
+        FastNoise _noises[Size];
+
         StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
 
         StoredMapData LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
@@ -59,12 +57,12 @@ class MapGeneration
         StoredMapData HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
 
         int BiomeDefinition(float e, float m);
-        
+
         float _Hash(const float n);
-        
+
         float Noise(const glm::vec3 &x);
 
-         float random (glm::vec2 st) 
+         float random (glm::vec2 st)
         {
             return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
         }

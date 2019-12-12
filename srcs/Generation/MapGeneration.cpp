@@ -58,9 +58,7 @@ float MapGeneration::Noise(const glm::vec3 &x)
 
 MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
-  FastNoise noise;
-	noise.SetNoiseType(FastNoise::Perlin);
-	noise.SetFrequency(0.01);
+  FastNoise noise = _noises[HighLand];
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -86,9 +84,8 @@ MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2
 
 MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
-	FastNoise noise;
-	noise.SetNoiseType(FastNoise::Perlin);
-	noise.SetFrequency(0.1);
+	FastNoise noise = _noises[Land];
+
   float globalX = pos.x * 16, globalY = pos.y * 16;
 
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -103,9 +100,7 @@ MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos
 
 MapGeneration::StoredMapData MapGeneration::BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
-  FastNoise noise;
-	noise.SetNoiseType(FastNoise::Perlin);
-	noise.SetFrequency(0.1);
+  FastNoise noise = _noises[Basic];
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -157,7 +152,12 @@ MapGeneration::StoredMapData MapGeneration::Generation(MapGeneration::Generation
 
 MapGeneration::MapGeneration()
 {
-  // _noises[Basic]->SetFrequency(0.01);
-  // _noises[]
-  // umap = std::unordered_map<glm::ivec2, StoredMapData*>();
+  _noises[Basic].SetNoiseType(FastNoise::Perlin);
+  _noises[Basic].SetFrequency(0.1);
+  _noises[Land].SetNoiseType(FastNoise::Perlin);
+  _noises[Land].SetFrequency(0.01);
+  _noises[HighLand].SetNoiseType(FastNoise::Perlin);
+  _noises[HighLand].SetFrequency(0.01);
 }
+
+FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};
