@@ -11,10 +11,12 @@ public:
 	~Input();
 	void Update(GLFWwindow*);
 	bool KeyPressed(uint32);
-	// bool KeyJustPressed(uint32);
+	bool KeyJustPressed(uint32);
 	glm::ivec2 MousePos();
+	glm::ivec2 MousePosDelta();
 private:
 	glm::ivec2 _mousePos;
+	glm::ivec2 _mousePosDelta;
 	std::unordered_map<uint32, bool> _pressMap;
-	// std::unordered_map<uint32, bool> _justPressedMap;
+	std::unordered_map<uint32, bool> _justPressedMap;
 };

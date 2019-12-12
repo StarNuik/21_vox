@@ -4,7 +4,12 @@
 // #include <glm/gtx/quaternion.hpp>
 
 Player::Player(Game* game) {
+	_camAngleX = 0.f;
+	_camAngleY = 0.f;
 	_game = game;
+	_rotateCamera = true;
+	//! Looks like a fucking costil
+	_game->GetUI()->SetPlayer(this);
 	_position = glm::vec3(0.f, 70.f, 3.f);
 	_rotation = glm::identity<glm::quat>();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
@@ -20,14 +25,19 @@ Player::~Player() {
 void Player::Update() {
 	Input* input = _game->GetInput();
 
-	if (input->KeyPressed(GLFW_KEY_1)) {
-		_game->GetUI()->SetState(true);
+	if (input->KeyJustPressed(GLFW_KEY_1)) {
+		bool state = !_game->GetUI()->GetState();
+		_game->GetUI()->SetState(state);
+		_game->GetRenderer()->SetCursor(state);
+		_rotateCamera = !state;
 	}
-	if (input->KeyPressed(GLFW_KEY_2)) {
-		_game->GetUI()->SetState(false);
+	if (_rotateCamera) {
+		glm::ivec2 mousePos = input->MousePosDelta();
+		_camAngleX += mousePos.x;
+		_camAngleY += mousePos.y;
+		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
-	glm::ivec2 mousePos = input->MousePos();
-	_rotation = glm::quat(-glm::vec3(glm::radians((float)mousePos.y), glm::radians((float)mousePos.x), 0.f));
+	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
 	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
 	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
 	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
@@ -49,6 +59,8 @@ void Player::Update() {
 	if (input->KeyPressed(GLFW_KEY_A)) {
 		_position -= right * FIXED_DELTA;
 	}
-	_camera->SetRotation(_rotation);
+	if (_rotateCamera) {
+		_camera->SetRotation(_rotation);
+	}
 	_camera->SetPosition(_position);
 }

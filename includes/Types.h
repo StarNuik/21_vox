@@ -22,6 +22,8 @@ class Chunk;
 class World;
 class Game;
 class VertexBuffers;
+class Player;
+class ResourceLoader;
 
 enum class BlockType {
 	Air = 0,

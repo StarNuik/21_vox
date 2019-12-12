@@ -36,6 +36,7 @@ public:
 	void SetActiveCamera(Camera*);
 	Camera* GetActiveCamera();
 	glm::ivec2 GetWindowSize();
+	void SetCursor(bool enabled);
 	
 	void RenderFrame();
 private:
@@ -44,6 +45,7 @@ private:
 	bool _imguiOn;
 	uint _width;
 	uint _height;
+	bool _cursorEnabled;
 	GLFWwindow* _window;
 	std::vector<RenderModel*> _rendered;
 	Camera* _activeCamera;

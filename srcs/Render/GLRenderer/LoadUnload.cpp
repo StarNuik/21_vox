@@ -20,3 +20,7 @@ void GLRenderer::RemoveModel(RenderModel* model) {
 		_rendered.erase(pos);
 	}
 };
+
+void GLRenderer::SetCursor(bool state) {
+	glfwSetInputMode(_window, GLFW_CURSOR, state ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+}
