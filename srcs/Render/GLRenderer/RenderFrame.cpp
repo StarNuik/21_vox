@@ -10,7 +10,9 @@ void GLRenderer::RenderFrame() {
 		modelShader->SetInt("tick", _tick);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
-	_game->GetUI()->Draw();
+	UIController* ui = _game->GetUI();
+	ui->UpdateData();
+	ui->Draw();
 	glfwSwapBuffers(_window);
 	_tick++;
 };

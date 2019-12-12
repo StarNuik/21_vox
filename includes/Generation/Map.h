@@ -15,8 +15,6 @@
 #include <cstdint>
 #include "FastNoise.h"
 #define FREQ 1
-#define EXP 0.1
-// #define EXP 2.8
 
 class Game;
 
