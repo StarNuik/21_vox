@@ -12,7 +12,6 @@
 struct DataRendering {
 	DataRendering();
 	std::deque<uint> frameTimes;
-	float maxFrameTime;
 };
 
 struct DataPlayer {};
