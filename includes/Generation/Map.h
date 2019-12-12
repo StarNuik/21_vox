@@ -48,7 +48,7 @@ class MapGeneration
         FastNoise& GetNoise(GenerationType);
     private:
 
-        FastNoise* _noises[Size];
+        FastNoise _noises[Size];
 
         StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
 

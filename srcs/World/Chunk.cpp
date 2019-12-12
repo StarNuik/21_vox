@@ -35,8 +35,8 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
 			}
 
-			high = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x,z));
-			// high = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z));
+			// high = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x,z));
+			high = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z));
 			h = (int)floorf(high.elevation);
 			for (int y = firstLayerBorder; y < 60 + h; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
