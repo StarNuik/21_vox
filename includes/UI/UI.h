@@ -6,6 +6,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "Engine/Engine.h"
+#include "FastNoise.h"
 
 #define UI_PLOT_FRAMES 100
 
@@ -15,7 +16,19 @@ struct DataRendering {
 };
 
 struct DataPlayer {};
-struct DataGeneration {};
+
+struct DataGeneration {
+	void SwitchNoise(Game*, int);
+	DataGeneration();
+	int selectedNoise;
+	float exp;
+	float terrace;
+	int seed;
+	float frequency;
+	FastNoise::Interp interpolation;
+	FastNoise::NoiseType noiseType;
+};
+
 struct DataResources {};
 
 class UIController {

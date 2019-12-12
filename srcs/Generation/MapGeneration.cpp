@@ -164,6 +164,9 @@ MapGeneration::MapGeneration()
   _noises[Land].SetFrequency(0.01);
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
+  _noiseNames[Basic] = "Basic";
+  _noiseNames[Land] = "Land";
+  _noiseNames[HighLand] = "HighLand";
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};
@@ -175,3 +178,5 @@ float MapGeneration::GetTeracceValue() {return _terraceValue;};
 void MapGeneration::SetExpValue(float value) {_exp = value;};
 
 void MapGeneration::SetTerraceValue(float value) {_terraceValue = value;};
+
+std::string MapGeneration::GetNoiseName(GenerationType t) {return _noiseNames[t];};

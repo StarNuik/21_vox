@@ -31,7 +31,7 @@ public:
         StoredMapData() {};
     };
 
-    enum GenerationType{
+    enum GenerationType {
         Basic = 0,
         Land,
         HighLand,
@@ -46,10 +46,12 @@ public:
     void SetExpValue(float value);
     float GetTeracceValue();
     void SetTerraceValue(float value);
+	std::string GetNoiseName(GenerationType);
 private:
     float _exp; // For sharp mountain peaks
     float _terraceValue; // For terrace
     FastNoise _noises[Size];
+	std::string _noiseNames[Size];
     StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
     StoredMapData LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
     StoredMapData HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
