@@ -170,4 +170,8 @@ FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {retur
 
 float MapGeneration::GetExpValue() {return _exp;};
 
+void MapGeneration::SetExpValue(float value) {_exp = value;};
+
 float MapGeneration::GetTeracceValue() {return _terraceValue;};
+
+void MapGeneration::SetTerraceValue(float value) {_terraceValue = value;};
