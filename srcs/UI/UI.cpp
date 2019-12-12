@@ -10,6 +10,8 @@ void UIController::SetState(bool state) {
 	_uiOn = state;
 };
 
+bool UIController::GetState() {return _uiOn;};
+
 void UIController::StartFrame() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -24,7 +26,9 @@ void UIController::EndFrame() {
 void UIController::Draw() {
 	StartFrame();
 	if (_uiOn) {
-		Main();
+		MainUI();
 	}
 	EndFrame();
 }
+
+void UIController::SetPlayer(Player* player) {_player = player;};

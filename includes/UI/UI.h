@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Types.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -13,15 +14,18 @@ public:
 	~UIController();
 	void Draw();
 	void SetState(bool);
+	bool GetState();
+	void SetPlayer(Player*);
 private:
 	void StartFrame();
 	void EndFrame();
-	void Main();
-	void Render();
-	void Engine();
-	void Player();
-	void World();
-	void Resources();
+	void MainUI();
+	void PlayerUI();
+	void RenderingUI();
+	void GenerationUI();
+	void ResourcesUI();
+	Player* _player;
+	ResourceLoader* _resources;
 	Game* _game;
 	bool _uiOn;
 };

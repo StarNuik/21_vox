@@ -9,6 +9,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_width = std::max(config.windowSize.x, 1);
 	_height = std::max(config.windowSize.y, 1);
 	_tick = 0;
+	_cursorEnabled = true;
 
 	if (!glfwInit()) {
 		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
@@ -28,8 +29,8 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 		//! Nice exit
 		exit(1);
 	}
-	glfwSetWindowAttrib(_window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
 	glfwSetInputMode(_window, GLFW_CURSOR, config.cursorEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	glfwSetWindowAttrib(_window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
 	if (glfwRawMouseMotionSupported() && config.cursorRaw)
 	{
 		glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -68,8 +69,6 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	Locator::getLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
-
-
 
 GLRenderer::~GLRenderer() {
 	if (_imguiOn) {

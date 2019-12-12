@@ -5,13 +5,9 @@
 #include "Engine/Engine.h"
 #include "Render/Camera.h"
 
-class Command {
-
-};
-
 #define SPEED 5.f
 
-class Player : public Entity{
+class Player : public Entity {
 public:
 	Player(Game* game);
 	virtual ~Player();
@@ -21,5 +17,8 @@ private:
 	Camera* _camera;
 	glm::vec3 _position;
 	glm::quat _rotation;
+	bool _rotateCamera;
+	float _camAngleX;
+	float _camAngleY;
 };
 

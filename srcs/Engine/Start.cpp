@@ -10,7 +10,7 @@ RenderEngineConfig glConfig() {
 	config.windowPos = glm::ivec2(900, 100);
 	config.windowName = std::string("Test");
 	config.windowResizeable = false;
-	config.cursorEnabled = true;
+	config.cursorEnabled = false;
 	config.cursorRaw = true;
 	config.glVersionMajor = 4;
 	config.glVersionMinor = 1;
