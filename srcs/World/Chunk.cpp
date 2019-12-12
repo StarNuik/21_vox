@@ -23,29 +23,25 @@ void Chunk::Generate() {
 		// _shards[y]->Generate();
 	// }
 	World* w = _game->GetWorld();
-	MapGeneration* mp = _game->GetGeneration();
-	std::unordered_map<glm::ivec2, StoredMapData*> umap = mp->BasicGeneration(16, 16, _position);
-	std::unordered_map<glm::ivec2, StoredMapData*> landMap = mp->LandGeneration(16, 16, _position);
-	std::unordered_map<glm::ivec2, StoredMapData*> highLandMap = mp->HighLandGeneration(16, 16, _position);
-	// for (auto pair : umap)
-	// 	std::cout << "Biom: " << pair.second->biom << std::endl;
+	MapGeneration mp = *_game->GetGeneration();
+	MapGeneration::StoredMapData high;
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
-
-			glm::ivec2 map_pos = glm::ivec2(_position.x * 16 + x, _position.y * 16 + z);
-			int h = (int)floorf((umap)[map_pos]->elevation);
+			high = mp.Generation(MapGeneration::Basic, _position, glm::ivec2(x, z));
+			int h = (int)floorf(high.elevation);
 			int firstLayerBorder = h + 40;
 
 			for (int y = 0; y < firstLayerBorder; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
 			}
 
-			// h = (int)floorf((highLandMap)[map_pos]->elevation);
-			h = (int)floorf((landMap)[map_pos]->elevation);
+			// high = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x,z));
+			high = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z));
+			h = (int)floorf(high.elevation);
 			for (int y = firstLayerBorder; y < 60 + h; y++) {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
 			}
-			w->SetBlock(glm::ivec3(_position.x * 16 + x, 60, _position.y * 16 + z), BlockType::Dirt);
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 60 + h, _position.y * 16 + z), BlockType::Grass);
 		}
 	}
 }

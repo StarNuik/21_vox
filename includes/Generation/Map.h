@@ -13,7 +13,6 @@
 #include "BiomeDefine.h"
 #include "Engine/Engine.h"
 #include <cstdint>
-#include "OpenSimplexNoise/OpenSimplexNoise.h"
 #include "FastNoise.h"
 #define FREQ 1
 #define EXP 0.1
@@ -21,31 +20,46 @@
 
 class Game;
 
-struct StoredMapData
-{
-    float elevation;
-    int biom;
-    
-    StoredMapData(float _value) {elevation = _value;};
-};
-
 class MapGeneration
 {
     public:
         MapGeneration();
         ~MapGeneration() {};    
     public:
-        std::unordered_map<glm::ivec2, StoredMapData*> umap;
+    
+        struct StoredMapData
+        {
+            float elevation;
+            int biom;
+            StoredMapData() {};
+        };
+    
+        enum GenerationType{
+            Basic = 0,
+            Land,
+            HighLand,
+            First = Basic,
+            Last = HighLand,
+            Size = Last + 1
+        };
+
+        StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
+
+        // std::unordered_map<glm::ivec2, StoredMapData*> umap;
+
+        FastNoise& GetNoise(GenerationType);
+    private:
+
+        FastNoise* _noises[Size];
+        
+        StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
+
+        StoredMapData LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
+
+        StoredMapData HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
 
         int BiomeDefinition(float e, float m);
         
-        std::unordered_map<glm::ivec2, StoredMapData*> BasicGeneration(float height, float width, glm::ivec2 pos);
-
-        std::unordered_map<glm::ivec2, StoredMapData*>  LandGeneration(float height, float width, glm::ivec2 pos);
-
-        std::unordered_map<glm::ivec2, StoredMapData*>  HighLandGeneration(float height, float width, glm::ivec2 pos);
-
-    private:
         float _Hash(const float n);
         
         float Noise(const glm::vec3 &x);
