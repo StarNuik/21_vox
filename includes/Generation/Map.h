@@ -15,7 +15,6 @@
 #include <cstdint>
 #include "FastNoise.h"
 #define FREQ 1
-#define EXP 0.1
 // #define EXP 2.8
 
 class Game;
@@ -46,7 +45,15 @@ class MapGeneration
         StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
 
         FastNoise& GetNoise(GenerationType);
+
+        float GetExpValue();
+
+        float GetTeracceValue();
+
     private:
+
+        float _exp; // For sharp mountain peaks
+        float _terraceValue; // For terrace
 
         FastNoise _noises[Size];
 

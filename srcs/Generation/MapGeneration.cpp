@@ -59,6 +59,8 @@ float MapGeneration::Noise(const glm::vec3 &x)
 MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
   FastNoise noise = _noises[HighLand];
+  float exp = _exp;
+  float terraceValue = _terraceValue;
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -73,8 +75,8 @@ MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2
   e += e1 + e2;
   e = (e * 0.5f + 0.5f) * 10;
 
-  float mountainPeaks = pow(e, 2.2f);
-  float terrace = round(mountainPeaks * 32.f) / 32.f;
+  float mountainPeaks = pow(e, exp);
+  float terrace = round(mountainPeaks * terraceValue) / terraceValue;
   // std::cout << mountainPeaks << std::endl;
   // std::cout << terrace * 10 << std::endl;
   StoredMapData block;
@@ -85,13 +87,14 @@ MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2
 MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
 	FastNoise noise = _noises[Land];
+  float terraceValue = _terraceValue;
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
 
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
   float e = 0.5f * (noise.GetNoise(2.f * nx, 2.f * ny));
   e = (e * 0.5f + 0.5f) * 10.f;
-  float terrace = round(e * 32.f) / 32.f;
+  float terrace = round(e * _terraceValue) / _terraceValue;
  
   StoredMapData block;
   block.elevation = terrace;
@@ -101,6 +104,7 @@ MapGeneration::StoredMapData  MapGeneration::LandGenerationColumn(glm::ivec2 pos
 MapGeneration::StoredMapData MapGeneration::BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
   FastNoise noise = _noises[Basic];
+  float terraceValue = _terraceValue;
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -121,7 +125,7 @@ MapGeneration::StoredMapData MapGeneration::BasicGenerationColumn(glm::ivec2 pos
   m += m1 + m2 + m2;//+ m3 + m4 + m5;
   m /= (1.0f + 0.75f + 0.33f + 0.33f + 0.33f + 0.50f);
   e = (e * 0.5f + 0.5f) * 10.f;
-  float terrace = round(e * 32.f) / 32.f;
+  float terrace = round(e * terraceValue) / terraceValue;
 
   StoredMapData block;
   block.elevation = terrace;
@@ -152,6 +156,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(MapGeneration::Generation
 
 MapGeneration::MapGeneration()
 {
+  _exp = 2.2f;
+  _terraceValue = 32.f;
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
   _noises[Land].SetNoiseType(FastNoise::Perlin);
@@ -161,3 +167,7 @@ MapGeneration::MapGeneration()
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};
+
+float MapGeneration::GetExpValue() {return _exp;};
+
+float MapGeneration::GetTeracceValue() {return _terraceValue;};
