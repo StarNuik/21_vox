@@ -63,7 +63,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(_window, true);
-	ImGui_ImplOpenGL3_Init("#version 400 core");
+	ImGui_ImplOpenGL3_Init("#version 410 core");
 	_imguiOn = true;
 
 	Locator::getLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
