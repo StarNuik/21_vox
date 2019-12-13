@@ -21,15 +21,24 @@ namespace UIData {
 
 	class DataGeneration {
 	public:
-		void SwitchNoise(Game*, int);
 		DataGeneration();
-		int selectedNoise;
+		void SwitchBiome(Game*, int);
+		int selectedBiome;
 		float exp;
 		float terrace;
 		int seed;
 		float frequency;
 		FastNoise::Interp interpolation;
 		FastNoise::NoiseType noiseType;
+		int octaves;
+		float lacunarity;
+		float gain;
+		FastNoise::FractalType fractalType;
+		FastNoise::CellularDistanceFunction distFunc;
+		FastNoise::CellularReturnType retType;
+		int distIndex0;
+		int distIndex1;
+		float jitter;
 	};
 
 	class DataResources {};
