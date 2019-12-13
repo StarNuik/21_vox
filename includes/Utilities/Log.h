@@ -16,16 +16,16 @@
 #define BG_DEFAULT std::string("\e[49m")
 
 class ILogger {
-	public:
+public:
 	virtual ~ILogger() {};
-	virtual void Log(std::string) {};
-	virtual void LogSuccess(std::string) {};
-	virtual void LogWarning(std::string) {};
-	virtual void LogError(std::string) {};
+	virtual void Log(std::string) = 0;
+	virtual void LogSuccess(std::string) = 0;
+	virtual void LogWarning(std::string) = 0;
+	virtual void LogError(std::string) = 0;
 };
 
 class NullLogger : public ILogger {
-	public:
+public:
 	virtual void Log(std::string) {};
 	virtual void LogSuccess(std::string) {};
 	virtual void LogWarning(std::string) {};
