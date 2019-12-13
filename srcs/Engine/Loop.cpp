@@ -1,9 +1,18 @@
-#include "Engine/Engine.h"
-#include "Utilities/Time.h"
-#include "Engine/Locator.hpp"
-#include "Types.h"
+// #include "Engine/Engine.h"
+// #include "Utilities/Time.h"
+// #include "Engine/Locator.hpp"
+// #include "Types.h"
+// #include <unistd.h>
+// #include <string>
+#include <GLFW/glfw3.h>
 #include <unistd.h>
-#include <string>
+
+#include "Engine/Game.h"
+#include "Utilities/Locator.hpp"
+#include "Render/GLRenderer.h"
+#include "Input/Input.h"
+#include "Engine/Entity.h"
+#include "Utilities/Time.h"
 
 void Game::Update() {
 	if (glfwWindowShouldClose(_renderer->GetWindow()) || _input->KeyPressed(GLFW_KEY_ESCAPE)) {
@@ -15,7 +24,7 @@ void Game::Update() {
 };
 
 void Game::GameLoop() {
-	Locator::getLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
+	Locator::GetLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{
 		int64 start = LONG_TIME;

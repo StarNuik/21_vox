@@ -1,8 +1,10 @@
 #pragma once
-#include <string>
+
+// #include <string>
 #include <unordered_map>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
+
 #include "Types.h"
 
 class Input {
@@ -10,8 +12,8 @@ public:
 	Input();
 	~Input();
 	void Update(GLFWwindow*);
-	bool KeyPressed(uint32);
-	bool KeyJustPressed(uint32);
+	bool KeyPressed(uint);
+	bool KeyJustPressed(uint);
 	glm::ivec2 MousePos();
 	glm::ivec2 MousePosDelta();
 private:

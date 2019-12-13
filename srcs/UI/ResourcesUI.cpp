@@ -1,14 +1,14 @@
-#include "UI/UI.h"
+#include "UI/UIController.h"
 
-// DataResources::DataResources() {}
+// UIData::UIController::DataResources::DataResources() {}
 
 void UIController::UpdateResources() {
-	DataResources& data = _dataResources;
+	UIData::DataResources& data = _dataResources;
 
 };
 
 void UIController::ResourcesUI() {
-	DataResources& data = _dataResources;
+	UIData::DataResources& data = _dataResources;
 
 	ImGui::Text("Resources UI");
 };

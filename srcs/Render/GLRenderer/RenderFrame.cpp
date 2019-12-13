@@ -1,5 +1,9 @@
-#include "Render/Render.h"
-#include "Engine/Locator.hpp"
+#include "Render/GLRenderer.h"
+#include "Render/Shader.h"
+#include "Render/RenderModel.h"
+#include "Utilities/Locator.hpp"
+#include "Engine/Game.h"
+#include "UI/UIController.h"
 
 void GLRenderer::RenderFrame() {
 	glClearColor(0.4f, 0.4f, 0.65f, 1.f);

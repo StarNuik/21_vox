@@ -1,9 +1,11 @@
-#include "Render/Objects.h"
-#include "Engine/Locator.hpp"
+#include <GL/glew.h>
+
+#include "Render/Geometry.h"
+#include "Utilities/Locator.hpp"
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
-#include "Types.h"
-#include <string>
+// #include "Types.h"
+// #include <string>
 
 std::vector<float> Geometry::ReadGeometry(std::string path) {
 	//? Code copied from https://github.com/syoyo/tinyobjloader
@@ -18,13 +20,13 @@ std::vector<float> Geometry::ReadGeometry(std::string path) {
 
 	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str());
 	if (!warn.empty()) {
-		Locator::getLogger()->LogWarning("[ReadGeometry]\n" + warn);
+		Locator::GetLogger()->LogWarning("[ReadGeometry]\n" + warn);
 	}
 	if (!err.empty()) {
-		Locator::getLogger()->LogError("[ReadGeometry]\n" + err);
+		Locator::GetLogger()->LogError("[ReadGeometry]\n" + err);
 	}
 	if (!ret) {
-		Locator::getLogger()->LogError("[ReadGeometry]\nError");
+		Locator::GetLogger()->LogError("[ReadGeometry]\nError");
 		exit(1);
 	}
 	size_t index_offset = 0;
@@ -46,7 +48,7 @@ std::vector<float> Geometry::ReadGeometry(std::string path) {
 		}
 		index_offset += fv;
 	}
-	Locator::getLogger()->LogSuccess("[Geometry::ReadGeometry]\nLoaded: " + path);
+	// Locator::GetLogger()->LogSuccess("[Geometry::ReadGeometry]\nLoaded: " + path);
 	return res;
 }
 

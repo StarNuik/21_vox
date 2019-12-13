@@ -1,19 +1,22 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+// #include <vector>
+// #include <unordered_map>
+// #include <iostream>
+// #include <math.h>
+#include <string>
+
+// #include <GL/glew.h>
+// #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include "glm/gtx/hash.hpp"
+// #include "glm/gtx/hash.hpp"
 
-#include <vector>
-#include <unordered_map>
-#include <iostream>
-#include <math.h>
 
-#include "BiomeDefine.h"
-#include "Engine/Engine.h"
-#include <cstdint>
+// #include "BiomeDefine.h"
+// #include "Engine/Engine.h"
+// #include <cstdint>
 #include "FastNoise.h"
+
 #define FREQ 1
 
 class Game;

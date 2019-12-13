@@ -1,4 +1,4 @@
-#include "Render/Objects.h"
+#include "Render/VertexBuffers.h"
 
 float* VertexBuffers::_buffers[VertexBuffers::Size];
 
@@ -94,7 +94,7 @@ void VertexBuffers::Init() {
 		-.5f,  .0f, -1.f,   -1.f, 0.f, 0.f,	 0.f,  0.f,
 	};
 	_buffers[MultiFront] = new float[48] {
-		-.5f,  .0f,  .0f,   0.f, 0.f, 1.f,	0.5f,  0.f,//! <---- scuffed af
+		-.5f,  .0f,  .0f,   0.f, 0.f, 1.f,	0.5f,  0.f,
 		-.5f,  1.f,  .0f,   0.f, 0.f, 1.f,	0.5f,  0.5f,
 		.5f,   1.f,  .0f,   0.f, 0.f, 1.f,	0.25f,  0.5f,
 
@@ -111,7 +111,7 @@ void VertexBuffers::Init() {
 		.5f,   1.f, -1.f,   0.f, 0.f, -1.f, 0.75f,  1.f,
 		-.5f,  1.f, -1.f,   0.f, 0.f, -1.f, 0.5f,  1.f,
 	};
-	_buffers[Flower] = new float[96] {
+	_buffers[Flower] = new float[96] { //! <----- doesn't work btw
 		-.5f,  .0f, -1.f,   -1.f, 0.f, 0.f, 1.f,  1.f,
 		-.5f,  1.f, -1.f,   -1.f, 0.f, 0.f, 1.f,  0.f,
 		-.5f,  1.f,  .0f,   -1.f, 0.f, 0.f, 0.f,  0.f,

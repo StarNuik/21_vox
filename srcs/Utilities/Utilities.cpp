@@ -1,5 +1,5 @@
 #include "Utilities/Utilities.h"
-#include "Engine/Locator.hpp"
+#include "Utilities/Locator.hpp"
 #include <fstream>
 
 char* Utilities::ReadFile(std::string path)
@@ -8,7 +8,7 @@ char* Utilities::ReadFile(std::string path)
 
 	file.open(path);
 	if (!file.is_open()) {
-		Locator::getLogger()->LogError("[Utilities::ReadFile]\nCouldn't open file: " + path);
+		Locator::GetLogger()->LogError("[Utilities::ReadFile]\nCouldn't open file: " + path);
 	}
 	file.seekg(0, std::ios::end);
 	const int len = file.tellg();

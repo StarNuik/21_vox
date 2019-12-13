@@ -1,7 +1,11 @@
-#include "Render/Objects.h"
-#include "Engine/Locator.hpp"
+// #include "Render/Objects.h"
+// #include "Engine/Locator.hpp"
+#include <GL/glew.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include "Render/Texture.h"
+#include "Utilities/Locator.hpp"
 
 Texture::Texture(std::string path) {
 	uint channels, width, height;
@@ -9,7 +13,7 @@ Texture::Texture(std::string path) {
 	stbi_set_flip_vertically_on_load(1);
 	uint8* data = stbi_load(path.c_str(), (int*)&width, (int*)&height, (int*)&channels, 4);
 	if (!data) {
-		Locator::getLogger()->LogError("[Texture::Texture]\nCouldn't load [" + path + "] texture.");
+		Locator::GetLogger()->LogError("[Texture::Texture]\nCouldn't load [" + path + "] texture.");
 		//! Something is wrong here!
 		exit(1);
 	}
@@ -24,7 +28,7 @@ Texture::Texture(std::string path) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
-	Locator::getLogger()->LogSuccess("[Texture::Texture]\nLoaded: " + path);
+	// Locator::GetLogger()->LogSuccess("[Texture::Texture]\nLoaded: " + path);
 }
 
 Texture::~Texture() {

@@ -1,12 +1,14 @@
-#include "UI/UI.h"
+#include <glm/glm.hpp>
+#include "UI/UIController.h"
+#include "Engine/Game.h"
 // #include <math.h>
 
-DataRendering::DataRendering() {
+UIData::DataRendering::DataRendering() {
 	frameTimes.resize(UI_PLOT_FRAMES, 0);
 }
 
 void UIController::UpdateRendering() {
-	DataRendering& data = _dataRendering;
+	UIData::DataRendering& data = _dataRendering;
 
 	uint frameTime = _game->GetLastFrameTime();
 	data.frameTimes.pop_front();
@@ -14,7 +16,7 @@ void UIController::UpdateRendering() {
 };
 
 void UIController::RenderingUI() {
-	DataRendering& data = _dataRendering;
+	UIData::DataRendering& data = _dataRendering;
 
 	float array[UI_PLOT_FRAMES];
 	float average = 0.f;

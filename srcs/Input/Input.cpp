@@ -1,6 +1,7 @@
+#include "Types.h"
 #include "Input/Input.h"
 #include <GLFW/glfw3.h>
-#include "Types.h"
+
 
 Input::Input() {
 	for (int i = 0; i <= GLFW_KEY_LAST; i++) {

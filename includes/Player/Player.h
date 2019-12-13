@@ -2,8 +2,10 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include "Engine/Engine.h"
-#include "Render/Camera.h"
+
+#include "Types.h"
+#include "Engine/Entity.h"
+
 
 #define SPEED 5.f
 

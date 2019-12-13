@@ -1,8 +1,12 @@
 // #include "World/World.h"
 #include "Types.h"
-#include "Engine/Locator.hpp"
+// #include "Utilities/Locator.hpp"
 #include "Utilities/Time.h"
 #include "World/Shard.h"
+#include "Render/RenderModel.h"
+#include "Engine/Game.h"
+#include "Render/GLRenderer.h"
+#include "Render/Geometry.h"
 
 Shard::Shard(Game* game, glm::ivec3 pos) {
 	_state = false;

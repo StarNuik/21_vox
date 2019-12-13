@@ -1,4 +1,5 @@
-#include "./Generation/Map.h"
+#include "Generation/MapGeneration.h"
+#include "Generation/BiomeDefine.h"
 #define LERP MapGeneration::_Lerp
 #define VEC3 glm::vec3
 

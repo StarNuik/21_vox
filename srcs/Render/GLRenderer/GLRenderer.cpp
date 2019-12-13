@@ -1,18 +1,24 @@
-#include "Render/Render.h"
-#include "Engine/Locator.hpp"
+#include <GL/glew.h>
+#include <algorithm>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+#include "Render/GLRenderer.h"
+#include "Utilities/Locator.hpp"
 
 GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_game = game;
 	_glfwOn = false;
 	_imguiOn = false;
 	_window = nullptr;
-	_width = std::max(config.windowSize.x, 1);
-	_height = std::max(config.windowSize.y, 1);
+	_width = std::max((int)config.windowSize.x, 1);
+	_height = std::max((int)config.windowSize.y, 1);
 	_tick = 0;
 	_cursorEnabled = true;
 
 	if (!glfwInit()) {
-		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
+		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
 		//! Nice exit
 		exit(1);
 	}
@@ -25,7 +31,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 
 	_window = glfwCreateWindow(_width, _height, config.windowName.c_str(), nullptr, nullptr);
 	if (!_window) {
-		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
+		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
 		//! Nice exit
 		exit(1);
 	}
@@ -41,7 +47,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
-		Locator::getLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
+		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
 		//! Nice exit
 		exit(1);
 	}
@@ -66,12 +72,11 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 	_imguiOn = true;
 
-	Locator::getLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
+	Locator::GetLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
 
 GLRenderer::~GLRenderer() {
-	std::cout << "NOooo" << std::endl;
 	if (_imguiOn) {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

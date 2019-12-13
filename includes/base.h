@@ -14,6 +14,6 @@
 #include <GLFW/glfw3.h>
 // #include <glm/glm.hpp>
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
+// #define TINYOBJLOADER_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION
 

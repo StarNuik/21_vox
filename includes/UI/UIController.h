@@ -1,35 +1,39 @@
 #pragma once
 
-#include "Types.h"
 #include <deque>
+
+#include "Types.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "Engine/Engine.h"
 #include "FastNoise.h"
 
 #define UI_PLOT_FRAMES 100
 
-struct DataRendering {
-	DataRendering();
-	std::deque<uint> frameTimes;
-};
+namespace UIData {
+	class DataRendering {
+	public:
+		DataRendering();
+		std::deque<uint> frameTimes;
+	};
 
-struct DataPlayer {};
+	class DataPlayer {};
 
-struct DataGeneration {
-	void SwitchNoise(Game*, int);
-	DataGeneration();
-	int selectedNoise;
-	float exp;
-	float terrace;
-	int seed;
-	float frequency;
-	FastNoise::Interp interpolation;
-	FastNoise::NoiseType noiseType;
-};
+	class DataGeneration {
+	public:
+		void SwitchNoise(Game*, int);
+		DataGeneration();
+		int selectedNoise;
+		float exp;
+		float terrace;
+		int seed;
+		float frequency;
+		FastNoise::Interp interpolation;
+		FastNoise::NoiseType noiseType;
+	};
 
-struct DataResources {};
+	class DataResources {};
+}
 
 class UIController {
 public:
@@ -53,12 +57,15 @@ private:
 	void GenerationUI();
 	void ResourcesUI();
 
+
 	Player* _player;
 	ResourceLoader* _resources;
 	Game* _game;
 	bool _uiOn;
-	DataRendering _dataRendering;
-	DataPlayer _dataPlayer;
-	DataGeneration _dataGeneration;
-	DataResources _dataResources;
+	UIData::DataRendering _dataRendering;
+	UIData::DataPlayer _dataPlayer;
+	UIData::DataGeneration _dataGeneration;
+	UIData::DataResources _dataResources;
 };
+
+

@@ -1,19 +1,27 @@
-#include "Render/Objects.h"
-#include "Utilities/Utilities.h"
-#include "Engine/Locator.hpp"
+// #include "Render/Objects.h"
+// #include "Utilities/Utilities.h"
+// #include "Engine/Locator.hpp"
+#include <string>
 #include <glm/gtc/type_ptr.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+#include "Render/Shader.h"
+#include "Utilities/Utilities.h"
+#include "Utilities/Locator.hpp"
+// #include "Types.h"
 
 void	CheckShaderError(uint index, std::string source)
 {
 	int		params = -1;
 	glGetShaderiv(index, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE) {
-		Locator::getLogger()->LogError("[CheckShaderError]\nShader didn't compile.");
+		Locator::GetLogger()->LogError("[CheckShaderError]\nShader didn't compile.");
 		int		max_length = 4096;
 		int		actual_length = 0;
 		char	shader_log[max_length];
 		glGetShaderInfoLog(index, max_length, &actual_length, shader_log);
-		Locator::getLogger()->Log(std::string(shader_log));
+		Locator::GetLogger()->Log(std::string(shader_log));
 		//! Something is wrong here!
 		glfwTerminate();
 		exit(1);
@@ -40,7 +48,7 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	glAttachShader(_id, _vs);
 	glAttachShader(_id, _fs);
 	glLinkProgram(_id);
-	Locator::getLogger()->LogSuccess("[Shader::Shader]\nLoaded: [" + vertexPath + ", " + fragmentPath);
+	// Locator::GetLogger()->LogSuccess("[Shader::Shader]\nLoaded: [" + vertexPath + ", " + fragmentPath);
 };
 
 Shader::~Shader() {

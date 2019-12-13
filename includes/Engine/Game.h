@@ -1,25 +1,12 @@
 #pragma once
+
 #include <vector>
 #include <iostream>
+
 #include "Types.h"
-#include "Render/Render.h"
-#include "Input/Input.h"
-#include "World/Resources.h"
-#include "UI/UI.h"
-#include "Generation/Map.h"
 
 #define FIXED_DELTA (1.f / 60.f)
 #define FRAME_MS (int)(FIXED_DELTA * 1000)
-
-class ResourceLoader;
-class UIController;
-class MapGeneration;
-
-class Entity {
-public:
-	virtual ~Entity() {};
-	virtual void Update() = 0;
-};
 
 class Game {
 public:

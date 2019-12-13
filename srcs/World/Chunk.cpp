@@ -1,7 +1,9 @@
 #include "Types.h"
 #include "World/World.h"
 #include "World/Shard.h"
-#include "Engine/Engine.h"
+#include "World/Chunk.h"
+#include "Engine/Game.h"
+#include "Generation/MapGeneration.h"
 
 Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = false;

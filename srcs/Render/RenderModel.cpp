@@ -1,5 +1,11 @@
-#include "Render/Objects.h"
+#include <GL/glew.h>
+
+#include "Render/RenderModel.h"
+#include "Render/Shader.h"
+#include "Render/Geometry.h"
+#include "Render/Texture.h"
 #include "Render/Camera.h"
+#include "Render/GLRenderer.h"
 
 RenderModel::RenderModel(Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
 	Init(shader, diffuseTexture, normalTexture, geometry);

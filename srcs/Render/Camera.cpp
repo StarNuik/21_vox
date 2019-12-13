@@ -1,4 +1,4 @@
-#include "Render/Render.h"
+#include "Render/GLRenderer.h"
 #include "Render/Camera.h"
 
 Camera::Camera(GLRenderer* renderer, float fov, float nearPlane, float farPlane) {

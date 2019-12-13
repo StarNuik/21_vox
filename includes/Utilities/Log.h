@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 #define TEXT_RED std::string("\e[91m")

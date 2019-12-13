@@ -1,4 +1,4 @@
-#include "UI/UI.h"
+#include "UI/UIController.h"
 
 UIController::UIController(Game* game) {
 	_game = game;

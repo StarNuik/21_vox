@@ -1,7 +1,12 @@
 #include "Types.h"
 #include "World/Shard.h"
-#include "Render/Objects.h"
-#include "Engine/Locator.hpp"
+#include "Render/RenderModel.h"
+#include "Render/GLRenderer.h"
+#include "Render/Geometry.h"
+#include "World/World.h"
+#include "Engine/Game.h"
+#include "World/ResourceLoader.h"
+#include "Utilities/Locator.hpp"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();

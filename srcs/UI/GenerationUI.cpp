@@ -1,10 +1,12 @@
-#include "UI/UI.h"
+#include "UI/UIController.h"
+#include "Generation/MapGeneration.h"
+#include "Engine/Game.h"
 
-DataGeneration::DataGeneration() {
+UIData::DataGeneration::DataGeneration() {
 	selectedNoise = 0;
 }
 
-void DataGeneration::SwitchNoise(Game* game, int newNoise) {
+void UIData::DataGeneration::SwitchNoise(Game* game, int newNoise) {
 	selectedNoise = newNoise;
 	FastNoise& noise = game->GetGeneration()->GetNoise((MapGeneration::GenerationType)selectedNoise);
 	seed = noise.GetSeed();
@@ -14,7 +16,7 @@ void DataGeneration::SwitchNoise(Game* game, int newNoise) {
 }
 
 void UIController::UpdateGeneration() {
-	DataGeneration& data = _dataGeneration;
+	UIData::DataGeneration& data = _dataGeneration;
 	MapGeneration* g = _game->GetGeneration();
 
 	data.exp = g->GetExpValue();
@@ -26,7 +28,7 @@ void UIController::GenerationUI() {
 	const float zero = 0.f;
 	const float fstep = 0.1f;
 	const int istep = 1;
-	DataGeneration& data = _dataGeneration;
+	UIData::DataGeneration& data = _dataGeneration;
 	MapGeneration* map = _game->GetGeneration();
 
 	float exp = data.exp;

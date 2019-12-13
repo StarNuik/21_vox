@@ -1,6 +1,8 @@
 #include "Types.h"
 #include "World/World.h"
-#include "Engine/Locator.hpp"
+#include "Utilities/Locator.hpp"
+#include "Engine/Game.h"
+#include "World/Chunk.h"
 
 World::World(Game* game) {
 	_game = game;
@@ -28,7 +30,6 @@ void World::DestroyChunk(glm::ivec2 pos) {
 		return;
 	chunk->SetActive(false);
 	_chunks[pos] = nullptr;
-	_chunks.erase(pos);
 	delete chunk;
 }
 

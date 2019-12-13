@@ -1,11 +1,22 @@
-#include "Engine/Engine.h"
-#include "Engine/Locator.hpp"
-#include "Player/Player.h"
-#include "Generation/Map.h"
-#include "World/World.h"
+// #include "Engine/Engine.h"
+// #include "Engine/Locator.hpp"
+// #include "Player/Player.h"
+// #include "Generation/Map.h"
+// #include "World/World.h"
 
-RenderEngineConfig glConfig() {
-	RenderEngineConfig config;
+#include "Render/GLRenderer.h"
+#include "Engine/Game.h"
+#include "Utilities/Locator.hpp"
+#include "Input/Input.h"
+#include "World/ResourceLoader.h"
+#include "UI/UIController.h"
+#include "World/World.h"
+#include "Generation/MapGeneration.h"
+#include "Player/Player.h"
+
+
+GLRenderer::RenderEngineConfig glConfig() {
+	GLRenderer::RenderEngineConfig config;
 	config.windowSize = glm::ivec2(1500, 900);
 	config.windowPos = glm::ivec2(900, 100);
 	config.windowName = std::string("Test");
@@ -23,7 +34,7 @@ RenderEngineConfig glConfig() {
 
 Game::Game() {
 	_finished = false;
-	Locator::provideLogger(NULL);
+	Locator::ProvideLogger(NULL);
 	_renderer = nullptr;
 	_input = nullptr;
 	_resources = nullptr;
@@ -33,7 +44,7 @@ Game::Game() {
 
 void Game::InitSystems() {
 	ILogger* log = new TerminalLogger();
-	Locator::provideLogger(log);
+	Locator::ProvideLogger(log);
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
@@ -73,6 +84,6 @@ Game::~Game() {
 	delete _input;
 	delete _renderer;
 
-	ILogger* log = Locator::getLogger();
+	ILogger* log = Locator::GetLogger();
 	delete log;
 };

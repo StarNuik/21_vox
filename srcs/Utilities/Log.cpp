@@ -1,7 +1,6 @@
-#include "Base.h"
+// #include "Base.h"
 #include "Utilities/Log.h"
-
-
+#include <iostream>
 
 TerminalLogger::TerminalLogger() {
 	LogSuccess("[TerminalLogger::TerminalLogger]\nInitialized Logger system successfully.");

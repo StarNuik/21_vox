@@ -1,4 +1,4 @@
-#include "Render/Render.h"
+#include "Render/GLRenderer.h"
 
 GLFWwindow* GLRenderer::GetWindow() {
 	return _window;

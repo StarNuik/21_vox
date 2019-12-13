@@ -1,5 +1,4 @@
-// #include "Engine/Engine.h"
-#include "Engine/Engine.h"
+#include "Engine/Game.h"
 
 void Game::AddEntity(Entity* entity) {
 	_entities.push_back(entity);

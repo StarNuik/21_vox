@@ -1,6 +1,7 @@
 #include "Types.h"
 #include "World/Shard.h"
-#include "Render/Objects.h"
+#include "World/World.h"
+#include "Render/VertexBuffers.h"
 
 std::vector<float> Shard::GenerateBlock(World* w, glm::ivec3 globalBlockPos) {
 	std::vector<float> res = std::vector<float>();

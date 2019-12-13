@@ -1,6 +1,11 @@
 #include "Player/Player.h"
-#include "Engine/Locator.hpp"
-#include <glm/gtx/euler_angles.hpp>
+#include "Utilities/Locator.hpp"
+#include "Engine/Game.h"
+#include "Render/GLRenderer.h"
+#include "Render/Camera.h"
+#include "Input/Input.h"
+#include "UI/UIController.h"
+// #include <glm/gtx/euler_angles.hpp>
 // #include <glm/gtx/quaternion.hpp>
 
 Player::Player(Game* game) {

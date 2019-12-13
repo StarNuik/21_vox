@@ -1,14 +1,14 @@
-#include "UI/UI.h"
+#include "UI/UIController.h"
 
-// DataPlayer::DataPlayer() {}
+// UIData::DataPlayer::DataPlayer() {}
 
 void UIController::UpdatePlayer() {
-	DataPlayer& data = _dataPlayer;
+	UIData::DataPlayer& data = _dataPlayer;
 
 };
 
 void UIController::PlayerUI() {
-	DataPlayer& data = _dataPlayer;
+	UIData::DataPlayer& data = _dataPlayer;
 
 	ImGui::Text("Player UI");
 };
