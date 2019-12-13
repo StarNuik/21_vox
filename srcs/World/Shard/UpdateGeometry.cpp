@@ -29,6 +29,8 @@ void Shard::UpdateGeometry() {
 		if (!HasType((BlockType)t))
 			continue;
 		RenderModel* model = GenerateModelOfType((BlockType)t);
+		if (!model)
+			continue;
 		_models.reserve(sizeof(RenderModel*));
 		_models.push_back(model);
 	}
@@ -52,7 +54,6 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
-				// std::vector<float> block = GenerateBlock(w, _position * 16 + glm::ivec3(x, y, z));
 				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z));
 				if (block.size() == 0)
 					continue;
@@ -65,6 +66,8 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 				vertexBuffer.insert(vertexBuffer.end(), block.begin(), block.end());
 				count--;
 			}
+	if (vertexBuffer.size() == 0)
+		return nullptr;
 	Geometry* g = new Geometry(vertexBuffer);
 	RenderModel* model = new RenderModel(r, rs->GetShader("Base"), rs->GetTexture(type), g);
 	model->SetPosition(_position * 16);

@@ -53,7 +53,7 @@ BlockType World::GetBlock(glm::ivec3 globalPos) {
 	glm::ivec2 chunkPos(floorf(globalPos.x / 16.f), floorf(globalPos.z / 16.f));
 	Chunk* chunk = this->_chunks[chunkPos];
 	if (!chunk) {
-		return BlockType::Air;
+		return BlockType::Stone; //! Is this okay?
 	} else {
 		int x = globalPos.x % 16;
 		int z = globalPos.z % 16;

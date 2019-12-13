@@ -56,7 +56,9 @@ void Chunk::SetActive(bool state) {
 }
 
 BlockType Chunk::GetBlock(glm::ivec3 pos) {
-	if (pos.y < 0 || pos.y >= 256)
+	if (pos.y < 0)
+		return BlockType::Stone; //! Is this okay?
+	if (pos.y >= 256)
 		return BlockType::Air;
 	int y = pos.y / 16;
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
