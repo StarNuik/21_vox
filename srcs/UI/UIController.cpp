@@ -22,6 +22,7 @@ void UIController::Draw() {
 }
 
 void UIController::UpdateData() {
+	UpdateProfiler();
 	UpdatePlayer();
 	UpdateRendering();
 	UpdateGeneration();
