@@ -11,11 +11,16 @@
 #define UI_PLOT_FRAMES 100
 
 namespace UIData {
-	class DataRendering {
+	class DataProfiler {
 	public:
-		DataRendering();
-		std::deque<uint> frameTimes;
+		DataProfiler();
+		std::deque<float> frameFull;
+		std::deque<float> input;
+		std::deque<float> update;
+		std::deque<float> renderFull;
 	};
+
+	class DataRendering {};
 
 	class DataPlayer {};
 
@@ -56,11 +61,13 @@ public:
 private:
 	void MainUI();
 
+	void UpdateProfiler();
 	void UpdatePlayer();
 	void UpdateRendering();
 	void UpdateGeneration();
 	void UpdateResources();
 
+	void ProfilerUI();
 	void PlayerUI();
 	void RenderingUI();
 	void GenerationUI();
@@ -75,6 +82,7 @@ private:
 	UIData::DataPlayer _dataPlayer;
 	UIData::DataGeneration _dataGeneration;
 	UIData::DataResources _dataResources;
+	UIData::DataProfiler _dataProfiler;
 };
 
 

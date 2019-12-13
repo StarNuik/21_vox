@@ -17,6 +17,6 @@ GLRenderer* Game::GetRenderer() {return _renderer;};
 Input* Game::GetInput() {return _input;};
 ResourceLoader* Game::GetResources() {return _resources;};
 UIController* Game::GetUI() {return _ui;};
-uint Game::GetLastFrameTime() {return _lastFrameTime;};
 World* Game::GetWorld() {return _world;};
 MapGeneration* Game::GetGeneration() {return _mpGen;};
+// uint Game::GetLastFrameTime() {return _lastFrameTime;};

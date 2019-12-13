@@ -13,6 +13,7 @@
 #include "World/World.h"
 #include "Generation/MapGeneration.h"
 #include "Player/Player.h"
+#include "Utilities/Profiler.h"
 
 
 GLRenderer::RenderEngineConfig glConfig() {
@@ -45,6 +46,12 @@ Game::Game() {
 void Game::InitSystems() {
 	ILogger* log = new TerminalLogger();
 	Locator::ProvideLogger(log);
+
+	Profiler::SetResolution(Profiler::Nanoseconds);
+	Profiler::Prepare("FrameFull");
+	Profiler::Prepare("Input");
+	Profiler::Prepare("Update");
+	Profiler::Prepare("RenderFull");
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();

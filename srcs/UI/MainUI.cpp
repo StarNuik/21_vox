@@ -2,6 +2,9 @@
 
 void UIController::MainUI() {
 	ImGui::Begin("Toolbar");
+	if (ImGui::CollapsingHeader("Profiler")) {
+		ProfilerUI();
+	}
 	if (ImGui::CollapsingHeader("Player")) {
 		PlayerUI();
 	}
