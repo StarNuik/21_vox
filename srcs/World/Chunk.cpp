@@ -56,13 +56,15 @@ void Chunk::SetActive(bool state) {
 }
 
 BlockType Chunk::GetBlock(glm::ivec3 pos) {
-	int y = pos.y / 16;
 	if (pos.y < 0 || pos.y >= 256)
 		return BlockType::Air;
+	int y = pos.y / 16;
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
 
 void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
+	if (pos.y < 0 || pos.y >= 256)
+		return;
 	int y = pos.y / 16;
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
 }
