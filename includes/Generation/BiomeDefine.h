@@ -1,6 +1,6 @@
 #pragma once
 
-enum biome
+enum Biome
 {
     OCEAN = 1,
     BEACH, // 2

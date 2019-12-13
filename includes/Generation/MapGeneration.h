@@ -34,13 +34,13 @@ public:
         Basic = 0,
         Land,
         HighLand,
+        BiomeDefinition,
         First = Basic,
-        Last = HighLand,
+        Last = BiomeDefinition,
         Size = Last + 1
     };
 
     StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
-    int TestBiome(glm::ivec2 pos, glm::ivec2 blockPosition);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);
@@ -55,9 +55,10 @@ private:
     StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
     StoredMapData LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
     StoredMapData HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
-    int BiomeDefinition(float e, float m);
+    int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     float _Hash(const float n);
     float Noise(const glm::vec3 &x);
+    float Smoothstep(float edge0, float edge1, float x);
     float random (glm::vec2 st)
     {
         return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);

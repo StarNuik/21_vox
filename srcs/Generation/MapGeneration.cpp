@@ -4,44 +4,50 @@
 #define LERP MapGeneration::_Lerp
 #define VEC3 glm::vec3
 
-int MapGeneration::BiomeDefinition(float e, float m)
-{
-  if (e < 0.1)
-    return OCEAN;
-  if (e < 0.12) return BEACH;
+// int MapGeneration::BiomeDefinition(float e, float m)
+// {
+//   if (e < 0.1)
+//     return OCEAN;
+//   if (e < 0.12) return BEACH;
   
-  if (e > 0.8) {
-    if (m < 0.1) return SCORCHED;
-    if (m < 0.2) return BARE;
-    if (m < 0.5) return TUNDRA;
-    return SNOW;
-  }
+//   if (e > 0.8) {
+//     if (m < 0.1) return SCORCHED;
+//     if (m < 0.2) return BARE;
+//     if (m < 0.5) return TUNDRA;
+//     return SNOW;
+//   }
 
-  if (e > 0.6) {
-    if (m < 0.33) return TEMPERATE_DESERT;
-    if (m < 0.66) return SHRUBLAND;
-    return TAIGA;
-  }
+//   if (e > 0.6) {
+//     if (m < 0.33) return TEMPERATE_DESERT;
+//     if (m < 0.66) return SHRUBLAND;
+//     return TAIGA;
+//   }
 
-  if (e > 0.3) {
-    if (m < 0.16) return TEMPERATE_DESERT;
-    if (m < 0.50) return GRASSLAND;
-    if (m < 0.83) return TEMPERATE_DECIDUOUS_FOREST;
-    return TEMPERATE_RAIN_FOREST;
-  }
+//   if (e > 0.3) {
+//     if (m < 0.16) return TEMPERATE_DESERT;
+//     if (m < 0.50) return GRASSLAND;
+//     if (m < 0.83) return TEMPERATE_DECIDUOUS_FOREST;
+//     return TEMPERATE_RAIN_FOREST;
+//   }
 
-  if (m < 0.16) return SUBTROPICAL_DESERT;
-  if (m < 0.33) return GRASSLAND;
-  if (m < 0.66) return TROPICAL_SEASONAL_FOREST;
-  return TROPICAL_RAIN_FOREST;
+//   if (m < 0.16) return SUBTROPICAL_DESERT;
+//   if (m < 0.33) return GRASSLAND;
+//   if (m < 0.66) return TROPICAL_SEASONAL_FOREST;
+//   return TROPICAL_RAIN_FOREST;
+// }
+
+
+float MapGeneration::Smoothstep(float edge0, float edge1, float x)
+{
+    // Scale, bias and saturate x to 0..1 range
+    x = glm::clamp((x - edge0) / (edge1 - edge0), 0.f, 1.f);
+    // Evaluate polynomial
+    return x*x*(3 - 2 * x);
 }
 
-int MapGeneration::TestBiome(glm::ivec2 pos, glm::ivec2 blockPosition)
+int MapGeneration::BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition)
 {
-  FastNoise noise;
-  noise.SetNoiseType(FastNoise::Cellular);
-  noise.SetFrequency(0.01);
-  noise.SetSeed(1339);
+  FastNoise noise = _noises[BiomeDefinition];
   
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
@@ -154,7 +160,7 @@ MapGeneration::StoredMapData MapGeneration::BasicGenerationColumn(glm::ivec2 pos
 
   StoredMapData block;
   block.elevation = terrace;
-  block.biom = BiomeDefinition(e, m);
+  // block.biom = BiomeDefinition(e, m);
   return block;
   // (umap)[position] = new StoredMapData(pow(e, EXP) - 0.42); // резкие горные пики
   // (umap)[position] = new StoredMapData((round((e * 16) / 16))); // терассы
@@ -164,18 +170,25 @@ MapGeneration::StoredMapData MapGeneration::Generation(MapGeneration::Generation
 {
   switch (genType)
   {
-  case Basic:
-      return BasicGenerationColumn(globalPos, blockPosition);
-    break;
-  case Land:
-      return LandGenerationColumn(globalPos, blockPosition);
-    break;
-  case HighLand:
-      return HighLandGenerationColumn(globalPos, blockPosition);
-    break;
-  default:
-      return BasicGenerationColumn(globalPos, blockPosition);
-    break;
+    case GenerationType::BiomeDefinition:
+    {
+      StoredMapData b;
+      b.biom = BiomeGeneration(globalPos, blockPosition);
+      return b;
+    }
+      break;
+    case GenerationType::Basic:
+        return BasicGenerationColumn(globalPos, blockPosition);
+      break;
+    case GenerationType::Land:
+        return LandGenerationColumn(globalPos, blockPosition);
+      break;
+    case GenerationType::HighLand:
+        return HighLandGenerationColumn(globalPos, blockPosition);
+      break;
+    default:
+        return BasicGenerationColumn(globalPos, blockPosition);
+      break;
   }
 }
 
@@ -183,6 +196,11 @@ MapGeneration::MapGeneration()
 {
   _exp = 2.2f;
   _terraceValue = 32.f;
+  _noises[BiomeDefinition].SetNoiseType(FastNoise::Cellular);
+  _noises[BiomeDefinition].SetSeed(1330);
+  _noises[BiomeDefinition].SetFrequency(0.001);
+  _noises[BiomeDefinition].SetCellularReturnType(FastNoise::CellValue);
+  _noises[BiomeDefinition].SetCellularDistanceFunction(FastNoise::Natural);
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
   _noises[Land].SetNoiseType(FastNoise::Simplex);
@@ -192,6 +210,7 @@ MapGeneration::MapGeneration()
   _noiseNames[Basic] = "Basic";
   _noiseNames[Land] = "Land";
   _noiseNames[HighLand] = "HighLand";
+  _noiseNames[BiomeDefinition] = "BiomeDefinition";
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};
