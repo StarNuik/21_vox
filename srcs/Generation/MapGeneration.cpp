@@ -1,5 +1,6 @@
 #include "Generation/MapGeneration.h"
 #include "Generation/BiomeDefine.h"
+#include <iostream>
 #define LERP MapGeneration::_Lerp
 #define VEC3 glm::vec3
 
@@ -35,6 +36,30 @@ int MapGeneration::BiomeDefinition(float e, float m)
   return TROPICAL_RAIN_FOREST;
 }
 
+int MapGeneration::TestBiome(glm::ivec2 pos, glm::ivec2 blockPosition)
+{
+  FastNoise noise;
+  noise.SetNoiseType(FastNoise::Cellular);
+  noise.SetFrequency(0.01);
+  noise.SetSeed(1339);
+  
+  float globalX = pos.x * 16, globalY = pos.y * 16;
+  float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
+  int biome = floorf((noise.GetNoise(nx, ny) * 0.5 + 0.5) * 10);
+
+  if (biome == 1)
+    return OCEAN;
+  else if (biome == 2)
+    return BEACH;
+  else if (biome >= 3 && biome <= 5)
+    return GRASSLAND;
+  else if (biome < 9)
+    return (TAIGA);
+  else
+    return (GRASSLAND);
+  // if (biome )
+}
+
 float MapGeneration::_Hash(const float n)
 {
     float x = sin(n) * 43758.5453f;
@@ -65,7 +90,6 @@ MapGeneration::StoredMapData  MapGeneration::HighLandGenerationColumn(glm::ivec2
 
   float globalX = pos.x * 16, globalY = pos.y * 16;
   float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
-
   float e = 1.f * (noise.GetNoise(nx, ny));
   float e1 = 0.50f * (noise.GetNoise(2.f * nx, 2.f * ny));
   float e2 = 0.25f * (noise.GetNoise(4.f * nx, 4.f * ny));
@@ -161,7 +185,7 @@ MapGeneration::MapGeneration()
   _terraceValue = 32.f;
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
-  _noises[Land].SetNoiseType(FastNoise::Perlin);
+  _noises[Land].SetNoiseType(FastNoise::Simplex);
   _noises[Land].SetFrequency(0.01);
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
