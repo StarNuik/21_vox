@@ -15,12 +15,12 @@
 #include "Utilities/Time.h"
 #include "Utilities/Profiler.h"
 
-void Game::Update() {
+void Game::Update(float delta) {
 	if (glfwWindowShouldClose(_renderer->GetWindow()) || _input->KeyPressed(GLFW_KEY_ESCAPE)) {
 		_finished = true;
 	}
 	for (Entity* entity : _entities) {
-		entity->Update();
+		entity->Update(delta);
 	}
 };
 
@@ -28,23 +28,23 @@ void Game::GameLoop() {
 	Locator::GetLogger()->LogSuccess("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{
-		int64 start = LONG_TIME;
+		float delta = Profiler::Getf("FrameFull") * 0.001;
 		Profiler::Start("FrameFull");
 		Profiler::Start("Input");
 		_input->Update(_renderer->GetWindow());
 		Profiler::End("Input");
 		Profiler::Start("Update");
-		Update();
+		Update(delta);
 		Profiler::End("Update");
 		// PhysicsUpdate();
 		Profiler::Start("RenderFull");
 		_renderer->RenderFrame();
 		Profiler::End("RenderFull");
 		Profiler::End("FrameFull");
-		int64 end = LONG_TIME;
+		// int64 end = LONG_TIME;
 
-		if ((end - start) - FRAME_MS > 0)
-			usleep(((end - start) - FRAME_MS) * 1000);
+		// if ((end - start) - FRAME_MS > 0)
+		// 	usleep(((end - start) - FRAME_MS) * 1000);
 		// _lastFrameTime = end - start;
 	}
 };

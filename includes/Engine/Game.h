@@ -28,7 +28,7 @@ public:
 	MapGeneration* _mpGen;
 	class ProfilerInfo;
 private:
-	void Update();
+	void Update(float delta);
 
 	bool _finished;
 	GLRenderer* _renderer;
@@ -37,5 +37,5 @@ private:
 	ResourceLoader* _resources;
 	World* _world;
 	UIController* _ui;
-	// uint _lastFrameTime;
+	float _lastFrame;
 };

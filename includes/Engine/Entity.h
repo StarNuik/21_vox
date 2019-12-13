@@ -4,5 +4,5 @@
 class Entity {
 public:
 	virtual ~Entity() {};
-	virtual void Update() = 0;
+	virtual void Update(float delta) = 0;
 };

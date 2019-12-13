@@ -2,6 +2,8 @@
 #include "Engine/Game.h"
 #include <algorithm>
 #include "Utilities/Profiler.h"
+#include "Player/Player.h"
+#include <glm/glm.hpp>
 
 void PlotLines(std::deque<float>& storage, const char* label);
 
@@ -26,12 +28,30 @@ void UIController::UpdateProfiler() {
 };
 
 void UIController::ProfilerUI() {
+	const float margin = 20.f;
 	UIData::DataProfiler& data = _dataProfiler;
+	ImGuiIO& io = ImGui::GetIO();
 
+	ImGui::SetNextWindowPos(ImVec2(margin, io.DisplaySize.y - margin), ImGuiCond_Always, ImVec2(0.f, 1.f));
+	ImGui::SetNextWindowBgAlpha(0.9f);
+	int windowFlags = ImGuiWindowFlags_NoMove |
+	ImGuiWindowFlags_NoDecoration |
+	ImGuiWindowFlags_AlwaysAutoResize |
+	ImGuiWindowFlags_NoSavedSettings |
+	ImGuiWindowFlags_NoFocusOnAppearing |
+	ImGuiWindowFlags_NoNav;
+	ImGui::Begin("Profiler", nullptr, windowFlags);
+	glm::vec3 pos = _player->GetPosition();
+	ImGui::Text("Pos: [x: %6.1f, y: %6.1f, z: %6.1f]", pos.x, pos.y, pos.z);
+	ImGui::Separator();
 	PlotLines(data.frameFull, "Full frame");
+	ImGui::Separator();
 	PlotLines(data.input, "Input loop");
+	ImGui::Separator();
 	PlotLines(data.update, "Update loop");
+	ImGui::Separator();
 	PlotLines(data.renderFull, "Render loop");
+	ImGui::End();
 };
 
 void PlotLines(std::deque<float>& storage, const char* label) {
@@ -45,5 +65,5 @@ void PlotLines(std::deque<float>& storage, const char* label) {
 	}
 	average /= (float)UI_PLOT_FRAMES;
 	std::string overlay = "Average: " + std::to_string(average) + " ms.";
-	ImGui::PlotLines(label, array, UI_PLOT_FRAMES, 0, overlay.c_str(), 0.f, (maxValue + maxValue * .2f), ImVec2(0, 100));
+	ImGui::PlotLines(label, array, UI_PLOT_FRAMES, 0, overlay.c_str(), 0.f, (maxValue + maxValue * .2f), ImVec2(0, 50));
 }

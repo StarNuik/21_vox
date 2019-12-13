@@ -10,5 +10,7 @@ void UIController::UpdatePlayer() {
 void UIController::PlayerUI() {
 	UIData::DataPlayer& data = _dataPlayer;
 
+	// _player->GetP
 	ImGui::Text("Player UI");
+	// ImGui::Text("")
 };

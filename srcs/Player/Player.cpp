@@ -27,10 +27,10 @@ Player::~Player() {
 	delete _camera;
 }
 
-void Player::Update() {
+void Player::Update(float delta) {
 	Input* input = _game->GetInput();
 
-	if (input->KeyJustPressed(GLFW_KEY_1)) {
+	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
 		_game->GetUI()->SetState(state);
 		_game->GetRenderer()->SetCursor(state);
@@ -47,25 +47,27 @@ void Player::Update() {
 	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
 	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
 	if (input->KeyPressed(GLFW_KEY_W)) {
-		_position += forward * FIXED_DELTA;
+		_position += forward * delta;
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
-		_position -= forward * FIXED_DELTA;
+		_position -= forward * delta;
 	}
 	if (input->KeyPressed(GLFW_KEY_SPACE)) {
-		_position += up * FIXED_DELTA;
+		_position += up * delta;
 	}
 	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-		_position -= up * FIXED_DELTA;
+		_position -= up * delta;
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
-		_position += right * FIXED_DELTA;
+		_position += right * delta;
 	}
 	if (input->KeyPressed(GLFW_KEY_A)) {
-		_position -= right * FIXED_DELTA;
+		_position -= right * delta;
 	}
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);
 	}
 	_camera->SetPosition(_position);
 }
+
+glm::vec3 Player::GetPosition() {return _position;};
