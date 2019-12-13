@@ -18,7 +18,6 @@ Texture::Texture(std::string path) {
 		exit(1);
 	}
 	glGenTextures(1, &_id);
-	Locator::GetLogger()->Log("| " + path + " | " + std::to_string(_id) + "");
 	glBindTexture(GL_TEXTURE_2D, _id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
