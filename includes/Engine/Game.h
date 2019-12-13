@@ -23,9 +23,10 @@ public:
 	ResourceLoader* GetResources();
 	UIController* GetUI();
 	World* GetWorld();
-	uint GetLastFrameTime();
+	// uint GetLastFrameTi me();
 	MapGeneration* GetGeneration();
 	MapGeneration* _mpGen;
+	class ProfilerInfo;
 private:
 	void Update();
 
@@ -36,5 +37,5 @@ private:
 	ResourceLoader* _resources;
 	World* _world;
 	UIController* _ui;
-	uint _lastFrameTime;
+	// uint _lastFrameTime;
 };

@@ -27,6 +27,6 @@ private:
 	glm::ivec3 _position;
 	Game* _game;
 	BlockType _blocks[16][16][16] = {BlockType::Air};
-	uint _blockTypePresent[(uint)BlockType::Last] = {0};
+	uint _blockTypePresent[(uint)BlockType::Size] = {0};
 	std::vector<RenderModel*> _models;
 };

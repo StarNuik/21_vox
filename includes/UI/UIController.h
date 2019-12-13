@@ -14,7 +14,10 @@ namespace UIData {
 	class DataProfiler {
 	public:
 		DataProfiler();
-		std::deque<uint> frameTimes;
+		std::deque<float> frameFull;
+		std::deque<float> input;
+		std::deque<float> update;
+		std::deque<float> renderFull;
 	};
 
 	class DataRendering {};

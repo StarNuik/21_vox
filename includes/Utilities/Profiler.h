@@ -25,6 +25,9 @@ private:
 	public:
 		__timepoint start;
 		__timepoint end;
+		__timepoint lastStart;
+		__timepoint lastEnd;
+		inline void PushBack();
 	};
 	static Resolution _res;
 	static std::unordered_map<std::string, Pair> _map;
