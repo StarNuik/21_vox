@@ -83,6 +83,7 @@ private:
 	UIData::DataGeneration _dataGeneration;
 	UIData::DataResources _dataResources;
 	UIData::DataProfiler _dataProfiler;
+	bool _showProfiler;
 };
 
 

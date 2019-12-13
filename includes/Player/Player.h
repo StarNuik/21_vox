@@ -7,13 +7,14 @@
 #include "Engine/Entity.h"
 
 
-#define SPEED 5.f
+#define SPEED 10.f
 
 class Player : public Entity {
 public:
 	Player(Game* game);
 	virtual ~Player();
-	void Update();
+	void Update(float delta);
+	glm::vec3 GetPosition();
 private:
 	Game* _game;
 	Camera* _camera;

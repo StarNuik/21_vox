@@ -3,6 +3,7 @@
 UIController::UIController(Game* game) {
 	_game = game;
 	_uiOn = false;
+	_showProfiler = true;
 };
 UIController::~UIController() {};
 
@@ -14,9 +15,7 @@ void UIController::Draw() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	if (_uiOn) {
-		MainUI();
-	}
+	MainUI();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
