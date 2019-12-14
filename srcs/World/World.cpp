@@ -48,6 +48,14 @@ void World::DeactivateChunk(glm::ivec2 pos) {
 	}
 }
 
+void World::SetChunkState(glm::ivec2 pos, bool state) {
+	Chunk* chunk = _chunks[pos];
+	if (!chunk) {
+		return;
+	}
+	chunk->SetActive(state);
+}
+
 BlockType World::GetBlock(glm::ivec3 globalPos) {
 	//* Maybe optimize this
 	glm::ivec2 chunkPos(floorf(globalPos.x / 16.f), floorf(globalPos.z / 16.f));

@@ -13,8 +13,6 @@ float sin01(float f) {
 }
 
 void main() {
-	// float height = 60.0 + sin01(tick * 0.004) * 6.0;
-	// height += sin01(fragPos.x * 0.2) * 4 - sin01(fragPos.z * 0.22) * 4;
 	vec4 texColor = texture(diffuseTex, uvPos);
-		fragColor = texColor;
+	fragColor = texColor;
 }

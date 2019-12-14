@@ -26,6 +26,7 @@ public:
 	void GenerateChunk(glm::ivec2);
 	void DestroyChunk(glm::ivec2);
 	void ActivateChunk(glm::ivec2);
+	void SetChunkState(glm::ivec2, bool);
 	void DeactivateChunk(glm::ivec2);
 	BlockType GetBlock(glm::ivec3 globalPosition);
 	void SetBlock(glm::ivec3 globalPosition, BlockType);
