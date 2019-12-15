@@ -91,6 +91,22 @@ float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos, int biome)
   return elevation;
 }
 
+float MapGeneration::BeachGenerationColumn(glm::ivec2 pos, int biome)
+{
+	FastNoise noise = _noises[BeachLand];
+  float terraceValue = _terraceValue;
+
+  float e = 1.f * (noise.GetNoise(1.f * pos.x, 1.f * pos.y));
+  e = (e * 0.5f + 0.5f) * 10.f; // range 0..10;
+  
+  // if (CheckingTheBiomeInTheNextColumn(glm::ivec3(pos, biome)))
+    // std::cout << "border: " << pos.x << " " << pos.y << std::endl;
+
+  float terrace = round(e * terraceValue) / terraceValue;  
+  int elevation = (int)floorf(terrace);
+  return elevation;
+}
+
 float MapGeneration::LandGenerationColumn(glm::ivec2 pos, int biome)
 {
 	FastNoise noise = _noises[Land];
@@ -195,7 +211,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.firstBlockLayer = BlockType::Sand;
       column.lastBlockLayer = BlockType::Sand;
-      column.elevation = LandGenerationColumn(pos, column.biom);
+      column.elevation = BeachGenerationColumn(pos, column.biom);
       return column;
     }
     case TAIGA:
@@ -281,18 +297,22 @@ MapGeneration::MapGeneration()
   _noises[BiomeDefinition].SetFrequency(0.001);
   _noises[BiomeDefinition].SetCellularReturnType(FastNoise::CellValue);
   _noises[BiomeDefinition].SetCellularDistanceFunction(FastNoise::Natural);
+
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
+
   _noises[Land].SetNoiseType(FastNoise::Simplex);
   _noises[Land].SetFrequency(0.01);
+
+  _noises[BeachLand].SetNoiseType(FastNoise::Simplex);
+  _noises[BeachLand].SetFrequency(0.01);
+
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
-  _noises[Testing].SetNoiseType(FastNoise::Cellular);
-  _noises[Testing].SetFrequency(0.05);
-  _noises[Testing].SetSeed(1339);
-  _noises[Testing].SetCellularDistanceFunction(FastNoise::Natural);
+
   _noiseNames[Basic] = "Basic";
   _noiseNames[Land] = "Land";
+  _noiseNames[BeachLand] = "BeachLand";
   _noiseNames[HighLand] = "HighLand";
   _noiseNames[BiomeDefinition] = "BiomeDefinition";
 }

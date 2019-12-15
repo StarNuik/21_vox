@@ -61,6 +61,7 @@ private:
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos, int biome);
+    float BeachGenerationColumn(glm::ivec2 pos, int biome);
     float HighLandGenerationColumn(glm::ivec2 pos, int biome);
   
     bool CheckingTheBiomeInTheNextColumn(glm::ivec3 middle);
