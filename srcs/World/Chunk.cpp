@@ -33,53 +33,19 @@ void Chunk::Generate() {
 		for (int z = 0; z < 16; z++) {
 			
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
+			block.elevation = glm::clamp(block.elevation, 0, 255); // max world height == 255
 			int firstLayerBorder = 40 + block.elevation;
 			for (int y = 0; y < firstLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
-			int lastLayerBorder = firstLayerBorder + 40 + block.elevation - 1;
+			block.elevation = glm::clamp(block.elevation, 0, 255); // max world height == 255
+			int lastLayerBorder = 60 + block.elevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
-			// high.elevation = mp.Generation(MapGeneration::Basic, _position, glm::ivec2(x, z)).elevation;
-			// int h = (int)floorf(high.elevation);
-			// int firstLayerBorder = h + 40;
-			//  h = glm::clamp(h, 0, 256);
-			// for (int y = 0; y < firstLayerBorder; y++) {
-			// 	w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
-			// }
-
-			// // if (test == 100)
-			// // 	for (int y = firstLayerBorder; y < test; y++)
-			// // 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Planks);
-			
-			// if (high.biom == OCEAN)
-			// {;
-			// 	h += 10;
-			// 	h = glm::clamp(h, 0, 256);
-			// 	for (int y = firstLayerBorder; y < 60; y++)
-			// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::OreCoal);
-			// }
-			// else if (high.biom == BEACH)
-			// {
-			// 	high.elevation = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x,z)).elevation;
-			// 	h = (int)floorf(high.elevation);
-			// 	h = glm::clamp(h, 0, 256);
-			// 	for (int y = firstLayerBorder; y < 60 + h; y++)
-			// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Sand);
-			// }
-			// else if (high.biom == GRASSLAND)
-			// {
-			// 	high.elevation = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x, z)).elevation;
-			// 	h = (int)floorf(high.elevation);
-			// 	h = glm::clamp(h, 0, 256);
-			// 	for (int y = firstLayerBorder; y < 60 + h; y++)
-			// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
-			// 	w->SetBlock(glm::ivec3(_position.x * 16 + x, 60 + h - 1, _position.y * 16 + z), BlockType::Grass);
-			// }
 			// else if (high.biom == TAIGA)
 			// {
 			// 	high.elevation = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z)).elevation;

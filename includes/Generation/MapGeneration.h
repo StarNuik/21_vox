@@ -57,10 +57,7 @@ private:
     float _exp; // For sharp mountain peaks
     float _terraceValue; // For terrace
     FastNoise _noises[Size];
-	std::string _noiseNames[Size];
-  
-    StoredMapData TestingDistance(glm::ivec2 pos, glm::ivec2 blockPosition);
-    StoredMapData Voronoi(glm::ivec2 pos, glm::ivec2 blockPosition);
+	std::string _noiseNames[Size]; 
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos, int biome);
@@ -72,7 +69,6 @@ private:
     float _Hash(const float n);
     float Noise(const glm::vec3 &x);
     float Smoothstep(float edge0, float edge1, float x);
-    float VoronoiDistance(glm::vec2 x);
     glm::vec2 random2(glm::vec2 p);
     float random (glm::vec2 st)
     {
