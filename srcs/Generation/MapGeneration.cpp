@@ -42,9 +42,9 @@ float MapGeneration::Lerp(float v0, float v1, float t)
 	return (1.f - t) * v0 + t * v1;
 }
 
-float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos, int biome)
+float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
 {
-  FastNoise noise = _noises[HighLand];
+  FastNoise& noise = _noises[HighLand];
   float exp = _exp;
   float terraceValue = _terraceValue;
 
@@ -66,27 +66,30 @@ float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos, int biome)
   return elevation;
 }
 
-float MapGeneration::BeachGenerationColumn(glm::ivec2 pos, int biome)
+float MapGeneration::BeachGenerationColumn(glm::ivec2 pos)
 {
-	FastNoise noise = _noises[Beach];
+	FastNoise& noise = _noises[Beach];
   float terraceValue = _terraceValue;
   float e = 1.f * (noise.GetNoise(1.f * pos.x, 1.f * pos.y));
   e = (e * 0.5f + 0.5f); // range 0..1;
   float terrace = round(e * terraceValue) / terraceValue;  
   float elevation = terrace;
+  // static float min = 100, max = 0;
+  // min = (min > elevation ? elevation : min);
+  // max = (max < elevation ? elevation : max);
+  // std::cout << "min: " << min << " | max: " << max << std::endl;
   // int elevation = (int)floorf(terrace);
   return elevation;
 }
 
-float MapGeneration::LandGenerationColumn(glm::ivec2 pos, int biome)
+float MapGeneration::LandGenerationColumn(glm::ivec2 pos)
 {
-	FastNoise noise = _noises[GrassLand];
+	FastNoise& noise = _noises[GrassLand];
   float terraceValue = _terraceValue;
 
   float e = 0.5f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
-  e = (e * 0.5f + 0.5f); // range 0..1;
+  e = (e * 0.5f + 0.5f);
   
-
   float terrace = round(e * terraceValue) / terraceValue;  
   float elevation = terrace;
   return elevation;
@@ -94,7 +97,7 @@ float MapGeneration::LandGenerationColumn(glm::ivec2 pos, int biome)
 
 float MapGeneration::BasicGenerationColumn(glm::ivec2 pos)
 {
-  FastNoise noise = _noises[Basic];
+  FastNoise& noise = _noises[Basic];
   float terraceValue = _terraceValue;
 
   float e = 1.f * (noise.GetNoise(1.f * pos.x, 1.f * pos.y));
@@ -110,65 +113,77 @@ float MapGeneration::BasicGenerationColumn(glm::ivec2 pos)
 
 float MapGeneration::CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y) // x,y - coord. z - bioms
 {
-  FastNoise noise = _noises[Biomes];
-  glm::vec2 nextBlock = glm::vec2(originPos.x + (1 * distance_x), originPos.y + (1 * distance_y));
+  float ret = -1.f;
+
+  FastNoise& noise = _noises[Biomes];
+  glm::ivec2 nextBlock = glm::ivec2(originPos.x + distance_x, originPos.y + distance_y);
 
   int biome = floorf((noise.GetNoise(nextBlock.x, nextBlock.y) * 0.5 + 0.5) * 10);
   biome = BiomeDefinition(biome);
-  if (biome != originBiome)
+  if (biome < originBiome)
   {
-    FastNoise nextNoise[Size];
-    float elevation = (nextNoise[biome].GetNoise((float)nextBlock.x, (float)nextBlock.y) * 0.5 + 0.5);
-    return elevation;
+    switch (biome)
+    {
+      case GenerationType::GrassLand:
+        ret = LandGenerationColumn(nextBlock);
+        break;
+      case GenerationType::Beach:
+        ret = BeachGenerationColumn(nextBlock);
+        break;
+      case GenerationType::HighLand:
+        ret = HighLandGenerationColumn(nextBlock);
+        break;
+      default:
+        ret = -1.f;
+        break;
+    }
+    return ret;
   }
 
   return -1.f;
 }
 
+static void haha(float& count, float &sum, float value)
+{
+  if (value == -1.f) {
+    return;
+  }
+  count++;
+  sum += value;
+}
+
 void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome)
 {
   float distance = 1.f;
-  float rightBlock;
-  float leftBlock;
-  float topBlock;
-  float buttomBlock;
+  float rightBlockElevation;
+  float leftBlockElevation;
+  float topBlockElevation;
+  float buttomBlockElevation;
 
   while (1337)
   {
-    rightBlock = CheckingTheBiomeInTheNextColumn(pos, biome, (int)distance, 0);
-    if (rightBlock != -1.f)
-    {
-      distance = distance * STEP;
-      elevation = Lerp(rightBlock, elevation, distance);
+    rightBlockElevation = CheckingTheBiomeInTheNextColumn(pos, biome, (int)distance, 0);
+    leftBlockElevation = CheckingTheBiomeInTheNextColumn(pos, biome, (int)-distance, 0);
+    topBlockElevation = CheckingTheBiomeInTheNextColumn(pos, biome, 0, (int)distance);
+    buttomBlockElevation = CheckingTheBiomeInTheNextColumn(pos, biome, 0, (int) -distance);
+
+    float count = 0;
+    float sum = 0;
+    haha(count, sum, rightBlockElevation);
+    haha(count, sum, leftBlockElevation);
+    haha(count, sum, topBlockElevation);
+    haha(count, sum, buttomBlockElevation);
+    float approx = 0;
+    if (count != 0) {
+      approx = sum / count;
+      elevation = Lerp(approx, elevation, distance * STEP);
       return;
     }
 
-    leftBlock = CheckingTheBiomeInTheNextColumn(pos, biome, (int)-distance, 0);
-    if (leftBlock != -1.f)
-    {
-      distance = distance * STEP;
-      elevation = Lerp(leftBlock, elevation, distance);
-      return;
-    }
-
-    topBlock = CheckingTheBiomeInTheNextColumn(pos, biome, 0, (int)distance);
-    if (topBlock != -1.f)
-    {
-      distance = distance * STEP;
-      elevation = Lerp(topBlock, elevation, distance);
-      return;
-    }
-
-    buttomBlock = CheckingTheBiomeInTheNextColumn(pos, biome, 0, (int) -distance);
-    if (buttomBlock != -1.f)
-    {
-      distance = distance * STEP;
-      elevation = Lerp(buttomBlock, elevation, distance);
-      return;
-    }
     if (distance >= MAX_DIST_TO_SMOOTHING)
       return;
     distance++;
+    // continue;
   }
 }
 
@@ -220,21 +235,21 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Grass;
-      column.elevation = LandGenerationColumn(pos, column.biom);
+      column.elevation = LandGenerationColumn(pos);
     }
       break;
     case GenerationType::Beach:
     {
       column.firstBlockLayer = BlockType::Sand;
       column.lastBlockLayer = BlockType::Sand;
-      column.elevation = BeachGenerationColumn(pos, column.biom);
+      column.elevation = BeachGenerationColumn(pos);
     }
       break;
     case GenerationType::HighLand:
     {
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
-      column.elevation = HighLandGenerationColumn(pos, column.biom);
+      column.elevation = HighLandGenerationColumn(pos);
       
       if (column.elevation > 75 && column.elevation < 86)
         column.lastBlockLayer = BlockType::Planks; //As planned, it should be snowing
@@ -246,9 +261,10 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Grass;
-      column.elevation = LandGenerationColumn(pos, column.biom);
+      column.elevation = LandGenerationColumn(pos);
     }
   }
+
   SmoothingButtJoint(column.elevation, pos, column.biom);
   return column;
 }
@@ -274,7 +290,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     case GenerationType::GrassLand:
     {
       column.biom = 0;
-      column.elevation = LandGenerationColumn(pos, column.biom);
+      column.elevation = LandGenerationColumn(pos);
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Grass;
       return column;
@@ -283,7 +299,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     case GenerationType::HighLand:
     {
       column.biom = 0;
-      column.elevation = HighLandGenerationColumn(pos, column.biom);
+      column.elevation = HighLandGenerationColumn(pos);
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Dirt;
       return column;

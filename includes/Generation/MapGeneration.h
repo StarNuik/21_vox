@@ -17,7 +17,7 @@
 // #include <cstdint>
 #include "FastNoise.h"
 #include "Types.h"
-#define MAX_DIST_TO_SMOOTHING 50
+#define MAX_DIST_TO_SMOOTHING 25
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 
 class MapGeneration
@@ -63,9 +63,9 @@ private:
 	std::string _noiseNames[Size]; 
    
     float BasicGenerationColumn(glm::ivec2 pos);
-    float LandGenerationColumn(glm::ivec2 pos, int biome);
-    float BeachGenerationColumn(glm::ivec2 pos, int biome);
-    float HighLandGenerationColumn(glm::ivec2 pos, int biome);
+    float LandGenerationColumn(glm::ivec2 pos);
+    float BeachGenerationColumn(glm::ivec2 pos);
+    float HighLandGenerationColumn(glm::ivec2 pos);
   
     int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     int BiomeDefinition(int elevation);
