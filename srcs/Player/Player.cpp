@@ -71,3 +71,4 @@ void Player::Update(float delta) {
 }
 
 glm::vec3 Player::GetPosition() {return _position;};
+glm::vec3 Player::GetDirection() {return glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);};
