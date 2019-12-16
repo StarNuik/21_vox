@@ -33,15 +33,16 @@ void Chunk::Generate() {
 		for (int z = 0; z < 16; z++) {
 			
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
-			block.elevation = glm::clamp(block.elevation, 0, 255); // max world height == 255
+			int elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
 			int firstLayerBorder = 40 + block.elevation;
 			for (int y = 0; y < firstLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
-			block.elevation = glm::clamp(block.elevation, 0, 255); // max world height == 255
-			int lastLayerBorder = 60 + block.elevation - 1;
+			elevation = (int)floorf(block.elevation * 10.f);
+			elevation = glm::clamp(elevation, 0, 255); // max world height == 255
+			int lastLayerBorder = 60 + elevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
