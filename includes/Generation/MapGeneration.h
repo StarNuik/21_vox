@@ -17,7 +17,7 @@
 // #include <cstdint>
 #include "FastNoise.h"
 #include "Types.h"
-#define MAX_DIST_TO_SMOOTHING 25
+#define MAX_DIST_TO_SMOOTHING 30
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 
 class MapGeneration
@@ -69,8 +69,11 @@ private:
   
     int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     int BiomeDefinition(int elevation);
+
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
     float CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
+    void Haha(float& count, float &sum, float value);
+    float GetApprox(float, float, float, float);
 
 
     float _Hash(const float n);

@@ -40,25 +40,12 @@ void Chunk::Generate() {
 			}
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
-			elevation = (int)floorf(block.elevation * 10.f);
-			elevation = glm::clamp(elevation, 0, 255); // max world height == 255
+			elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
 			int lastLayerBorder = 60 + elevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
-			// else if (high.biom == TAIGA)
-			// {
-			// 	high.elevation = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z)).elevation;
-			// 	h = (int)floorf(high.elevation);
-			// 	h = glm::clamp(h, 0, 256);
-			// 	for (int y = firstLayerBorder; y < 60 + h; y++) {
-			// 		if (y < 60 + h - 5)
-			// 			w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
-			// 		else
-			// 			w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
-			// 	}
-			// }
 		}
 	}
 }
