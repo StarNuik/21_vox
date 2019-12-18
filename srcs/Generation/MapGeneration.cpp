@@ -133,6 +133,9 @@ float MapGeneration::CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int o
       case GenerationType::HighLand:
         ret = HighLandGenerationColumn(nextBlock);
         break;
+      case GenerationType::Ocean:
+        ret = 0.2f;
+        break;
       default:
         ret = -1.f;
         break;
@@ -232,6 +235,13 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   column.biom = BiomeGeneration(globalPos, blockPosition);
   switch (column.biom)
   {
+    case GenerationType::Ocean:
+    {
+      column.elevation = 1.f;
+      column.firstBlockLayer = BlockType::Planks; // it should be water ofc
+      column.lastBlockLayer = BlockType::Planks; // it should be water ofc
+    }
+      break;
     case GenerationType::GrassLand:
     {
       column.elevation = LandGenerationColumn(pos);

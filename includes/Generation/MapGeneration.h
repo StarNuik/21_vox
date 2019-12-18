@@ -38,8 +38,8 @@ public:
     enum GenerationType {
         Basic = 0,
         Ocean,
-        GrassLand,
         Beach,
+        GrassLand,
         Snow,
         HighLand,
         Biomes,
