@@ -72,8 +72,7 @@ private:
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
     float CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
-    void Haha(float& count, float &sum, float value);
-    float GetApprox(float, float, float, float);
+    float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
 
 
     float _Hash(const float n);
