@@ -31,11 +31,10 @@ void Chunk::Generate() {
 
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
-			
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
 			int elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
 			int firstLayerBorder = 40 + block.elevation;
-			for (int y = 0; y < firstLayerBorder; y++){
+			for (int y = 1; y < firstLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 
@@ -46,6 +45,7 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), BlockType::Bedrock);
 		}
 	}
 }
