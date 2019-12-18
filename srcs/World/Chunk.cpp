@@ -45,6 +45,13 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
+
+			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Sky);
+			if (block.elevation >= 0.55f && block.elevation <= 0.85f)
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, 200, _position.y * 16 + z), block.firstBlockLayer);
+			// if (block.elevation >= 0.68f && block.elevation <= 0.85f)
+				// w->SetBlock(glm::ivec3(_position.x * 16 + x, 200, _position.y * 16 + z), block.firstBlockLayer);
+
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), BlockType::Bedrock);
 		}
 	}
