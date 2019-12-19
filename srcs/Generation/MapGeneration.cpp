@@ -42,16 +42,6 @@ float MapGeneration::Lerp(float v0, float v1, float t)
 	return (1.f - t) * v0 + t * v1;
 }
 
-float MapGeneration::SkyBlockGeneration(glm::ivec2 pos)
-{
-  FastNoise noise = _noises[Sky];
-
-  float e = noise.GetNoise(pos.x, pos.y);
-  e = (e * 0.5f + 0.5f);
-  return e;
-
-}
-
 float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[HighLand];
@@ -332,14 +322,6 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       return column;
     }
       break;
-    case GenerationType::Sky:
-    {
-      column.biom = 0;
-      column.elevation = SkyBlockGeneration(pos);
-      column.firstBlockLayer = BlockType::Cobblestone; //should be sky block ofc
-      column.lastBlockLayer = BlockType::Cobblestone; //should be sky block ofc
-      return column;
-    }
     default:
     {
       column.biom = 0;
@@ -358,6 +340,7 @@ MapGeneration::MapGeneration()
 {
   _exp = 2.2f;
   _terraceValue = 32.f;
+
   _noises[Biomes].SetNoiseType(FastNoise::Cellular);
   _noises[Biomes].SetSeed(1339);
   _noises[Biomes].SetFrequency(0.01);
@@ -375,11 +358,6 @@ MapGeneration::MapGeneration()
 
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
-
-  _noises[Sky].SetNoiseType(FastNoise::PerlinFractal);
-  _noises[Sky].SetFrequency(0.05);
-  _noises[Sky].SetSeed(1330);
-
 
   _noiseNames[Basic] = "Basic";
   _noiseNames[GrassLand] = "GrassLand";
