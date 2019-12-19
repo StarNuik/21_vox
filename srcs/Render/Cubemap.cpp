@@ -4,11 +4,13 @@
 #include "Utilities/Locator.hpp"
 
 CubeMap::CubeMap(std::string paths[6]) {
+	uint width, height, channels;
+	
 	glGenTextures(1, &_id);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
-
-	uint width, height, channels;
+	stbi_set_flip_vertically_on_load(0);
 	for (uint i = 0; i < 6; i++) {
+		// stbi_set_flip_vertically_on_load(1);
 		uint8 *data = stbi_load(paths[i].c_str(), (int*)&width, (int*)&height, (int*)&channels, 3);
 		if (!data) {
 			Locator::GetLogger()->LogError("[CubeMap::CubeMap]\nCouldn't load [" + paths[i] + "]");
@@ -22,6 +24,7 @@ CubeMap::CubeMap(std::string paths[6]) {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	stbi_set_flip_vertically_on_load(1);
 };
 
 CubeMap::~CubeMap() {

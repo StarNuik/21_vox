@@ -5,6 +5,8 @@
 #include "Render/Texture.h"
 #include "Render/Geometry.h"
 #include "Render/Cubemap.h"
+#include "Render/Skybox.h"
+#include "Utilities/Locator.hpp"
 // #include "World/World.h"
 
 ResourceLoader::ResourceLoader() {
@@ -13,6 +15,8 @@ ResourceLoader::ResourceLoader() {
 	LoadTextures();
 	LoadGeometries();
 	LoadCubeMaps();
+	_skybox = new Skybox(_shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
+	Locator::GetLogger()->LogSuccess("[ResourceLoader::ResourceLoader]\nResources loaded.");
 };
 
 ResourceLoader::~ResourceLoader() {
@@ -28,16 +32,19 @@ ResourceLoader::~ResourceLoader() {
 	for (auto pair : _cubemaps) {
 		delete pair.second;
 	}
+	delete _skybox;
 	VertexBuffers::Destroy();
 };
 
-Shader* ResourceLoader::GetShader(std::string name) {return _shaders[name];}
-Texture* ResourceLoader::GetTexture(BlockType type) {return _textures[(int)type];}
-Geometry* ResourceLoader::GetGeometry(std::string name) {return _geometries[name];}
+Shader* ResourceLoader::GetShader(std::string name) {return _shaders[name];};
+Texture* ResourceLoader::GetTexture(BlockType type) {return _textures[(int)type];};
+Geometry* ResourceLoader::GetGeometry(std::string name) {return _geometries[name];};
 CubeMap* ResourceLoader::GetCubeMap(std::string name) {return _cubemaps[name];};
+Skybox* ResourceLoader::GetSkybox() {return _skybox;};
 
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
+	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
 };
 
 void ResourceLoader::LoadTextures() {
@@ -66,6 +73,22 @@ void ResourceLoader::LoadGeometries() {
 };
 
 void ResourceLoader::LoadCubeMaps() {
-	std::string paths[6] = {"", "", "", "", "", ""};
-	_cubemaps["Skybox_Day"] = new CubeMap(paths);
+	std::string pathsDay[6] = {
+		"./resources/CubeMaps/miramar_ft.tga",
+		"./resources/CubeMaps/miramar_bk.tga", //
+		"./resources/CubeMaps/miramar_up.tga",
+		"./resources/CubeMaps/miramar_dn.tga",
+		"./resources/CubeMaps/miramar_rt.tga",
+		"./resources/CubeMaps/miramar_lf.tga" //
+	};
+	std::string pathsNight[6] = {
+		"./resources/CubeMaps/cwd_ft.jpg",
+		"./resources/CubeMaps/cwd_bk.jpg",
+		"./resources/CubeMaps/cwd_up.jpg",
+		"./resources/CubeMaps/cwd_dn.jpg",
+		"./resources/CubeMaps/cwd_rt.jpg",
+		"./resources/CubeMaps/cwd_lf.jpg"
+	};
+	_cubemaps["Skybox Day"] = new CubeMap(pathsDay);
+	_cubemaps["Skybox Night"] = new CubeMap(pathsNight);
 };

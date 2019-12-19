@@ -52,6 +52,7 @@ Shader* RenderModel::Use(Camera* camera) {
 		//! IDK if this works
 		glActiveTexture(GL_TEXTURE1);
 		_normalTexture->Use();
+		glActiveTexture(GL_TEXTURE0);
 	}
 	_shader->SetMatrix4("model", GetAphineMatrix());
 	_shader->SetMatrix4("view", camera->GetViewMatrix());

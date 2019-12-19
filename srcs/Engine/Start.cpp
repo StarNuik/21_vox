@@ -41,6 +41,8 @@ Game::Game() {
 	_resources = nullptr;
 	_world = nullptr;
 	_ui = nullptr;
+	_lastFrame = 0.f;
+	_runtime = 0.f;
 };
 
 void Game::InitSystems() {
@@ -64,7 +66,7 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 10
+#define WORLD_RADIUS 2
 
 void Game::InitWorld() {
 	const int border = WORLD_RADIUS;

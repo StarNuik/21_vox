@@ -23,6 +23,7 @@ class Geometry;
 class GLRenderer;
 class RenderModel;
 class Shader;
+class Skybox;
 class Texture;
 class VertexBuffers;
 class UIController;
