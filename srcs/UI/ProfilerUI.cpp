@@ -42,7 +42,9 @@ void UIController::ProfilerUI() {
 	ImGuiWindowFlags_NoNav;
 	ImGui::Begin("Profiler", nullptr, windowFlags);
 	glm::vec3 pos = _player->GetPosition();
+	glm::vec3 dir = _player->GetDirection();
 	ImGui::Text("Pos: [x: %6.1f, y: %6.1f, z: %6.1f]", pos.x, pos.y, pos.z);
+	ImGui::Text("Dir: [x: %6.1f, y: %6.1f, z: %6.1f]", dir.x, dir.y, dir.z);
 	ImGui::Separator();
 	PlotLines(data.frameFull, "Full frame");
 	ImGui::Separator();

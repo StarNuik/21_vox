@@ -15,6 +15,7 @@ public:
 	virtual ~Player();
 	void Update(float delta);
 	glm::vec3 GetPosition();
+	glm::vec3 GetDirection();
 private:
 	Game* _game;
 	Camera* _camera;

@@ -4,6 +4,7 @@
 #include "World/Chunk.h"
 #include "Engine/Game.h"
 #include "Generation/MapGeneration.h"
+#include "Generation/BiomeDefine.h"
 
 Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = false;
@@ -26,24 +27,26 @@ void Chunk::Generate() {
 	// }
 	World* w = _game->GetWorld();
 	MapGeneration mp = *_game->GetGeneration();
-	MapGeneration::StoredMapData high;
+	MapGeneration::StoredMapData block;
+
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
-			high = mp.Generation(MapGeneration::Basic, _position, glm::ivec2(x, z));
-			int h = (int)floorf(high.elevation);
-			int firstLayerBorder = h + 40;
-
-			for (int y = 0; y < firstLayerBorder; y++) {
-				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Stone);
+			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
+			int elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
+			int firstLayerBorder = 40 + block.elevation;
+			for (int y = 1; y < firstLayerBorder; y++){
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 
-			// high = mp.Generation(MapGeneration::Land, _position, glm::ivec2(x,z));
-			high = mp.Generation(MapGeneration::HighLand, _position, glm::ivec2(x,z));
-			h = (int)floorf(high.elevation);
-			for (int y = firstLayerBorder; y < 60 + h; y++) {
-				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Dirt);
+			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
+			elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
+			int lastLayerBorder = 60 + elevation - 1;
+			for (int y = firstLayerBorder; y < lastLayerBorder; y++){
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
-			w->SetBlock(glm::ivec3(_position.x * 16 + x, 60 + h, _position.y * 16 + z), BlockType::Grass);
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
+
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), BlockType::Bedrock);
 		}
 	}
 }

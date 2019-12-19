@@ -9,17 +9,16 @@
 // #include <GL/glew.h>
 // #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-// #include "glm/gtx/hash.hpp"
+#include <glm/gtx/hash.hpp>
 
 
 // #include "BiomeDefine.h"
 // #include "Engine/Engine.h"
 // #include <cstdint>
 #include "FastNoise.h"
-
-#define FREQ 1
-
-class Game;
+#include "Types.h"
+#define MAX_DIST_TO_SMOOTHING 30
+#define STEP 1 / MAX_DIST_TO_SMOOTHING
 
 class MapGeneration
 {
@@ -31,19 +30,26 @@ public:
     {
         float elevation;
         int biom;
+        BlockType firstBlockLayer;
+        BlockType lastBlockLayer;
         StoredMapData() {};
     };
 
     enum GenerationType {
         Basic = 0,
-        Land,
+        Ocean,
+        Beach,
+        GrassLand,
+        Snow,
         HighLand,
+        Biomes,
         First = Basic,
-        Last = HighLand,
+        Last = Biomes,
         Size = Last + 1
     };
 
-    StoredMapData Generation(GenerationType genType, glm::ivec2 globalPos, glm::ivec2 blockPosition);
+    StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
+    StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);
@@ -54,13 +60,28 @@ private:
     float _exp; // For sharp mountain peaks
     float _terraceValue; // For terrace
     FastNoise _noises[Size];
-	std::string _noiseNames[Size];
-    StoredMapData BasicGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
-    StoredMapData LandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
-    StoredMapData HighLandGenerationColumn(glm::ivec2 pos, glm::ivec2 blockPosition);
-    int BiomeDefinition(float e, float m);
+	std::string _noiseNames[Size]; 
+   
+    float BasicGenerationColumn(glm::ivec2 pos);
+    float LandGenerationColumn(glm::ivec2 pos);
+    float BeachGenerationColumn(glm::ivec2 pos);
+    float HighLandGenerationColumn(glm::ivec2 pos);
+  
+    int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
+    int BiomeDefinition(int elevation);
+
+    void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
+    float CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
+    float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
+
+
     float _Hash(const float n);
     float Noise(const glm::vec3 &x);
+    float Smoothstep(float edge0, float edge1, float x);
+    glm::vec2 random2(glm::vec2 p);
+
+    float Lerp(float v0, float v1, float t);
+
     float random (glm::vec2 st)
     {
         return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
