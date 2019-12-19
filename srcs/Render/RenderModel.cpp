@@ -3,27 +3,18 @@
 #include "Render/RenderModel.h"
 #include "Render/Shader.h"
 #include "Render/Geometry.h"
-#include "Render/Texture.h"
+#include "Render/Material.h"
 #include "Render/Camera.h"
 #include "Render/GLRenderer.h"
 
-RenderModel::RenderModel(Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
-	Init(shader, diffuseTexture, normalTexture, geometry);
-}
-
-RenderModel::RenderModel(Shader* shader, Texture* diffuseTexture, Geometry* geometry) {
-	Init(shader, diffuseTexture, nullptr, geometry);
-}
-
-RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
-	Init(shader, diffuseTexture, normalTexture, geometry);
+RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Material* material, Geometry* geometry) {
 	_renderer = renderer;
-	_renderer->AddModel(this);
-}
-
-RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Texture* diffuseTexture, Geometry* geometry) {
-	Init(shader, diffuseTexture, nullptr, geometry);
-	_renderer = renderer;
+	_shader = shader;
+	_material = material;
+	_geometry = geometry;
+	_position = glm::vec3(0.f);
+	_scale = glm::vec3(1.f);
+	_rotation = glm::identity<glm::quat>();
 	_renderer->AddModel(this);
 }
 
@@ -33,27 +24,10 @@ RenderModel::~RenderModel() {
 	}
 };
 
-void RenderModel::Init(Shader* shader, Texture* diffuseTexture, Texture* normalTexture, Geometry* geometry) {
-	_shader = shader;
-	_diffuseTexture = diffuseTexture;
-	_normalTexture = normalTexture;
-	_geometry = geometry;
-	_position = glm::vec3(0.f);
-	_scale = glm::vec3(1.f);
-	_rotation = glm::identity<glm::quat>();
-}
-
 Shader* RenderModel::Use(Camera* camera) {
 	_shader->Use();
 	_geometry->Use();
-	glActiveTexture(GL_TEXTURE0);
-	_diffuseTexture->Use();
-	if (_normalTexture) {
-		//! IDK if this works
-		glActiveTexture(GL_TEXTURE1);
-		_normalTexture->Use();
-		glActiveTexture(GL_TEXTURE0);
-	}
+	_material->Use(_shader);
 	_shader->SetMatrix4("model", GetAphineMatrix());
 	_shader->SetMatrix4("view", camera->GetViewMatrix());
 	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());

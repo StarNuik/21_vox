@@ -14,18 +14,21 @@ public:
 	ResourceLoader();
 	~ResourceLoader();
 	Shader* GetShader(std::string);
-	Texture* GetTexture(BlockType);
+	Texture* GetTexture(std::string);
 	Geometry* GetGeometry(std::string);
 	CubeMap* GetCubeMap(std::string);
 	Skybox* GetSkybox();
+	Material* GetMaterial(BlockType);
 	// Block* GetBlock(BlockType);
 private:
 	void LoadShaders();
 	void LoadTextures();
 	void LoadGeometries();
 	void LoadCubeMaps();
+	void LoadMaterials();
 	std::unordered_map<std::string, Shader*> _shaders;
-	std::unordered_map<uint, Texture*> _textures;
+	std::unordered_map<std::string, Texture*> _textures;
+	std::unordered_map<int, Material*> _materials;
 	std::unordered_map<std::string, Geometry*> _geometries;
 	std::unordered_map<std::string, CubeMap*> _cubemaps;
 	Skybox* _skybox;

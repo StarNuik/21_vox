@@ -21,6 +21,7 @@ class Camera;
 class CubeMap;
 class Geometry;
 class GLRenderer;
+class Material;
 class RenderModel;
 class Shader;
 class Skybox;

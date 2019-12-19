@@ -7,15 +7,22 @@
 #include "Render/Texture.h"
 #include "Utilities/Locator.hpp"
 
-Texture::Texture(std::string path) {
+Texture::Texture() {};
+
+Texture::~Texture() {
+	if (_loaded) {
+		glDeleteTextures(1, &_id);
+	}
+};
+
+void Texture::Load(std::string path) {
 	uint channels, width, height;
 
 	stbi_set_flip_vertically_on_load(1);
 	uint8* data = stbi_load(path.c_str(), (int*)&width, (int*)&height, (int*)&channels, 4);
 	if (!data) {
-		Locator::GetLogger()->LogError("[Texture::Texture]\nCouldn't load [" + path + "] texture.");
-		//! Something is wrong here!
-		exit(1);
+		stbi_image_free(data);
+		return;
 	}
 	glGenTextures(1, &_id);
 	glBindTexture(GL_TEXTURE_2D, _id);
@@ -28,13 +35,11 @@ Texture::Texture(std::string path) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
-	// Locator::GetLogger()->LogSuccess("[Texture::Texture]\nLoaded: " + path);
-}
+	_loaded = true;
+};
 
-Texture::~Texture() {
-	glDeleteTextures(1, &_id);
-}
+bool Texture::IsLoaded() {return _loaded;};
 
 void Texture::Use() {
 	glBindTexture(GL_TEXTURE_2D, _id);
-}
+};
