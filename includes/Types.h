@@ -18,6 +18,7 @@ class MapGeneration;
 class Input;
 class Player;
 class Camera;
+class CubeMap;
 class Geometry;
 class GLRenderer;
 class RenderModel;

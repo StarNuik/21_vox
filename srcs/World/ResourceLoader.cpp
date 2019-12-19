@@ -4,6 +4,7 @@
 #include "Render/Shader.h"
 #include "Render/Texture.h"
 #include "Render/Geometry.h"
+#include "Render/Cubemap.h"
 // #include "World/World.h"
 
 ResourceLoader::ResourceLoader() {
@@ -11,6 +12,7 @@ ResourceLoader::ResourceLoader() {
 	LoadShaders();
 	LoadTextures();
 	LoadGeometries();
+	LoadCubeMaps();
 };
 
 ResourceLoader::~ResourceLoader() {
@@ -23,24 +25,16 @@ ResourceLoader::~ResourceLoader() {
 	for (auto pair : _geometries) {
 		delete pair.second;
 	}
+	for (auto pair : _cubemaps) {
+		delete pair.second;
+	}
 	VertexBuffers::Destroy();
 };
 
-Shader* ResourceLoader::GetShader(std::string name) {
-	return _shaders[name];
-}
-
-Texture* ResourceLoader::GetTexture(BlockType type) {
-	return _textures[(int)type];
-}
-
-Geometry* ResourceLoader::GetGeometry(std::string name) {
-	return _geometries[name];
-}
-
-// Block* ResourceLoader::GetBlock(BlockType type) {
-// 	return _blocks[(int)type];
-// }
+Shader* ResourceLoader::GetShader(std::string name) {return _shaders[name];}
+Texture* ResourceLoader::GetTexture(BlockType type) {return _textures[(int)type];}
+Geometry* ResourceLoader::GetGeometry(std::string name) {return _geometries[name];}
+CubeMap* ResourceLoader::GetCubeMap(std::string name) {return _cubemaps[name];};
 
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
@@ -71,12 +65,7 @@ void ResourceLoader::LoadGeometries() {
 	// _geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 };
 
-// void ResourceLoader::LoadBlocks() {
-	// _blocks[(int)BlockType::Air] = nullptr;
-	// _blocks[(int)BlockType::Bedrock] = new Block(_textures["Bedrock"]);
-	// _blocks[(int)BlockType::Cobblestone] = new Block(_textures["Cobblestone"]);
-	// _blocks[(int)BlockType::Dirt] = new Block(_textures["Dirt"]);
-	// _blocks[(int)BlockType::Planks] = new Block(_textures["Planks"]);
-	// _blocks[(int)BlockType::Sand] = new Block(_textures["Sand"]);
-	// _blocks[(int)BlockType::Stone] = new Block(_textures["Stone"]);
-// };
+void ResourceLoader::LoadCubeMaps() {
+	std::string paths[6] = {"", "", "", "", "", ""};
+	_cubemaps["Skybox_Day"] = new CubeMap(paths);
+};
