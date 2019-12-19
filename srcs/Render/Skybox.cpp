@@ -28,8 +28,10 @@ Shader* Skybox::Use(Camera* camera, float lerpVal) {
 	_geometry->Use();
 	glActiveTexture(GL_TEXTURE0);
 	_cubemap_day->Use();
+	_shader->SetInt("day", 0);
 	glActiveTexture(GL_TEXTURE1);
 	_cubemap_night->Use();
+	_shader->SetInt("night", 1);
 	glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
 	_shader->SetMatrix4("view", view);
 	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());

@@ -60,4 +60,5 @@ public:
 	bool glDepthTest;
 	bool glCullFace;
 	bool glCullCounterClockwise;
+	bool glSeamlessCubeMap;
 };

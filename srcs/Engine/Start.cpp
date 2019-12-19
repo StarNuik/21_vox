@@ -30,6 +30,7 @@ GLRenderer::RenderEngineConfig glConfig() {
 	config.glDepthTest = true;
 	config.glCullFace = false;
 	config.glCullCounterClockwise = false;
+	config.glSeamlessCubeMap = true;
 	return config;
 }
 

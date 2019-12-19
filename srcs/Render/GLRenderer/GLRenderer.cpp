@@ -61,6 +61,9 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 		else
 			glFrontFace(GL_CW);
 	}
+	if (config.glSeamlessCubeMap) {
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	}
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
