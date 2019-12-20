@@ -12,6 +12,12 @@ struct Material {
 	float shininess;
 };
 
+struct DirLight {
+	vec3 direction;
+	vec3 color;
+};
+
+uniform DirLight dirLight[2];
 uniform Material material;
 
 float sin01(float f) {

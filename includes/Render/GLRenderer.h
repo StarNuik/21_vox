@@ -34,7 +34,6 @@ public:
 	
 	void RenderFrame();
 private:
-	uint _tick;
 	bool _glfwOn;
 	bool _imguiOn;
 	uint _width;

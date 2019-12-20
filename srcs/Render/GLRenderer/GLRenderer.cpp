@@ -14,7 +14,6 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_window = nullptr;
 	_width = std::max((int)config.windowSize.x, 1);
 	_height = std::max((int)config.windowSize.y, 1);
-	_tick = 0;
 	_cursorEnabled = true;
 
 	if (!glfwInit()) {

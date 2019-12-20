@@ -5,10 +5,11 @@ layout(location = 2) in vec2 unused2;
 
 out vec3 skyCoords;
 
+uniform mat4 model;
 uniform mat4 projection;
 uniform mat4 view;
 
 void main() {
-	skyCoords = position;
+	skyCoords = vec3(model * vec4(position, 1.0));
 	gl_Position = projection * view * vec4(position, 1.0);
 }

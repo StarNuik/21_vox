@@ -67,7 +67,7 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 2
+#define WORLD_RADIUS 4
 
 void Game::InitWorld() {
 	const int border = WORLD_RADIUS;

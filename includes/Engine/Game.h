@@ -5,10 +5,6 @@
 
 #include "Types.h"
 
-#define FIXED_DELTA (1.f / 60.f)
-#define FRAME_MS (int)(FIXED_DELTA * 1000)
-#define SECONDS_IN_A_DAY (360)
-
 class Game {
 public:
 	Game();

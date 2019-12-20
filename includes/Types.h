@@ -11,6 +11,8 @@ typedef char int8;
 
 typedef uint32 uint;
 
+#define SECONDS_IN_A_DAY (360.f)
+
 class Entity;
 class Game;
 class Locator;

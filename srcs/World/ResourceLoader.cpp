@@ -47,6 +47,7 @@ Material* ResourceLoader::GetMaterial(BlockType type) {return _materials[(int)ty
 
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
+	_shaders["DirLight"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/dirLight.frag");
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
 };
 
@@ -110,20 +111,20 @@ void ResourceLoader::LoadGeometries() {
 
 void ResourceLoader::LoadCubeMaps() {
 	std::string pathsDay[6] = {
-		"./resources/CubeMaps/miramar_ft.tga",
-		"./resources/CubeMaps/miramar_bk.tga", //
-		"./resources/CubeMaps/miramar_up.tga",
-		"./resources/CubeMaps/miramar_dn.tga",
-		"./resources/CubeMaps/miramar_rt.tga",
-		"./resources/CubeMaps/miramar_lf.tga" //
+		"./resources/CubeMaps/day_top.png",
+		"./resources/CubeMaps/day_top.png",
+		"./resources/CubeMaps/day_top.png",
+		"./resources/CubeMaps/day_top.png",
+		"./resources/CubeMaps/day_sun.png",
+		"./resources/CubeMaps/day_top.png"
 	};
 	std::string pathsNight[6] = {
-		"./resources/CubeMaps/cwd_ft.jpg",
-		"./resources/CubeMaps/cwd_bk.jpg",
-		"./resources/CubeMaps/cwd_up.jpg",
-		"./resources/CubeMaps/cwd_dn.jpg",
-		"./resources/CubeMaps/cwd_rt.jpg",
-		"./resources/CubeMaps/cwd_lf.jpg"
+		"./resources/CubeMaps/purplenebula_ft.tga",
+		"./resources/CubeMaps/purplenebula_bk.tga",
+		"./resources/CubeMaps/purplenebula_up.tga",
+		"./resources/CubeMaps/purplenebula_dn.tga",
+		"./resources/CubeMaps/purplenebula_rt.tga",
+		"./resources/CubeMaps/purplenebula_lf.tga"
 	};
 	_cubemaps["Skybox Day"] = new CubeMap(pathsDay);
 	_cubemaps["Skybox Night"] = new CubeMap(pathsNight);

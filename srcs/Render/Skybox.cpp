@@ -1,6 +1,7 @@
 #include <vector>
 #include <GL/glew.h>
 
+#include "Types.h"
 #include "Render/VertexBuffers.h"
 #include "Render/Skybox.h"
 #include "Render/Geometry.h"
@@ -23,7 +24,13 @@ Skybox::~Skybox() {
 	delete _geometry;
 };
 
-Shader* Skybox::Use(Camera* camera, float lerpVal) {
+Shader* Skybox::Use(Camera* camera, float lerpVal, float runtime) {
+	glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+	float currentTime = std::fmod(runtime, SECONDS_IN_A_DAY);
+	float angleRadians = currentTime / SECONDS_IN_A_DAY * 2 * glm::pi<float>();
+	glm::quat rotation = glm::quat(glm::vec3(angleRadians, 0.f, 0.f));
+	glm::mat4 model = glm::identity<glm::mat4>() * glm::mat4_cast(rotation);
+
 	_shader->Use();
 	_geometry->Use();
 	glActiveTexture(GL_TEXTURE0);
@@ -32,7 +39,7 @@ Shader* Skybox::Use(Camera* camera, float lerpVal) {
 	glActiveTexture(GL_TEXTURE1);
 	_cubemap_night->Use();
 	_shader->SetInt("night", 1);
-	glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+	_shader->SetMatrix4("model", model);
 	_shader->SetMatrix4("view", view);
 	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());
 	_shader->SetFloat("lerpVal", lerpVal);

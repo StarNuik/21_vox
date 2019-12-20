@@ -12,3 +12,8 @@ void main() {
 	vec4 nightCol = texture(night, skyCoords);
 	fragColor = mix(nightCol, dayCol, lerpVal);
 }
+
+// void main() {
+// 	vec4 nightCol = texture(night, skyCoords);
+// 	fragColor = mix(nightCol, vec4(0.5, 0.5, 0.95, 1.0), lerpVal);
+// }
