@@ -31,7 +31,7 @@ Shader* RenderModel::Use(Camera* camera) {
 	_shader->SetMatrix4("model", GetAphineMatrix());
 	_shader->SetMatrix4("view", camera->GetViewMatrix());
 	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());
-	_shader->SetFloat3("viewPos", camera->GetPosition());
+	_shader->SetFloat3("cameraPos", camera->GetPosition());
 	return _shader;
 }
 

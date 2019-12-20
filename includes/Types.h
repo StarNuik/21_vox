@@ -11,7 +11,7 @@ typedef char int8;
 
 typedef uint32 uint;
 
-#define SECONDS_IN_A_DAY (360.f)
+#define SECONDS_IN_A_DAY (60.f)
 
 class Entity;
 class Game;
@@ -21,6 +21,7 @@ class Input;
 class Player;
 class Camera;
 class CubeMap;
+class DirLight;
 class Geometry;
 class GLRenderer;
 class Material;

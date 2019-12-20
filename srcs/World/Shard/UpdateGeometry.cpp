@@ -62,7 +62,7 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 	if (vertexBuffer.size() == 0)
 		return nullptr;
 	Geometry* g = new Geometry(vertexBuffer);
-	RenderModel* model = new RenderModel(r, rs->GetShader("Base"), rs->GetMaterial(type), g);
+	RenderModel* model = new RenderModel(r, rs->GetShader(USED_SHADER), rs->GetMaterial(type), g);
 	model->SetPosition(_position * 16);
 	return (model);
 };

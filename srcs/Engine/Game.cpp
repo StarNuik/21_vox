@@ -17,7 +17,7 @@ void Game::RemoveEntity(Entity* entity) {
 float Game::GetDayNightVal() {
 	const float dawnTime = SECONDS_IN_A_DAY / 12.f;
 	const float duskTime = SECONDS_IN_A_DAY / 12.f;
-	const float nightTime = SECONDS_IN_A_DAY / 6.f;
+	const float nightTime = SECONDS_IN_A_DAY / 2.f;
 	const float dayTime = SECONDS_IN_A_DAY - dawnTime - duskTime - nightTime;
 	float currentTime = std::fmod(_runtime, SECONDS_IN_A_DAY);//(int)_runtime % SECONDS_IN_A_DAY;
 	if (currentTime <= dawnTime) {

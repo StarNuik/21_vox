@@ -34,6 +34,7 @@ public:
 	
 	void RenderFrame();
 private:
+	void SetDirLights();
 	bool _glfwOn;
 	bool _imguiOn;
 	uint _width;

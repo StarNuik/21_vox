@@ -21,10 +21,14 @@ void GLRenderer::RenderFrame() {
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDepthMask(GL_TRUE);
 
+	//* Set directional lights
+	skybox->SetDirLights(_game->GetDayNightVal(), _game->GetRuntime());
+
 	//* Blocks
 	for (int i = 0; i < _rendered.size(); i++) {
 		RenderModel* model = _rendered[i];
 		Shader* modelShader = model->Use(_activeCamera);
+		skybox->ApplyDirLights(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 
@@ -33,4 +37,8 @@ void GLRenderer::RenderFrame() {
 	ui->Draw();
 
 	glfwSwapBuffers(_window);
+};
+
+void GLRenderer::SetDirLights() {
+	
 };
