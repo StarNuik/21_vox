@@ -29,22 +29,24 @@ void Game::GameLoop() {
 	while (!_finished)
 	{
 		float delta = Profiler::Getf("FrameFull") * 0.001;
+		_runtime += delta;
 		Profiler::Start("FrameFull");
 		Profiler::Start("Input");
+
 		_input->Update(_renderer->GetWindow());
+
 		Profiler::End("Input");
 		Profiler::Start("Update");
+
 		Update(delta);
+
 		Profiler::End("Update");
 		// PhysicsUpdate();
 		Profiler::Start("RenderFull");
+
 		_renderer->RenderFrame();
+
 		Profiler::End("RenderFull");
 		Profiler::End("FrameFull");
-		// int64 end = LONG_TIME;
-
-		// if ((end - start) - FRAME_MS > 0)
-		// 	usleep(((end - start) - FRAME_MS) * 1000);
-		// _lastFrameTime = end - start;
 	}
 };

@@ -5,6 +5,7 @@ UIController::UIController(Game* game) {
 	_uiOn = false;
 	_showProfiler = true;
 };
+
 UIController::~UIController() {};
 
 void UIController::SetState(bool state) {_uiOn = state;};

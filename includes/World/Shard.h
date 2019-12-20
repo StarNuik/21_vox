@@ -5,6 +5,8 @@
 
 #include "Types.h"
 
+#define USED_SHADER "DirLight"
+
 class Shard {
 public:
 	Shard(Game*, glm::ivec3);

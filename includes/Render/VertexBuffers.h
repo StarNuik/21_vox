@@ -16,8 +16,9 @@ public:
 		MultiFront,
 		MultiBack,
 		Flower,
+		Skybox,
 		First = Top,
-		Last = Flower,
+		Last = Skybox,
 		Size = Last + 1
 	};
 	static void Init();

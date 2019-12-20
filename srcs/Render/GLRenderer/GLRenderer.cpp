@@ -14,7 +14,6 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_window = nullptr;
 	_width = std::max((int)config.windowSize.x, 1);
 	_height = std::max((int)config.windowSize.y, 1);
-	_tick = 0;
 	_cursorEnabled = true;
 
 	if (!glfwInit()) {
@@ -60,6 +59,9 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 			glFrontFace(GL_CCW);
 		else
 			glFrontFace(GL_CW);
+	}
+	if (config.glSeamlessCubeMap) {
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 
 	IMGUI_CHECKVERSION();

@@ -7,10 +7,7 @@
 
 class RenderModel {
 public:
-	RenderModel(Shader*, Texture*, Geometry*);
-	RenderModel(Shader*, Texture*, Texture*, Geometry*);
-	RenderModel(GLRenderer*, Shader*, Texture*, Geometry*);
-	RenderModel(GLRenderer*, Shader*, Texture*, Texture*, Geometry*);
+	RenderModel(GLRenderer*, Shader*, Material*, Geometry*);
 	~RenderModel();
 	Shader* Use(Camera* camera);
 	void SetPosition(glm::vec3);
@@ -23,10 +20,9 @@ public:
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
 private:
-	void Init(Shader*, Texture*, Texture*, Geometry*);
+	// void Init(Shader*, Texture*, Texture*, Geometry*);
 	Shader* _shader;
-	Texture* _diffuseTexture;
-	Texture* _normalTexture;
+	Material* _material;
 	Geometry* _geometry;
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
