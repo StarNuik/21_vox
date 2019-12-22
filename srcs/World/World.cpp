@@ -86,14 +86,3 @@ void World::PlayerSetBlock(glm::ivec3 globalPos, BlockType type) {
 	if (chunk)
 		chunk->PlayerSetBlock(glm::ivec3(globalPos.x % 16, globalPos.y, globalPos.z % 16), type);
 }
-
-NearestOpaque World::GetNearestOpaque(glm::ivec3 globalPos) {
-	NearestOpaque res;
-	res.right = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	res.left = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	res.top = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	res.bottom = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	res.front = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	res.back = GetBlock(globalPos + glm::ivec3(1, 0, 0)) == BlockType::Air;
-	return res;
-};
