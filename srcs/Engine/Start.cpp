@@ -71,12 +71,18 @@ void Game::InitSystems() {
 
 void Game::InitWorld() {
 	const int border = WORLD_RADIUS;
+	Profiler::Start("Generation");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->GenerateChunk(glm::ivec2(x, z));
+	Profiler::End("Generation");
+	Profiler::Start("Models");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++)
 			_world->ActivateChunk(glm::ivec2(x, z));
+	Profiler::End("Models");
+	Locator::GetLogger()->LogWarning("Generation took " + std::to_string(Profiler::Getf("Generation") * 0.001f) + "s");
+	Locator::GetLogger()->LogWarning("Model creation took " + std::to_string(Profiler::Getf("Models") * 0.001f) + "s");
 };
 
 void Game::DestroyWorld() {

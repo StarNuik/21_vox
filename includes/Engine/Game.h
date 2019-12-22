@@ -24,7 +24,6 @@ public:
 	float GetRuntime();
 	float GetDayNightVal();
 	MapGeneration* _mpGen;
-	class ProfilerInfo;
 private:
 	void Update(float delta);
 

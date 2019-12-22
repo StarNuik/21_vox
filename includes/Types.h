@@ -11,7 +11,7 @@ typedef char int8;
 
 typedef uint32 uint;
 
-#define SECONDS_IN_A_DAY (60.f)
+#define SECONDS_IN_A_DAY (360.f)
 
 class Entity;
 class Game;
@@ -39,6 +39,7 @@ class Chunk;
 class ResourceLoader;
 class Shard;
 class World;
+class NearestBlocks;
 
 enum class BlockType {
 	Air = 0,

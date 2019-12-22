@@ -5,19 +5,16 @@
 #include <glm/gtx/hash.hpp>
 
 #include "Types.h"
-// #include "World/Chunk.h"
-// #include "Types.h"
 
-class Game;
-
-// class Block {
-// public:
-// 	Block(Texture* texture);
-// 	~Block();
-// private:
-// 		Texture* _texture;
-// 		bool _isWalkable;
-// };
+class NearestOpaque {
+public:
+	bool right;
+	bool left;
+	bool top;
+	bool bottom;
+	bool front;
+	bool back;
+};
 
 class World {
 public:
@@ -31,6 +28,7 @@ public:
 	BlockType GetBlock(glm::ivec3 globalPosition);
 	void SetBlock(glm::ivec3 globalPosition, BlockType);
 	void PlayerSetBlock(glm::ivec3 globalPosition, BlockType);
+	NearestOpaque GetNearestOpaque(glm::ivec3 globalPosition);
 private:
 	Game* _game;
 	std::unordered_map<glm::ivec2, Chunk*> _chunks;
