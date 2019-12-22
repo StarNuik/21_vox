@@ -3,7 +3,7 @@
 #include "Render/RenderModel.h"
 #include "Render/Skybox.h"
 #include "World/ResourceLoader.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "UI/UIController.h"
 

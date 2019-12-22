@@ -1,7 +1,7 @@
 #include "GL/glew.h"
 #include "Render/Cubemap.h"
 #include "stb_image.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 CubeMap::CubeMap(std::string paths[6]) {
 	uint width, height, channels;
@@ -13,7 +13,7 @@ CubeMap::CubeMap(std::string paths[6]) {
 		// stbi_set_flip_vertically_on_load(1);
 		uint8 *data = stbi_load(paths[i].c_str(), (int*)&width, (int*)&height, (int*)&channels, 3);
 		if (!data) {
-			Locator::GetLogger()->LogError("[CubeMap::CubeMap]\nCouldn't load [" + paths[i] + "]");
+			Log::Error("[CubeMap::CubeMap]\nCouldn't load [" + paths[i] + "]");
 			exit(1);
 		}
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

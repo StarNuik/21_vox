@@ -5,7 +5,7 @@
 #include "Render/Material.h"
 #include "Render/Texture.h"
 #include "Render/Shader.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 Material::Material(std::string dirPath, float shininess) {
 	_diffuseMap.Load(dirPath + "_diffuse.png");
@@ -13,7 +13,7 @@ Material::Material(std::string dirPath, float shininess) {
 	_specularMap.Load(dirPath + "_specular.png");
 	_shininess = shininess;
 	if (!_diffuseMap.IsLoaded()) {
-		Locator::GetLogger()->LogError("[Material::Material]\nCouldn't load diffuse map: " + dirPath + "_diffuse.png");
+		Log::Error("[Material::Material]\nCouldn't load diffuse map: " + dirPath + "_diffuse.png");
 		exit(1);
 	}
 }

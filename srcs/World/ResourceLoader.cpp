@@ -7,7 +7,7 @@
 #include "Render/Cubemap.h"
 #include "Render/Skybox.h"
 #include "Render/Material.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 // #include "World/World.h"
 
 ResourceLoader::ResourceLoader() {
@@ -18,7 +18,7 @@ ResourceLoader::ResourceLoader() {
 	LoadCubeMaps();
 	LoadMaterials();
 	_skybox = new Skybox(_shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
-	Locator::GetLogger()->LogSuccess("[ResourceLoader::ResourceLoader]\nResources loaded.");
+	Log::Success("[ResourceLoader::ResourceLoader]\nResources loaded.");
 };
 
 ResourceLoader::~ResourceLoader() {

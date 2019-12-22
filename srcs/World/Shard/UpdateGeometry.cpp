@@ -6,7 +6,7 @@
 #include "World/World.h"
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();

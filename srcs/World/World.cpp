@@ -1,6 +1,6 @@
 #include "Types.h"
 #include "World/World.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "World/Chunk.h"
 

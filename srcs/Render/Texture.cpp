@@ -1,11 +1,11 @@
 // #include "Render/Objects.h"
-// #include "Engine/Locator.hpp"
+// #include "Engine/Log.h"
 #include <GL/glew.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include "Render/Texture.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 Texture::Texture() {};
 
