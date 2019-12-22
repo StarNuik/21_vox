@@ -11,6 +11,8 @@ typedef char int8;
 
 typedef uint32 uint;
 
+#define SECONDS_IN_A_DAY (360.f)
+
 class Entity;
 class Game;
 class Locator;
@@ -18,10 +20,14 @@ class MapGeneration;
 class Input;
 class Player;
 class Camera;
+class CubeMap;
+class DirLight;
 class Geometry;
 class GLRenderer;
+class Material;
 class RenderModel;
 class Shader;
+class Skybox;
 class Texture;
 class VertexBuffers;
 class UIController;
@@ -33,6 +39,7 @@ class Chunk;
 class ResourceLoader;
 class Shard;
 class World;
+class NearestBlocks;
 
 enum class BlockType {
 	Air = 0,

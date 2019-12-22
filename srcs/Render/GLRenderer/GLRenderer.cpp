@@ -5,7 +5,7 @@
 #include "imgui_impl_opengl3.h"
 
 #include "Render/GLRenderer.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_game = game;
@@ -14,11 +14,10 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	_window = nullptr;
 	_width = std::max((int)config.windowSize.x, 1);
 	_height = std::max((int)config.windowSize.y, 1);
-	_tick = 0;
 	_cursorEnabled = true;
 
 	if (!glfwInit()) {
-		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
+		Log::Error("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
 		//! Nice exit
 		exit(1);
 	}
@@ -31,7 +30,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 
 	_window = glfwCreateWindow(_width, _height, config.windowName.c_str(), nullptr, nullptr);
 	if (!_window) {
-		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
+		Log::Error("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
 		//! Nice exit
 		exit(1);
 	}
@@ -47,7 +46,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
-		Locator::GetLogger()->LogError("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
+		Log::Error("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
 		//! Nice exit
 		exit(1);
 	}
@@ -61,6 +60,9 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 		else
 			glFrontFace(GL_CW);
 	}
+	if (config.glSeamlessCubeMap) {
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	}
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -72,7 +74,7 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 	_imguiOn = true;
 
-	Locator::GetLogger()->LogSuccess("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
+	Log::Success("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
 

@@ -13,38 +13,18 @@
 #define BG_YELLOW std::string("\e[43m")
 #define BG_GREEN std::string("\e[42m")
 #define BG_GRAY std::string("\e[47m")
+#define BG_CYAN std::string("\e[46m")
 #define BG_DEFAULT std::string("\e[49m")
 
-class ILogger {
+class Log {
 public:
-	virtual ~ILogger() {};
-	virtual void Log(std::string) = 0;
-	virtual void LogSuccess(std::string) = 0;
-	virtual void LogWarning(std::string) = 0;
-	virtual void LogError(std::string) = 0;
+	static void Basic(std::string);
+	static void Error(std::string);
+	static void Warning(std::string);
+	static void Important(std::string);
+	static void Success(std::string);
+	static void ErrorBg(std::string);
+	static void WarningBg(std::string);
+	static void ImportantBg(std::string);
+	static void SuccessBg(std::string);
 };
-
-class NullLogger : public ILogger {
-public:
-	virtual void Log(std::string) {};
-	virtual void LogSuccess(std::string) {};
-	virtual void LogWarning(std::string) {};
-	virtual void LogError(std::string) {};
-};
-
-class TerminalLogger : public ILogger {
-	public:
-	TerminalLogger();
-	virtual void Log(std::string);
-	virtual void LogSuccess(std::string);
-	virtual void LogWarning(std::string);
-	virtual void LogError(std::string);
-};
-
-// class FileLogger : public Logger {
-// 	public:
-// 	virtual void Log(std::string);
-// 	virtual void LogSuccess(std::string);
-// 	virtual void LogWarning(std::string);
-// 	virtual void LogError(std::string);
-// };

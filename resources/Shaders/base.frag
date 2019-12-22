@@ -2,17 +2,23 @@
 in vec2 uvPos;
 in vec3 normal;
 in vec3 fragPos;
+
 out vec4 fragColor;
 
-uniform sampler2D diffuseTex;
-uniform sampler2D normalTex;
-uniform int tick;
+struct Material {
+	sampler2D diffuse;
+	sampler2D normal;
+	sampler2D specular;
+	float shininess;
+};
+
+uniform Material material;
 
 float sin01(float f) {
 	return ((sin(f) + 1.0) * 0.5);
 }
 
 void main() {
-	vec4 texColor = texture(diffuseTex, uvPos);
+	vec4 texColor = texture(material.diffuse, uvPos);
 	fragColor = texColor;
 }

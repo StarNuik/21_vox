@@ -2,7 +2,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 // #include "Engine/Engine.h"
-// #include "Engine/Locator.hpp"
+// #include "Engine/Log.h"
 // #include "Generation/Map.h"
 
 // #include "Render/Objects.h"

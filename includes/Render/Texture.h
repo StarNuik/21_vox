@@ -6,9 +6,12 @@
 
 class Texture {
 public:
-	Texture(std::string);
+	Texture();
 	~Texture();
+	void Load(std::string);
 	void Use();
+	bool IsLoaded();
 private:
 	uint _id;
+	bool _loaded;
 };

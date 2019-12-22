@@ -34,7 +34,7 @@ public:
 	
 	void RenderFrame();
 private:
-	uint _tick;
+	void SetDirLights();
 	bool _glfwOn;
 	bool _imguiOn;
 	uint _width;
@@ -60,4 +60,5 @@ public:
 	bool glDepthTest;
 	bool glCullFace;
 	bool glCullCounterClockwise;
+	bool glSeamlessCubeMap;
 };

@@ -1,18 +1,18 @@
 // #include "Engine/Engine.h"
-// #include "Engine/Locator.hpp"
+// #include "Engine/Log.h"
 // #include "Player/Player.h"
 // #include "Generation/Map.h"
 // #include "World/World.h"
 
 #include "Render/GLRenderer.h"
 #include "Engine/Game.h"
-#include "Utilities/Locator.hpp"
 #include "Input/Input.h"
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
 #include "World/World.h"
 #include "Generation/MapGeneration.h"
 #include "Player/Player.h"
+#include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
 
 
@@ -30,28 +30,28 @@ GLRenderer::RenderEngineConfig glConfig() {
 	config.glDepthTest = true;
 	config.glCullFace = false;
 	config.glCullCounterClockwise = false;
+	config.glSeamlessCubeMap = true;
 	return config;
 }
 
 Game::Game() {
 	_finished = false;
-	Locator::ProvideLogger(NULL);
 	_renderer = nullptr;
 	_input = nullptr;
 	_resources = nullptr;
 	_world = nullptr;
 	_ui = nullptr;
+	_lastFrame = 0.f;
+	_runtime = 0.f;
 };
 
 void Game::InitSystems() {
-	ILogger* log = new TerminalLogger();
-	Locator::ProvideLogger(log);
-
-	Profiler::SetResolution(Profiler::Nanoseconds);
 	Profiler::Prepare("FrameFull");
 	Profiler::Prepare("Input");
 	Profiler::Prepare("Update");
 	Profiler::Prepare("RenderFull");
+	Profiler::Prepare("Generation");
+	Profiler::Prepare("Models");
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
@@ -64,16 +64,27 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 9
+#define WORLD_RADIUS 10
 
 void Game::InitWorld() {
 	const int border = WORLD_RADIUS;
 	for (int x = -border; x <= border; x++)
-		for (int z = -border; z <= border; z++)
+		for (int z = -border; z <= border; z++) {
+			Profiler::Start("Generation");
 			_world->GenerateChunk(glm::ivec2(x, z));
+			Profiler::Add("Generation");
+		}
+	Profiler::Start("Models");
 	for (int x = -border; x <= border; x++)
-		for (int z = -border; z <= border; z++)
+		for (int z = -border; z <= border; z++) {
+			Profiler::Start("Models");
 			_world->ActivateChunk(glm::ivec2(x, z));
+			Profiler::Add("Models");
+		}
+	Log::Warning("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
+	Log::Warning("Single chunk generation, on average: " + std::to_string(Profiler::GetAverageMs("Generation")) + "ms");
+	Log::Warning("Model creation took: " + std::to_string(Profiler::GetTotalS("Models")) + "s");
+	Log::Warning("Single model, on average: " + std::to_string(Profiler::GetAverageMs("Models")) + "ms");
 };
 
 void Game::DestroyWorld() {
@@ -90,7 +101,4 @@ Game::~Game() {
 	delete _resources;
 	delete _input;
 	delete _renderer;
-
-	ILogger* log = Locator::GetLogger();
-	delete log;
 };

@@ -1,5 +1,5 @@
 #include "Player/Player.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "Render/GLRenderer.h"
 #include "Render/Camera.h"

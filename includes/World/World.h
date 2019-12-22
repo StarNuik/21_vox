@@ -5,19 +5,6 @@
 #include <glm/gtx/hash.hpp>
 
 #include "Types.h"
-// #include "World/Chunk.h"
-// #include "Types.h"
-
-class Game;
-
-// class Block {
-// public:
-// 	Block(Texture* texture);
-// 	~Block();
-// private:
-// 		Texture* _texture;
-// 		bool _isWalkable;
-// };
 
 class World {
 public:

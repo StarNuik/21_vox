@@ -1,6 +1,6 @@
 // #include "World/World.h"
 #include "Types.h"
-// #include "Utilities/Locator.hpp"
+// #include "Utilities/Log.h"
 #include "Utilities/Time.h"
 #include "World/Shard.h"
 #include "Render/RenderModel.h"
@@ -44,11 +44,12 @@ BlockType Shard::GetBlock(glm::ivec3 pos) {
 }
 
 void Shard::SetBlock(glm::ivec3 pos, BlockType type) {
+	BlockType oldBlock = _blocks[pos.x][pos.y][pos.z];
+	if (oldBlock != BlockType::Air) {
+		_blockTypePresent[(uint)oldBlock]--;
+	}
 	if (type != BlockType::Air) {
 		_blockTypePresent[(uint)type]++;
-	} else {
-		BlockType removed = _blocks[pos.x][pos.y][pos.z];
-		_blockTypePresent[(uint)removed]--;
 	}
 	_blocks[pos.x][pos.y][pos.z] = type;
 }

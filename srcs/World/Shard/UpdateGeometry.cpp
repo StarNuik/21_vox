@@ -6,19 +6,12 @@
 #include "World/World.h"
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();
-	//? If shard is active, remove models from the renderer
-	if (_state) {
-		for (RenderModel* model : _models) {
-			r->RemoveModel(model);
-		}
-	}
 	//? Delete old geometry and models
 	for (RenderModel* model : _models) {
-		delete model->GetGeometry();
 		delete model;
 	}
 	_models.clear();
@@ -69,7 +62,7 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 	if (vertexBuffer.size() == 0)
 		return nullptr;
 	Geometry* g = new Geometry(vertexBuffer);
-	RenderModel* model = new RenderModel(r, rs->GetShader("Base"), rs->GetTexture(type), g);
+	RenderModel* model = new RenderModel(r, rs->GetShader(USED_SHADER), rs->GetMaterial(type), g);
 	model->SetPosition(_position * 16);
 	return (model);
 };

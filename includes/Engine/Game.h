@@ -5,9 +5,6 @@
 
 #include "Types.h"
 
-#define FIXED_DELTA (1.f / 60.f)
-#define FRAME_MS (int)(FIXED_DELTA * 1000)
-
 class Game {
 public:
 	Game();
@@ -23,10 +20,10 @@ public:
 	ResourceLoader* GetResources();
 	UIController* GetUI();
 	World* GetWorld();
-	// uint GetLastFrameTi me();
 	MapGeneration* GetGeneration();
+	float GetRuntime();
+	float GetDayNightVal();
 	MapGeneration* _mpGen;
-	class ProfilerInfo;
 private:
 	void Update(float delta);
 
@@ -38,4 +35,5 @@ private:
 	World* _world;
 	UIController* _ui;
 	float _lastFrame;
+	float _runtime;
 };

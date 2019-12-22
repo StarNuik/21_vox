@@ -1,6 +1,6 @@
 #include "Types.h"
 #include "World/World.h"
-#include "Utilities/Locator.hpp"
+#include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "World/Chunk.h"
 
@@ -34,25 +34,22 @@ void World::DestroyChunk(glm::ivec2 pos) {
 }
 
 void World::ActivateChunk(glm::ivec2 pos) {
-	Chunk* chunk = _chunks[pos];
-	if (!chunk) {
-		return;
-	}
-	chunk->SetActive(true);
+	SetChunkState(pos, true);
 }
 
 void World::DeactivateChunk(glm::ivec2 pos) {
-	Chunk* chunk = _chunks[pos];
-	if (chunk) {
-		chunk->SetActive(false);
-	}
+	SetChunkState(pos, false);
 }
 
 void World::SetChunkState(glm::ivec2 pos, bool state) {
 	Chunk* chunk = _chunks[pos];
-	if (!chunk) {
+	if (!chunk and !state) {
 		return;
 	}
+	// if (!chunk and state) {
+	// 	GenerateChunk(pos);
+	// 	chunk = _chunks[pos];
+	// }
 	chunk->SetActive(state);
 }
 
