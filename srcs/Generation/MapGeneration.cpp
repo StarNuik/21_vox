@@ -42,6 +42,24 @@ float MapGeneration::Lerp(float v0, float v1, float t)
 	return (1.f - t) * v0 + t * v1;
 }
 
+float MapGeneration::TreeGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Tree];
+  int R = 3;
+  float max = 0;
+
+  for (int yn = pos.y - R; yn <= pos.y + R; yn++) {
+    for (int xn = pos.x - R; xn <= pos.x + R; xn++) {
+      float e = noise.GetNoise(xn, yn);
+      if (e > max)
+        max = e;
+    }
+  }
+  if (noise.GetNoise(pos.x, pos.y) == max)
+    return 1.f;
+  return -1.f;
+}
+
 float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[HighLand];
@@ -322,6 +340,14 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       return column;
     }
       break;
+    case GenerationType::Tree:
+    {
+      column.biom = 0;
+      column.elevation = TreeGeneration(pos);
+      column.firstBlockLayer = BlockType::Leaves;
+      column.lastBlockLayer = BlockType::Log;
+      return column;
+    }
     default:
     {
       column.biom = 0;
@@ -332,7 +358,6 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     }
       break;
   }
-
 }
 
 
@@ -346,6 +371,10 @@ MapGeneration::MapGeneration()
   _noises[Biomes].SetFrequency(0.01);
   _noises[Biomes].SetCellularReturnType(FastNoise::CellValue);
   _noises[Biomes].SetCellularDistanceFunction(FastNoise::Natural);
+
+  _noises[Tree].SetNoiseType(FastNoise::WhiteNoise);
+  _noises[Tree].SetSeed(200);
+  _noises[Tree].SetFrequency(0.01);
 
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
@@ -364,6 +393,7 @@ MapGeneration::MapGeneration()
   _noiseNames[Beach] = "Beach";
   _noiseNames[HighLand] = "HighLand";
   _noiseNames[Biomes] = "BiomeDefinition";
+  _noiseNames[Tree] = "Tree";
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};

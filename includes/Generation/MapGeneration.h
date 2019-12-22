@@ -42,6 +42,7 @@ public:
         GrassLand,
         Snow,
         HighLand,
+        Tree,
         Biomes,
         First = Basic,
         Last = Biomes,
@@ -66,6 +67,8 @@ private:
     float LandGenerationColumn(glm::ivec2 pos);
     float BeachGenerationColumn(glm::ivec2 pos);
     float HighLandGenerationColumn(glm::ivec2 pos);
+
+    float TreeGeneration(glm::ivec2 pos);
   
     int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     int BiomeDefinition(int elevation);
