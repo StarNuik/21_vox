@@ -85,8 +85,8 @@ void Game::InitWorld() {
 	Log::Basic("Single chunk generation, on average: " + std::to_string(Profiler::GetAverageMs("Generation")) + "ms");
 	Log::Warning("|       Name       |   Total (s)  | Average (ms)|");
 	Log::Basic  ("|      Models      |   " + std::to_string(Profiler::GetTotalS("Model")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model")) + "  |");
-	Log::Basic  ("|  Generate model  |   " + std::to_string(Profiler::GetTotalS("Model|Gen")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Gen")) + "  |");
-	Log::Basic  ("|   Single block   |   " + std::to_string(Profiler::GetTotalS("Model|Block")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Block")) + "  |");
+	// Log::Basic  ("|  Generate model  |   " + std::to_string(Profiler::GetTotalS("Model|Gen")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Gen")) + "  |");
+	// Log::Basic  ("|   Single block   |   " + std::to_string(Profiler::GetTotalS("Model|Block")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Block")) + "  |");
 	// Log::Basic  ("|    Pos floorf    |   " + std::to_string(Profiler::GetTotalS("Model|Pos")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Pos")) + "  |");
 	// Log::Basic  ("|      Pos mod     |   " + std::to_string(Profiler::GetTotalS("Model|Pos2")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Pos2")) + "  |");
 };
