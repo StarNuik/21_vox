@@ -51,7 +51,7 @@ RenderModel* Shard::GenerateModelOfType(const BlockType type) {
 				if (_blocks[x][y][z] != type)
 					continue;
 				// Profiler::Start("Model|Block");
-				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z));
+				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z), glm::ivec3(x, y, z));
 				// Profiler::Add("Model|Block");
 				if (block.size() == 0)
 					continue;
@@ -72,18 +72,18 @@ RenderModel* Shard::GenerateModelOfType(const BlockType type) {
 	return (model);
 };
 
-std::vector<float> Shard::GenerateGeometryFor(const BlockType type, World* w, const glm::ivec3 p) {
+std::vector<float> Shard::GenerateGeometryFor(const BlockType type, World* w, const glm::ivec3 p, const glm::ivec3 l) {
 	switch (type) {
 		case BlockType::CraftingTable:
 		case BlockType::Grass:
 		case BlockType::Log:
-			return (GenerateMultisideBlock(w, p));
+			return (GenerateMultisideBlock(w, p, l));
 			break;
 		case BlockType::Dandelion:
-			return (GenerateFlower(w, p));
+			return (GenerateFlower(w, p, l));
 			break;
 		default:
-			return (GenerateBlock(w, p));
+			return (GenerateBlock(w, p, l));
 			break;
 	}
 }
