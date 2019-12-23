@@ -4,6 +4,8 @@
 #include "Engine/Game.h"
 #include "World/Chunk.h"
 
+#include "Utilities/Profiler.h"
+
 World::World(Game* game) {
 	_game = game;
 }
@@ -53,19 +55,21 @@ void World::SetChunkState(glm::ivec2 pos, bool state) {
 	chunk->SetActive(state);
 }
 
-BlockType World::GetBlock(glm::ivec3 globalPos) {
+BlockType World::GetBlock(const glm::ivec3 globalPos) {
 	//* Maybe optimize this
-	glm::ivec2 chunkPos(floorf(globalPos.x / 16.f), floorf(globalPos.z / 16.f));
-	Chunk* chunk = this->_chunks[chunkPos];
+	int x, z;
+	x = globalPos.x >= 0 ? globalPos.x >> 4 : (globalPos.x + 1) / 16 - 1;
+	z = globalPos.z >= 0 ? globalPos.z >> 4 : (globalPos.z + 1) / 16 - 1;
+	const glm::ivec2 chunkPos(x, z);
+	Chunk* chunk = _chunks[chunkPos];
 	if (!chunk) {
 		return BlockType::Stone; //! Is this okay?
-	} else {
-		int x = globalPos.x % 16;
-		int z = globalPos.z % 16;
-		x = x < 0 ? 16 + x : x;
-		z = z < 0 ? 16 + z : z;
-		return _chunks[chunkPos]->GetBlock(glm::ivec3(x, globalPos.y, z));
 	}
+	x = globalPos.x % 16;
+	z = globalPos.z % 16;
+	x = x < 0 ? 16 + x : x;
+	z = z < 0 ? 16 + z : z;
+	return _chunks[chunkPos]->GetBlock(glm::ivec3(x, globalPos.y, z));
 }
 
 void World::SetBlock(glm::ivec3 globalPos, BlockType type) {

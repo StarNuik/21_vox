@@ -7,27 +7,30 @@
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
+#include "Utilities/Profiler.h"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();
-	//? Delete old geometry and models
+	//* Delete old geometry and models
 	for (RenderModel* model : _models) {
 		delete model;
 	}
 	_models.clear();
 	//! Otherwise _models.push_back(model) segfaults
 	_models = std::vector<RenderModel*>();
-	//? For every block type
+	//* For every block type
 	for (uint t = (uint)BlockType::First + 1; t <= (uint)BlockType::Last; t++) {
 		if (!HasType((BlockType)t))
 			continue;
+		Profiler::Start("Model|Gen");
 		RenderModel* model = GenerateModelOfType((BlockType)t);
+		Profiler::Add("Model|Gen");
 		if (!model)
 			continue;
 		_models.reserve(sizeof(RenderModel*));
 		_models.push_back(model);
 	}
-	//? If shard is active, add models to the renderer
+	//* If shard is active, add models to the renderer
 	if (_state) {
 		for (RenderModel* model : _models) {
 			r->AddModel(model);
@@ -35,7 +38,7 @@ void Shard::UpdateGeometry() {
 	}
 }
 
-RenderModel* Shard::GenerateModelOfType(BlockType type) {
+RenderModel* Shard::GenerateModelOfType(const BlockType type) {
 	GLRenderer* r = _game->GetRenderer();
 	ResourceLoader* rs = _game->GetResources();
 	World* w = _game->GetWorld();
@@ -47,7 +50,9 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
+				Profiler::Start("Model|Block");
 				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z));
+				Profiler::Add("Model|Block");
 				if (block.size() == 0)
 					continue;
 				for (int i = 0; i < block.size(); i += 8) {
@@ -67,7 +72,7 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 	return (model);
 };
 
-std::vector<float> Shard::GenerateGeometryFor(BlockType type, World* w, glm::ivec3 p) {
+std::vector<float> Shard::GenerateGeometryFor(const BlockType type, World* w, const glm::ivec3 p) {
 	switch (type) {
 		case BlockType::CraftingTable:
 		case BlockType::Grass:

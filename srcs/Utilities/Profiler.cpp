@@ -31,8 +31,9 @@ void Profiler::End(std::string key) {
 }
 
 void Profiler::Add(std::string key) {
+	__timepoint t = std::chrono::high_resolution_clock::now();
 	Profiler::Pair& get = _map[key];
-	get.end = std::chrono::high_resolution_clock::now();
+	get.end = t;
 	get.total += get.end - get.start;
 	get.count++;
 	get.PushBack();

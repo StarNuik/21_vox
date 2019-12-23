@@ -46,12 +46,6 @@ Game::Game() {
 };
 
 void Game::InitSystems() {
-	Profiler::Prepare("FrameFull");
-	Profiler::Prepare("Input");
-	Profiler::Prepare("Update");
-	Profiler::Prepare("RenderFull");
-	Profiler::Prepare("Generation");
-	Profiler::Prepare("Models");
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
@@ -64,9 +58,16 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 10
+#define WORLD_RADIUS 3
 
 void Game::InitWorld() {
+	Profiler::Prepare("Generation");
+	Profiler::Prepare("Model");
+	Profiler::Prepare("Model|Gen");
+	Profiler::Prepare("Model|Block");
+	Profiler::Prepare("Model|Get");
+	Profiler::Prepare("Model|Pos");
+	Profiler::Prepare("Model|Pos2");
 	const int border = WORLD_RADIUS;
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
@@ -74,17 +75,20 @@ void Game::InitWorld() {
 			_world->GenerateChunk(glm::ivec2(x, z));
 			Profiler::Add("Generation");
 		}
-	Profiler::Start("Models");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
-			Profiler::Start("Models");
+			Profiler::Start("Model");
 			_world->ActivateChunk(glm::ivec2(x, z));
-			Profiler::Add("Models");
+			Profiler::Add("Model");
 		}
-	Log::Warning("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
-	Log::Warning("Single chunk generation, on average: " + std::to_string(Profiler::GetAverageMs("Generation")) + "ms");
-	Log::Warning("Model creation took: " + std::to_string(Profiler::GetTotalS("Models")) + "s");
-	Log::Warning("Single model, on average: " + std::to_string(Profiler::GetAverageMs("Models")) + "ms");
+	Log::Basic("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
+	Log::Basic("Single chunk generation, on average: " + std::to_string(Profiler::GetAverageMs("Generation")) + "ms");
+	Log::Warning("|       Name       |   Total (s)  | Average (ms)|");
+	Log::Basic  ("|      Models      |   " + std::to_string(Profiler::GetTotalS("Model")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model")) + "  |");
+	Log::Basic  ("|  Generate model  |   " + std::to_string(Profiler::GetTotalS("Model|Gen")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Gen")) + "  |");
+	Log::Basic  ("|   Single block   |   " + std::to_string(Profiler::GetTotalS("Model|Block")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Block")) + "  |");
+	// Log::Basic  ("|    Pos floorf    |   " + std::to_string(Profiler::GetTotalS("Model|Pos")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Pos")) + "  |");
+	// Log::Basic  ("|      Pos mod     |   " + std::to_string(Profiler::GetTotalS("Model|Pos2")) + "   |  " + std::to_string(Profiler::GetAverageMs("Model|Pos2")) + "  |");
 };
 
 void Game::DestroyWorld() {

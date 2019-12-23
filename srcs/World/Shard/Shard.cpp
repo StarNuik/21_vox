@@ -39,7 +39,7 @@ void Shard::SetActive(bool state) {
 	_state = state;
 }
 
-BlockType Shard::GetBlock(glm::ivec3 pos) {
+BlockType Shard::GetBlock(const glm::ivec3 pos) {
 	return _blocks[pos.x][pos.y][pos.z];
 }
 

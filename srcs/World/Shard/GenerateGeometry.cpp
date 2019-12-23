@@ -2,8 +2,9 @@
 #include "World/Shard.h"
 #include "World/World.h"
 #include "Render/VertexBuffers.h"
+#include "Utilities/Profiler.h"
 
-std::vector<float> Shard::GenerateBlock(World* w, glm::ivec3 globalBlockPos) {
+std::vector<float> Shard::GenerateBlock(World* w, const glm::ivec3 globalBlockPos) {
 	std::vector<float> res = std::vector<float>();
 
 	//? Right face
@@ -45,7 +46,7 @@ std::vector<float> Shard::GenerateBlock(World* w, glm::ivec3 globalBlockPos) {
 	return res;
 }
 
-std::vector<float> Shard::GenerateMultisideBlock(World* w, glm::ivec3 globalBlockPos) {
+std::vector<float> Shard::GenerateMultisideBlock(World* w, const glm::ivec3 globalBlockPos) {
 	std::vector<float> res = std::vector<float>();
 
 	//? Right face
