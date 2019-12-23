@@ -31,12 +31,14 @@ void Chunk::Generate() {
 
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
+			
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
 			int elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
 			int firstLayerBorder = 40 + block.elevation;
 			for (int y = 1; y < firstLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
+			int cavesHeight = firstLayerBorder;
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
@@ -45,7 +47,24 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
-
+			
+			if (block.biom != MapGeneration::Ocean) // caves generation
+			{
+				float e = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).elevation;
+				elevation = glm::clamp((int)e, 0, 255);
+				if (elevation != 0)
+				{
+					cavesHeight -= 120;
+					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationleCaves).elevation;
+					int h = glm::clamp((int)height, 1, 255);
+					cavesHeight = glm::clamp(cavesHeight, 1, 255);
+					cavesHeight += h;
+					for (int y = cavesHeight; y < cavesHeight + elevation + 1; y++){
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
+					}
+				}
+			}
+			
 			if (block.biom == MapGeneration::GrassLand && (x > 3 && x < 13 && z > 3 && z < 13) // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
 			&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).elevation == 1.f)
 			{
