@@ -42,6 +42,25 @@ float MapGeneration::Lerp(float v0, float v1, float t)
 	return (1.f - t) * v0 + t * v1;
 }
 
+float MapGeneration::CrevicesGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Crevices];
+
+  float terraceValue = _terraceValue;
+
+  float e = 1.f * (noise.GetNoise(pos.x * 0.55f, pos.y * 3.5f));
+  e = (e * 0.5f + 0.5f) * 10;
+
+  if (e < 8)
+    return -1.f;
+  else
+    e = 9;
+
+  float terrace = round(e * terraceValue) / terraceValue;
+  return terrace;
+}
+
+
 float MapGeneration::ElevationleCavesGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[ElevationleCaves];
@@ -53,6 +72,8 @@ float MapGeneration::ElevationleCavesGeneration(glm::ivec2 pos)
   float e = 1.f * (noise.GetNoise(pos.x, pos.y));
   float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
   float e2 = 0.25f * (noise.GetNoise(4.f * pos.x, 4.f * pos.y));
+  float e3 = 0.13f * (noise.GetNoise(8.f * pos.x, 8.f * pos.y));
+  e += e1 + e2 + e3;
   e = (e * 0.5f + 0.5f) * 10;
 
 
@@ -129,11 +150,7 @@ float MapGeneration::BeachGenerationColumn(glm::ivec2 pos)
   e = (e * 0.5f + 0.5f); // range 0..1;
   float terrace = round(e * terraceValue) / terraceValue;  
   float elevation = terrace;
-  // static float min = 100, max = 0;
-  // min = (min > elevation ? elevation : min);
-  // max = (max < elevation ? elevation : max);
-  // std::cout << "min: " << min << " | max: " << max << std::endl;
-  // int elevation = (int)floorf(terrace);
+
   return elevation;
 }
 
@@ -237,7 +254,7 @@ void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int bio
     float approx = GetApprox(rightBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation);
     if (approx != -1.f)
     {
-      elevation = Lerp(approx, elevation, distance * STEP);
+      elevation = LERP(approx, elevation, distance * STEP);
       return;
     }
     if (distance >= MAX_DIST_TO_SMOOTHING)
@@ -357,24 +374,17 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       return column;
     }
       break;
-    case GenerationType::GrassLand:
+    case GenerationType::Crevices:
     {
       column.biom = 0;
-      column.elevation = LandGenerationColumn(pos);
-      column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::Grass;
-      return column;
-    }
-      break;
-    case GenerationType::HighLand:
-    {
-      column.biom = 0;
-      column.elevation = HighLandGenerationColumn(pos);
-      column.firstBlockLayer = BlockType::Stone;
+      column.elevation = CrevicesGeneration(pos);
+      if (column.elevation <= 0.f)
+        column.firstBlockLayer = BlockType::Air;
+      else
+        column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Dirt;
       return column;
     }
-      break;
     case GenerationType::Tree:
     {
       column.biom = 0;
@@ -432,6 +442,10 @@ MapGeneration::MapGeneration()
   _noises[ElevationleCaves].SetNoiseType(FastNoise::Perlin);
   _noises[ElevationleCaves].SetFrequency(0.01);
 
+  _noises[Crevices].SetNoiseType(FastNoise::Perlin);
+  _noises[Crevices].SetSeed(1333);
+  _noises[Crevices].SetFrequency(0.016);
+
   _noises[Basic].SetNoiseType(FastNoise::Perlin);
   _noises[Basic].SetFrequency(0.1);
 
@@ -452,6 +466,7 @@ MapGeneration::MapGeneration()
   _noiseNames[Tree] = "Tree";
   _noiseNames[ShapeCaves] = "ShapeCaves";
   _noiseNames[ElevationleCaves] = "ElevationleCaves";
+  _noiseNames[Crevices] = "Crevices";
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};

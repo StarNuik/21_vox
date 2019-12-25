@@ -44,6 +44,7 @@ public:
         HighLand,
         ShapeCaves,
         ElevationleCaves,
+        Crevices,
         Tree,
         Biomes,
         First = Basic,
@@ -75,6 +76,8 @@ private:
     float ShapeCavesGeneration(glm::ivec2 pos);
     float ElevationleCavesGeneration(glm::ivec2 pos);
 
+    float CrevicesGeneration(glm::ivec2 pos);
+
   
     int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     int BiomeDefinition(int elevation);
@@ -95,6 +98,7 @@ private:
     {
         return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
     }
+
     template <typename T> inline T _Lerp(const T &v0, const T &v1, float t)
     {
         return v0 + (v1 - v0) * std::max(0.f, std::min(1.f, t));
