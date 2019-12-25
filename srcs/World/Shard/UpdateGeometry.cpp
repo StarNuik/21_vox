@@ -73,6 +73,7 @@ std::vector<float> Shard::GenerateGeometryFor(const BlockType type, World* w, co
 		case BlockType::CraftingTable:
 		case BlockType::Grass:
 		case BlockType::Log:
+		case BlockType::SnowGrass:
 			return (GenerateMultisideBlock(w, p, l));
 			break;
 		case BlockType::Dandelion:
