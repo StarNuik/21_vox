@@ -11,7 +11,7 @@ void GLRenderer::RenderFrame() {
 	ResourceLoader* r = _game->GetResources();
 	UIController* ui = _game->GetUI();
 
-	glClearColor(0.4f, 0.4f, 0.65f, 1.f);
+	//* Clear 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//* Skybox
@@ -36,6 +36,7 @@ void GLRenderer::RenderFrame() {
 	ui->UpdateData();
 	ui->Draw();
 
+	//* Swap
 	glfwSwapBuffers(_window);
 };
 
