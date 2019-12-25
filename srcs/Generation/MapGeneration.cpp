@@ -60,10 +60,45 @@ float MapGeneration::CrevicesGeneration(glm::ivec2 pos)
   return terrace;
 }
 
-
-float MapGeneration::ElevationleCavesGeneration(glm::ivec2 pos)
+float MapGeneration::SecondElevationCavesGeneration(glm::ivec2 pos)
 {
-  FastNoise& noise = _noises[ElevationleCaves];
+  FastNoise& noise = _noises[SecondElevationCaves];
+
+  float terraceValue = _terraceValue;
+  float exp = _exp;
+
+  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
+  float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
+
+  e += e1;
+  e = (e * 0.5f + 0.5f) * 10;
+
+  float heightDifference = pow(e, exp);
+  float elevation = round(heightDifference * terraceValue) / terraceValue;
+  return elevation;
+}
+
+float MapGeneration::SecondShapeCavesGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[SecondShapeCaves];
+
+  float terraceValue = _terraceValue;
+
+  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
+  e = (e * 0.5f + 0.5f) * 10;
+  e = glm::clamp((int)e, 0, 255);
+  if (e == 3 || e == 4)
+    e = 4.f;
+  else
+    return -1.f;
+
+  float terrace = round(e * terraceValue) / terraceValue;
+  return terrace;
+}
+
+float MapGeneration::ElevationCavesGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[ElevationCaves];
 
   float terraceValue = _terraceValue;
   float exp = _exp;
@@ -378,11 +413,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.biom = 0;
       column.elevation = CrevicesGeneration(pos);
-      if (column.elevation <= 0.f)
-        column.firstBlockLayer = BlockType::Air;
-      else
-        column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::Dirt;
+      column.firstBlockLayer = BlockType::Air;
+      column.lastBlockLayer = BlockType::Air;
       return column;
     }
     case GenerationType::Tree:
@@ -401,10 +433,29 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.lastBlockLayer = BlockType::Air;
       return column;
     }
-    case GenerationType::ElevationleCaves:
+    case GenerationType::ElevationCaves:
     {
       column.biom = 0;
-      column.elevation = ElevationleCavesGeneration(pos);
+      column.elevation = ElevationCavesGeneration(pos);
+      column.firstBlockLayer = BlockType::Bedrock;
+      column.lastBlockLayer = BlockType::Bedrock;
+      return column;
+    }
+    case GenerationType::SecondShapeCaves:
+    {
+      column.biom = 0;
+      column.elevation = SecondShapeCavesGeneration(pos);
+      if (column.elevation == -1.f)
+        column.firstBlockLayer = BlockType::Air;
+      else
+        column.firstBlockLayer = BlockType::Dirt;
+      column.lastBlockLayer = BlockType::Air;
+      return column;
+    }
+    case GenerationType::SecondElevationCaves:
+    {
+      column.biom = 0;
+      column.elevation = SecondElevationCavesGeneration(pos);
       column.firstBlockLayer = BlockType::Bedrock;
       column.lastBlockLayer = BlockType::Bedrock;
       return column;
@@ -439,8 +490,14 @@ MapGeneration::MapGeneration()
 
   _noises[ShapeCaves].SetNoiseType(FastNoise::SimplexFractal);
   _noises[ShapeCaves].SetFrequency(0.01);
-  _noises[ElevationleCaves].SetNoiseType(FastNoise::Perlin);
-  _noises[ElevationleCaves].SetFrequency(0.01);
+  _noises[ElevationCaves].SetNoiseType(FastNoise::Perlin);
+  _noises[ElevationCaves].SetFrequency(0.01);
+  
+  _noises[SecondShapeCaves].SetNoiseType(FastNoise::Simplex);
+  _noises[SecondShapeCaves].SetFrequency(0.018);
+  _noises[SecondElevationCaves].SetNoiseType(FastNoise::Perlin);
+  _noises[SecondElevationCaves].SetSeed(1339);
+  _noises[SecondElevationCaves].SetFrequency(0.01);
 
   _noises[Crevices].SetNoiseType(FastNoise::Perlin);
   _noises[Crevices].SetSeed(1333);
@@ -465,7 +522,9 @@ MapGeneration::MapGeneration()
   _noiseNames[Biomes] = "BiomeDefinition";
   _noiseNames[Tree] = "Tree";
   _noiseNames[ShapeCaves] = "ShapeCaves";
-  _noiseNames[ElevationleCaves] = "ElevationleCaves";
+  _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
+  _noiseNames[ElevationCaves] = "ElevationleCaves";
+  _noiseNames[SecondElevationCaves] = "SecondElevationCaves";
   _noiseNames[Crevices] = "Crevices";
 }
 

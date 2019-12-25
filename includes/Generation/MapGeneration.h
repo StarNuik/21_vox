@@ -43,7 +43,9 @@ public:
         Snow,
         HighLand,
         ShapeCaves,
-        ElevationleCaves,
+        SecondShapeCaves,
+        ElevationCaves,
+        SecondElevationCaves,
         Crevices,
         Tree,
         Biomes,
@@ -73,11 +75,15 @@ private:
 
     float TreeGeneration(glm::ivec2 pos);
 
+
     float ShapeCavesGeneration(glm::ivec2 pos);
-    float ElevationleCavesGeneration(glm::ivec2 pos);
+    float ElevationCavesGeneration(glm::ivec2 pos);
+
+    float SecondShapeCavesGeneration(glm::ivec2 pos);
+    float SecondElevationCavesGeneration(glm::ivec2 pos);
+
 
     float CrevicesGeneration(glm::ivec2 pos);
-
   
     int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
     int BiomeDefinition(int elevation);

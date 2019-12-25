@@ -39,7 +39,9 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
 			int cavesDepth = firstLayerBorder - 40;
+			int secondCavesDepth = firstLayerBorder - 40;
 			int crevicesDepth = firstLayerBorder - 15;
+
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
@@ -55,12 +57,25 @@ void Chunk::Generate() {
 				elevation = glm::clamp((int)e, 0, 255);
 				if (elevation != 0)
 				{
-					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationleCaves).elevation;
+					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).elevation;
 					int h = glm::clamp((int)height, 1, 255);
 					cavesDepth += h;
 					cavesDepth = glm::clamp(cavesDepth, 1, 255);
 					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = cavesDepth; y < cavesHeight; y++){
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
+					}
+				}
+
+				e = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).elevation;
+				elevation = glm::clamp((int)e, 0, 255);
+				if (elevation != 0)
+				{
+					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).elevation;
+					int h = glm::clamp((int)height, 1, 255);
+					secondCavesDepth += h;
+					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
+					for (int y = secondCavesDepth; y < cavesHeight; y++){
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
 					}
 				}
