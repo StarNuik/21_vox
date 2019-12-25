@@ -22,9 +22,7 @@ void Shard::UpdateGeometry() {
 	for (uint t = (uint)BlockType::First + 1; t <= (uint)BlockType::Last; t++) {
 		if (!HasType((BlockType)t))
 			continue;
-		// Profiler::Start("Model|Gen");
 		RenderModel* model = GenerateModelOfType((BlockType)t);
-		// Profiler::Add("Model|Gen");
 		if (!model)
 			continue;
 		_models.reserve(sizeof(RenderModel*));
@@ -50,9 +48,7 @@ RenderModel* Shard::GenerateModelOfType(const BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
-				// Profiler::Start("Model|Block");
 				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z), glm::ivec3(x, y, z));
-				// Profiler::Add("Model|Block");
 				if (block.size() == 0)
 					continue;
 				for (int i = 0; i < block.size(); i += 8) {
