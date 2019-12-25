@@ -5,7 +5,7 @@
 
 #include "Types.h"
 
-#define USED_SHADER "DirLight"
+#define USED_SHADER "Phong"
 
 class Shard {
 public:

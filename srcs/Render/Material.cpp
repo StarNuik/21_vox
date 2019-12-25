@@ -29,12 +29,16 @@ void Material::Use(Shader* shader) {
 	glActiveTexture(GL_TEXTURE1);
 	if (_normalMap.IsLoaded()) {
 		_normalMap.Use();
+	} else {
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	shader->SetInt("material.specular", 2);
 	glActiveTexture(GL_TEXTURE2);
 	if (_specularMap.IsLoaded()) {
 		_specularMap.Use();
+	} else {
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	shader->SetFloat("material.shininess", _shininess);

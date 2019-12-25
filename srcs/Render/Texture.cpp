@@ -7,7 +7,9 @@
 #include "Render/Texture.h"
 #include "Utilities/Log.h"
 
-Texture::Texture() {};
+Texture::Texture() {
+	_loaded = false;
+};
 
 Texture::~Texture() {
 	if (_loaded) {

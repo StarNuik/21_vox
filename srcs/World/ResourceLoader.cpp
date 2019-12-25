@@ -48,6 +48,7 @@ Material* ResourceLoader::GetMaterial(BlockType type) {return _materials[(int)ty
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
 	_shaders["DirLight"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/dirLight.frag");
+	_shaders["Phong"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/phong.frag");
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
 };
 
@@ -139,15 +140,15 @@ void ResourceLoader::LoadMaterials() {
 	_materials[(int)BlockType::Stone] = new Material("./resources/Textures/Stone/Stone", 1.f);
 	_materials[(int)BlockType::OreCoal] = new Material("./resources/Textures/CoalOre/CoalOre", 1.f);
 	_materials[(int)BlockType::OreDiamond] = new Material("./resources/Textures/DiamondOre/DiamondOre", 1.f);
-	_materials[(int)BlockType::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 1.f);
+	_materials[(int)BlockType::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 32.f);
 	_materials[(int)BlockType::OreIron] = new Material("./resources/Textures/IronOre/IronOre", 1.f);
 	_materials[(int)BlockType::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f);
 	_materials[(int)BlockType::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f);
-	_materials[(int)BlockType::Grass] = new Material("./resources/Textures/Grass/Grass", 1.f);
+	_materials[(int)BlockType::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f);
 	_materials[(int)BlockType::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f);
 	_materials[(int)BlockType::Log] = new Material("./resources/Textures/Log/Log", 1.f);
 	_materials[(int)BlockType::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f);
-	_materials[(int)BlockType::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 1.f);
-	_materials[(int)BlockType::Water] = new Material("./resources/Textures/Water/Water", 1.f);
-	_materials[(int)BlockType::Ice] = new Material("./resources/Textures/Ice/Ice", 1.f);
+	_materials[(int)BlockType::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f);
+	_materials[(int)BlockType::Water] = new Material("./resources/Textures/Water/Water", 32.f);
+	_materials[(int)BlockType::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f);
 };
