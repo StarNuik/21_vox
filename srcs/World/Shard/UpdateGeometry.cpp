@@ -28,12 +28,6 @@ void Shard::UpdateGeometry() {
 		_models.reserve(sizeof(RenderModel*));
 		_models.push_back(model);
 	}
-	//* If shard is active, add models to the renderer
-	if (_state) {
-		for (RenderModel* model : _models) {
-			r->AddModel(model);
-		}
-	}
 }
 
 RenderModel* Shard::GenerateModelOfType(const BlockType type) {

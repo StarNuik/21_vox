@@ -25,8 +25,7 @@ void GLRenderer::RenderFrame() {
 	skybox->SetDirLights(_game->GetDayNightVal(), _game->GetRuntime());
 
 	//* Blocks
-	for (int i = 0; i < _rendered.size(); i++) {
-		RenderModel* model = _rendered[i];
+	for (RenderModel* model : _rendered) {
 		Shader* modelShader = model->Use(_activeCamera);
 		skybox->ApplyDirLights(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);

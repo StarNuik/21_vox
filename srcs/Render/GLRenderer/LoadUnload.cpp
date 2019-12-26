@@ -15,8 +15,7 @@ void GLRenderer::AddModel(RenderModel* model) {
 void GLRenderer::RemoveModel(RenderModel* model) {
 	std::vector<RenderModel*>::iterator pos;
 	pos = std::find(_rendered.begin(), _rendered.end(), model);
-	if (pos != _rendered.end())
-	{
+	if (pos != _rendered.end()) {
 		_rendered.erase(pos);
 	}
 };
