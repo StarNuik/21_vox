@@ -40,6 +40,3 @@ void GLRenderer::RenderFrame() {
 	glfwSwapBuffers(_window);
 };
 
-void GLRenderer::SetDirLights() {
-	
-};
