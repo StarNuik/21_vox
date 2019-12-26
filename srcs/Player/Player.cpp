@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "Player/Player.h"
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
@@ -5,6 +7,7 @@
 #include "Render/Camera.h"
 #include "Input/Input.h"
 #include "UI/UIController.h"
+#include "World/World.h"
 // #include <glm/gtx/euler_angles.hpp>
 // #include <glm/gtx/quaternion.hpp>
 
@@ -68,7 +71,28 @@ void Player::Update(float delta) {
 		_camera->SetRotation(_rotation);
 	}
 	_camera->SetPosition(_position);
+	// std::thread t(&Player::DoChunks, this);
+	// t.detach();
+	//! KILL ME WITH FIRE
+	DoChunks();
 }
+
+//! KILL ME WITH FIRE
+void Player::DoChunks() {
+	World* w = _game->GetWorld();
+	int x = _position.x;
+	int z = _position.z;
+	x = x >= 0 ? x >> 4 : (x + 1) / 16 - 1;
+	z = z >= 0 ? z >> 4 : (z + 1) / 16 - 1;
+	const glm::ivec2 chunkPos(x, z);
+	for (x = -12; x <= 12; x++)
+		for (z = -12; z <= 12; z++) {
+			int r = x * x + z * z;
+			w->SetChunkState(chunkPos + glm::ivec2(x, z), r <= 100);
+		}
+	// Log::Basic("Active chunks: " + std::to_string(activeChunks));
+};
+//! KILL ME WITH FIRE
 
 glm::vec3 Player::GetPosition() {return _position;};
 glm::vec3 Player::GetDirection() {return glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);};

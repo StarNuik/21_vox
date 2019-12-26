@@ -16,6 +16,8 @@ public:
 	void Update(float delta);
 	glm::vec3 GetPosition();
 	glm::vec3 GetDirection();
+	//! KILL ME WITH FIRE
+	void DoChunks();
 private:
 	Game* _game;
 	Camera* _camera;

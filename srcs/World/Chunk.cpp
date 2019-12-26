@@ -52,6 +52,8 @@ void Chunk::Generate() {
 }
 
 void Chunk::SetActive(bool state) {
+	if (_state == state)
+		return;
 	_state = state;
 	for (int i = 0; i < 16; i++) {
 		_shards[i]->SetActive(state);

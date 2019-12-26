@@ -48,10 +48,10 @@ void World::SetChunkState(glm::ivec2 pos, bool state) {
 	if (!chunk and !state) {
 		return;
 	}
-	// if (!chunk and state) {
-	// 	GenerateChunk(pos);
-	// 	chunk = _chunks[pos];
-	// }
+	if (!chunk and state) {
+		GenerateChunk(pos);
+		chunk = _chunks[pos];
+	}
 	chunk->SetActive(state);
 }
 
