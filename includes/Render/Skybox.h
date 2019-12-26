@@ -13,11 +13,12 @@
 
 class Skybox {
 public:
-	Skybox(Shader*, CubeMap* day, CubeMap* night);
+	Skybox(Game*, Shader*, CubeMap* day, CubeMap* night);
 	~Skybox();
 	Shader* Use(Camera*, float lerpVal, float runtime);
 	void ApplyDirLights(Shader*);
 	void SetDirLights(float lerpVal, float runtime);
+	ShadowRenderer* GetShadowRenderer();
 private:
 	CubeMap* _cubemap_day;
 	CubeMap* _cubemap_night;
@@ -27,4 +28,5 @@ private:
 	// glm::vec3 _moonColor;
 	DirLight* _sunLight;
 	DirLight* _moonLight;
+	ShadowRenderer* _shadows;
 };

@@ -10,14 +10,15 @@
 #include "Utilities/Log.h"
 // #include "World/World.h"
 
-ResourceLoader::ResourceLoader() {
+ResourceLoader::ResourceLoader(Game* game) {
+	_game = game;
 	VertexBuffers::Init();
 	LoadShaders();
 	LoadTextures();
 	LoadGeometries();
 	LoadCubeMaps();
 	LoadMaterials();
-	_skybox = new Skybox(_shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
+	_skybox = new Skybox(_game, _shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
 	Log::Success("[ResourceLoader::ResourceLoader]\nResources loaded.");
 };
 
@@ -51,6 +52,9 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Phong"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/phong.frag");
 	_shaders["Normals"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/normals.frag");
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
+	_shaders["Shadows"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/shadows.frag");
+	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
+	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 };
 
 void ResourceLoader::LoadTextures() {

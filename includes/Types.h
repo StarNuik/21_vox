@@ -40,6 +40,7 @@ class ResourceLoader;
 class Shard;
 class World;
 class NearestBlocks;
+class ShadowRenderer;
 
 enum class BlockType {
 	Air = 0,

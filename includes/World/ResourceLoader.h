@@ -11,7 +11,7 @@
 
 class ResourceLoader {
 public:
-	ResourceLoader();
+	ResourceLoader(Game*);
 	~ResourceLoader();
 	Shader* GetShader(std::string);
 	Texture* GetTexture(std::string);
@@ -21,6 +21,7 @@ public:
 	Material* GetMaterial(BlockType);
 	// Block* GetBlock(BlockType);
 private:
+	Game* _game;
 	void LoadShaders();
 	void LoadTextures();
 	void LoadGeometries();

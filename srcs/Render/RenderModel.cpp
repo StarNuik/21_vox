@@ -24,14 +24,18 @@ RenderModel::~RenderModel() {
 	}
 };
 
-Shader* RenderModel::Use(Camera* camera) {
-	_shader->Use();
+void RenderModel::ApplySelf(Camera* camera, Shader* shader) {
+	shader->Use();
 	_geometry->Use();
-	_material->Use(_shader);
-	_shader->SetMatrix4("model", GetAphineMatrix());
-	_shader->SetMatrix4("view", camera->GetViewMatrix());
-	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());
-	_shader->SetFloat3("cameraPos", camera->GetPosition());
+	_material->Use(shader);
+	shader->SetMatrix4("model", GetAphineMatrix());
+	shader->SetMatrix4("view", camera->GetViewMatrix());
+	shader->SetMatrix4("projection", camera->GetProjectionMatrix());
+	shader->SetFloat3("cameraPos", camera->GetPosition());
+};
+
+Shader* RenderModel::Use(Camera* camera) {
+	ApplySelf(camera, _shader);
 	return _shader;
 }
 

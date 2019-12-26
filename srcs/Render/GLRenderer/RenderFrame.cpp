@@ -1,7 +1,10 @@
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include "Render/GLRenderer.h"
 #include "Render/Shader.h"
 #include "Render/RenderModel.h"
 #include "Render/Skybox.h"
+#include "Render/ShadowRenderer.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
@@ -10,12 +13,15 @@
 void GLRenderer::RenderFrame() {
 	ResourceLoader* r = _game->GetResources();
 	UIController* ui = _game->GetUI();
+	Skybox* skybox = r->GetSkybox();
+	ShadowRenderer* shadows = skybox->GetShadowRenderer();
 
-	//* Clear 
+	shadows->Render(_rendered, _game->GetRuntime());
+
+	//* Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//* Skybox
-	Skybox* skybox = r->GetSkybox();
 	glDepthMask(GL_FALSE);
 	skybox->Use(_activeCamera, _game->GetDayNightVal(), _game->GetRuntime());
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -27,9 +33,11 @@ void GLRenderer::RenderFrame() {
 	//* Blocks
 	for (RenderModel* model : _rendered) {
 		Shader* modelShader = model->Use(_activeCamera);
+		shadows->ApplySelf(modelShader);
 		skybox->ApplyDirLights(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	// shadows->Render(_rendered, _game->GetRuntime());
 
 	//* UI
 	ui->UpdateData();
@@ -38,4 +46,3 @@ void GLRenderer::RenderFrame() {
 	//* Swap
 	glfwSwapBuffers(_window);
 };
-

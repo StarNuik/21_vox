@@ -10,6 +10,7 @@ public:
 	RenderModel(GLRenderer*, Shader*, Material*, Geometry*);
 	~RenderModel();
 	Shader* Use(Camera* camera);
+	void ApplySelf(Camera*, Shader*);
 	void SetPosition(glm::vec3);
 	void SetRotation(glm::quat);
 	void SetScale(glm::vec3);

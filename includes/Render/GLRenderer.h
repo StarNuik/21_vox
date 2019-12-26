@@ -1,21 +1,11 @@
 #pragma once
 
-// #include "Types.h"
-// #include <string>
-// #include <vector>
-// #include <unordered_map>
-// #include "Render/Objects.h"
-// #include "Render/Camera.h"
-// #include "Engine/Engine.h"
-
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
 #include <GLFW/glfw3.h>
 
 #include "Types.h"
-
-// class Game;
 
 class GLRenderer {
 public:
