@@ -15,7 +15,6 @@
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
 
-
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
 	config.windowSize = glm::ivec2(1500, 900);
@@ -58,7 +57,7 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 3
+#define WORLD_RADIUS 10
 
 void Game::InitWorld() {
 	Profiler::Prepare("Generation");

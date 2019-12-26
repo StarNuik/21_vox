@@ -5,7 +5,7 @@ Camera::Camera(GLRenderer* renderer, float fov, float nearPlane, float farPlane)
 	glm::ivec2 winSize = renderer->GetWindowSize();
 	_position = glm::vec3(0.f);
 	_rotation = glm::identity<glm::quat>();
-	// _projectionMatrix = glm::ortho((float)(-winSize.x / 2), (float)(winSize.x / 2), (float)(-winSize.y / 2), (float)(winSize.y / 2), -100.f, 100.f);
+	// _projectionMatrix = glm::ortho((float)(-winSize.x / 8), (float)(winSize.x / 8), (float)(-winSize.y / 8), (float)(winSize.y / 8), -320.f, 320.f);
 	_projectionMatrix = glm::perspective(glm::radians(fov), (float)winSize.x / (float)winSize.y, nearPlane, farPlane);
 };
 
