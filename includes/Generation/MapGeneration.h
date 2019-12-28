@@ -28,7 +28,8 @@ public:
 public:
     struct StoredMapData
     {
-        float elevation;
+        float approximateElevation;
+        int exactElevation;
         int biom;
         BlockType firstBlockLayer;
         BlockType lastBlockLayer;

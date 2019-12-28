@@ -344,39 +344,40 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   {
     case GenerationType::Ocean:
     {
-      column.elevation = 1.f;
+      column.approximateElevation = 1.f;
+      column.exactElevation =  1;
       column.firstBlockLayer = BlockType::Planks; // it should be water ofc
       column.lastBlockLayer = BlockType::Planks; // it should be water ofc
     }
       break;
     case GenerationType::GrassLand:
     {
-      column.elevation = LandGenerationColumn(pos);
-      SmoothingButtJoint(column.elevation, pos, column.biom);
-      column.elevation = (int)floorf(column.elevation * 10.f);
+      column.approximateElevation = LandGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Grass;
     }
       break;
     case GenerationType::Beach:
     {
-      column.elevation = BeachGenerationColumn(pos);
-      SmoothingButtJoint(column.elevation, pos, column.biom);
-      column.elevation = (int)floorf(column.elevation * 10.f);
+      column.approximateElevation = BeachGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = BlockType::Sand;
       column.lastBlockLayer = BlockType::Sand;
     }
       break;
     case GenerationType::HighLand:
     {
-      column.elevation = HighLandGenerationColumn(pos);
-      SmoothingButtJoint(column.elevation, pos, column.biom);
-      column.elevation = (int)floorf(column.elevation + 5.216f);
+      column.approximateElevation = HighLandGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
-      if (column.elevation > 75 && column.elevation < 86)
+      if (column.approximateElevation > 75 && column.approximateElevation < 86)
         column.lastBlockLayer = BlockType::Planks; //As planned, it should be snowing
-      else if (column.elevation >= 86)
+      else if (column.approximateElevation >= 86)
         column.lastBlockLayer = BlockType::Grass; //As planned, it should be ice
     }
       break;
@@ -384,10 +385,11 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::Grass;
-      column.elevation = LandGenerationColumn(pos);
-      column.elevation = (int)floorf(column.elevation * 10.f);
+      column.approximateElevation = LandGenerationColumn(pos);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     }
   }
+  column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
   return column;
 }
 
@@ -402,74 +404,64 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   {
     case GenerationType::Basic:
     {
-      column.biom = 0;
-      column.elevation = BasicGenerationColumn(pos);
+      column.approximateElevation = BasicGenerationColumn(pos);
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
-      return column;
     }
       break;
     case GenerationType::Crevices:
     {
-      column.biom = 0;
-      column.elevation = CrevicesGeneration(pos);
+      column.approximateElevation = CrevicesGeneration(pos);
       column.firstBlockLayer = BlockType::Air;
       column.lastBlockLayer = BlockType::Air;
-      return column;
     }
+      break;
     case GenerationType::Tree:
     {
-      column.biom = 0;
-      column.elevation = TreeGeneration(pos);
+      column.approximateElevation = TreeGeneration(pos);
       column.firstBlockLayer = BlockType::Leaves;
       column.lastBlockLayer = BlockType::Log;
-      return column;
     }
+      break;
     case GenerationType::ShapeCaves:
     {
-      column.biom = 0;
-      column.elevation = ShapeCavesGeneration(pos);
+      column.approximateElevation = ShapeCavesGeneration(pos);
       column.firstBlockLayer = BlockType::Air;
       column.lastBlockLayer = BlockType::Air;
-      return column;
     }
+      break;
     case GenerationType::ElevationCaves:
     {
-      column.biom = 0;
-      column.elevation = ElevationCavesGeneration(pos);
-      column.firstBlockLayer = BlockType::Bedrock;
-      column.lastBlockLayer = BlockType::Bedrock;
-      return column;
+      column.approximateElevation = ElevationCavesGeneration(pos);
+      column.firstBlockLayer = BlockType::Air;
+      column.lastBlockLayer = BlockType::Air;
     }
+      break;
     case GenerationType::SecondShapeCaves:
     {
-      column.biom = 0;
-      column.elevation = SecondShapeCavesGeneration(pos);
-      if (column.elevation == -1.f)
-        column.firstBlockLayer = BlockType::Air;
-      else
-        column.firstBlockLayer = BlockType::Dirt;
+      column.approximateElevation = SecondShapeCavesGeneration(pos);
+      column.firstBlockLayer = BlockType::Air;
       column.lastBlockLayer = BlockType::Air;
-      return column;
     }
+      break;
     case GenerationType::SecondElevationCaves:
     {
-      column.biom = 0;
-      column.elevation = SecondElevationCavesGeneration(pos);
+      column.approximateElevation = SecondElevationCavesGeneration(pos);
       column.firstBlockLayer = BlockType::Bedrock;
       column.lastBlockLayer = BlockType::Bedrock;
-      return column;
     }
+      break;
     default:
     {
-      column.biom = 0;
-      column.elevation = BasicGenerationColumn(pos);
+      column.approximateElevation = BasicGenerationColumn(pos);
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
-      return column;
     }
       break;
   }
+  column.biom = 0;
+  column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
+  return column;
 }
 
 

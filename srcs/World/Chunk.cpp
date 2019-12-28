@@ -32,9 +32,9 @@ void Chunk::Generate() {
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
 			
+			int elevation;
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
-			int elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
-			int firstLayerBorder = 40 + block.elevation;
+			int firstLayerBorder = 40 + block.exactElevation;
 			for (int y = 1; y < firstLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
@@ -42,10 +42,8 @@ void Chunk::Generate() {
 			int secondCavesDepth = firstLayerBorder - 40;
 			int crevicesDepth = firstLayerBorder - 15;
 
-
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
-			elevation = glm::clamp((int)block.elevation, 0, 255); // max world height == 255
-			int lastLayerBorder = 60 + elevation - 1;
+			int lastLayerBorder = 60 + block.exactElevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++){
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			}
@@ -53,27 +51,22 @@ void Chunk::Generate() {
 
 			if (block.biom != MapGeneration::Ocean) // caves generation
 			{
-				float e = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).elevation;
-				elevation = glm::clamp((int)e, 0, 255);
+				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;
 				if (elevation != 0)
 				{
-					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).elevation;
-					int h = glm::clamp((int)height, 1, 255);
-					cavesDepth += h;
-					cavesDepth = glm::clamp(cavesDepth, 1, 255);
+					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
+					cavesDepth += height;
 					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = cavesDepth; y < cavesHeight; y++){
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
 					}
 				}
 
-				e = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).elevation;
-				elevation = glm::clamp((int)e, 0, 255);
+				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;
 				if (elevation != 0)
 				{
-					float height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).elevation;
-					int h = glm::clamp((int)height, 1, 255);
-					secondCavesDepth += h;
+					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
+					secondCavesDepth += height;
 					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = secondCavesDepth; y < cavesHeight; y++){
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
@@ -81,15 +74,15 @@ void Chunk::Generate() {
 				}
 			}
 
-			elevation = glm::clamp((int)mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Crevices).elevation, 0, 255); // Crevices generation
-			if (elevation != 0.f)
+			elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Crevices).exactElevation; // Crevices generation
+			if (elevation != 0)
 			{
 				for (int y = cavesDepth; y < 255; y++){
 					w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
 				}
 			}
 			else if (block.biom == MapGeneration::GrassLand && (x > 3 && x < 13 && z > 3 && z < 13) // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
-			&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).elevation == 1.f)
+			&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).approximateElevation == 1.f)
 			{
 				int treeHeight = lastLayerBorder + 5;
 				for (int y = lastLayerBorder + 1; y < treeHeight; y++){
@@ -102,8 +95,7 @@ void Chunk::Generate() {
 					for (int xn = distanceToLogX; xn < distanceToLogX + 5; xn++){
 						for (int zn = distanceToLogZ; zn < distanceToLogZ + 5; zn++){
 							if ((!((xn == distanceToLogX && zn == distanceToLogZ) || (xn == distanceToLogX + 4 && zn == distanceToLogZ)
-							|| (xn == distanceToLogX + 4 && zn == distanceToLogZ + 4) || (xn == distanceToLogX && zn == distanceToLogZ + 4)))
-							)
+							|| (xn == distanceToLogX + 4 && zn == distanceToLogZ + 4) || (xn == distanceToLogX && zn == distanceToLogZ + 4))))
 								w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight, _position.y * 16 + zn), BlockType::Leaves);
 						}
 					}
