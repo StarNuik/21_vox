@@ -86,7 +86,7 @@ private:
 
     float CrevicesGeneration(glm::ivec2 pos);
   
-    int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
+    int BiomeGeneration(glm::ivec2 pos);
     int BiomeDefinition(int elevation);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);

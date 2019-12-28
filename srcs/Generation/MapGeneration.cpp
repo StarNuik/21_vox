@@ -225,8 +225,8 @@ float MapGeneration::CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int o
   FastNoise& noise = _noises[Biomes];
   glm::ivec2 nextBlock = glm::ivec2(originPos.x + distance_x, originPos.y + distance_y);
 
-  int biome = floorf((noise.GetNoise(nextBlock.x, nextBlock.y) * 0.5 + 0.5) * 10);
-  biome = BiomeDefinition(biome);
+
+  int biome = BiomeGeneration(nextBlock);
   if (biome < originBiome)
   {
     switch (biome)
@@ -322,14 +322,13 @@ int MapGeneration::BiomeDefinition(int elevation)
     return GrassLand;
 }
 
-int MapGeneration::BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition)
+int MapGeneration::BiomeGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Biomes];
 
-  float globalX = pos.x * 16, globalY = pos.y * 16;
-  float nx = globalX + blockPosition.x, ny = globalY + blockPosition.y;
+  float e = 1.f * noise.GetNoise(1.f * pos.x, 1.f * pos.y);
 
-  int elevation = floorf((noise.GetNoise(nx, ny) * 0.5 + 0.5) * 10);
+  int elevation = floorf((e * 0.5f + 0.5f) * 10);
   return BiomeDefinition(elevation);
 }
 
@@ -339,7 +338,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
 
-  column.biom = BiomeGeneration(globalPos, blockPosition);
+  column.biom = BiomeGeneration(pos);
   switch (column.biom)
   {
     case GenerationType::Ocean:
