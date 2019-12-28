@@ -1,6 +1,6 @@
 // #include "World/World.h"
 #include "Types.h"
-// #include "Utilities/Log.h"
+#include "Utilities/Log.h"
 #include "Utilities/Time.h"
 #include "World/Shard.h"
 #include "Render/RenderModel.h"
@@ -28,18 +28,16 @@ void Shard::SetActive(bool state) {
 	GLRenderer* r = _game->GetRenderer();
 	if (_state == false && state == true) {
 		UpdateGeometry();
-		for (RenderModel* model : _models) {
-			r->AddModel(model);
-		}
 	} else if (_state == true && state == false) {
 		for (RenderModel* model : _models) {
-			r->RemoveModel(model);
+			delete model;
 		}
+		_models.clear();
 	}
 	_state = state;
 }
 
-BlockType Shard::GetBlock(glm::ivec3 pos) {
+BlockType Shard::GetBlock(const glm::ivec3 pos) {
 	return _blocks[pos.x][pos.y][pos.z];
 }
 

@@ -46,12 +46,6 @@ Game::Game() {
 };
 
 void Game::InitSystems() {
-	Profiler::Prepare("FrameFull");
-	Profiler::Prepare("Input");
-	Profiler::Prepare("Update");
-	Profiler::Prepare("RenderFull");
-	Profiler::Prepare("Generation");
-	Profiler::Prepare("Models");
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
@@ -64,27 +58,22 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 10
+#define WORLD_RADIUS 3
 
 void Game::InitWorld() {
+	Profiler::Prepare("Generation");
 	const int border = WORLD_RADIUS;
+	Profiler::Start("Generation");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
-			Profiler::Start("Generation");
 			_world->GenerateChunk(glm::ivec2(x, z));
-			Profiler::Add("Generation");
 		}
-	Profiler::Start("Models");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
-			Profiler::Start("Models");
 			_world->ActivateChunk(glm::ivec2(x, z));
-			Profiler::Add("Models");
 		}
-	Log::Warning("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
-	Log::Warning("Single chunk generation, on average: " + std::to_string(Profiler::GetAverageMs("Generation")) + "ms");
-	Log::Warning("Model creation took: " + std::to_string(Profiler::GetTotalS("Models")) + "s");
-	Log::Warning("Single model, on average: " + std::to_string(Profiler::GetAverageMs("Models")) + "ms");
+	Profiler::Add("Generation");
+	Log::Basic("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
 };
 
 void Game::DestroyWorld() {

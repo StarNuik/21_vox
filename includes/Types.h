@@ -59,7 +59,10 @@ enum class BlockType {
 	Leaves,
 	Log,
 	Dandelion,
+	SnowGrass,
+	Water,
+	Ice,
 	First = Air,
-	Last = Dandelion,
+	Last = Ice,
 	Size = Last + 1
 };

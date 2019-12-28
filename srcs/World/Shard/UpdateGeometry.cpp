@@ -7,17 +7,18 @@
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
+#include "Utilities/Profiler.h"
 
 void Shard::UpdateGeometry() {
 	GLRenderer* r = _game->GetRenderer();
-	//? Delete old geometry and models
+	//* Delete old geometry and models
 	for (RenderModel* model : _models) {
 		delete model;
 	}
 	_models.clear();
 	//! Otherwise _models.push_back(model) segfaults
 	_models = std::vector<RenderModel*>();
-	//? For every block type
+	//* For every block type
 	for (uint t = (uint)BlockType::First + 1; t <= (uint)BlockType::Last; t++) {
 		if (!HasType((BlockType)t))
 			continue;
@@ -27,15 +28,9 @@ void Shard::UpdateGeometry() {
 		_models.reserve(sizeof(RenderModel*));
 		_models.push_back(model);
 	}
-	//? If shard is active, add models to the renderer
-	if (_state) {
-		for (RenderModel* model : _models) {
-			r->AddModel(model);
-		}
-	}
 }
 
-RenderModel* Shard::GenerateModelOfType(BlockType type) {
+RenderModel* Shard::GenerateModelOfType(const BlockType type) {
 	GLRenderer* r = _game->GetRenderer();
 	ResourceLoader* rs = _game->GetResources();
 	World* w = _game->GetWorld();
@@ -47,7 +42,7 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 			for (int z = 0; z < 16 && count > 0; z++) {
 				if (_blocks[x][y][z] != type)
 					continue;
-				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z));
+				std::vector<float> block = GenerateGeometryFor(type, w, _position * 16 + glm::ivec3(x, y, z), glm::ivec3(x, y, z));
 				if (block.size() == 0)
 					continue;
 				for (int i = 0; i < block.size(); i += 8) {
@@ -67,18 +62,19 @@ RenderModel* Shard::GenerateModelOfType(BlockType type) {
 	return (model);
 };
 
-std::vector<float> Shard::GenerateGeometryFor(BlockType type, World* w, glm::ivec3 p) {
+std::vector<float> Shard::GenerateGeometryFor(const BlockType type, World* w, const glm::ivec3 p, const glm::ivec3 l) {
 	switch (type) {
 		case BlockType::CraftingTable:
 		case BlockType::Grass:
 		case BlockType::Log:
-			return (GenerateMultisideBlock(w, p));
+		case BlockType::SnowGrass:
+			return (GenerateMultisideBlock(w, p, l));
 			break;
 		case BlockType::Dandelion:
-			return (GenerateFlower(w, p));
+			return (GenerateFlower(w, p, l));
 			break;
 		default:
-			return (GenerateBlock(w, p));
+			return (GenerateBlock(w, p, l));
 			break;
 	}
 }

@@ -18,6 +18,11 @@ void Game::Update(float delta) {
 };
 
 void Game::GameLoop() {
+	Profiler::Prepare("FrameFull");
+	Profiler::Prepare("Input");
+	Profiler::Prepare("Update");
+	Profiler::Prepare("RenderFull");
+
 	Log::Success("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{

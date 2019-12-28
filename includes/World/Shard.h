@@ -20,10 +20,10 @@ private:
 	bool HasType(BlockType);
 	uint CountType(BlockType);
 	RenderModel* GenerateModelOfType(BlockType);
-	std::vector<float> GenerateGeometryFor(BlockType, World*, glm::ivec3);
-	std::vector<float> GenerateBlock(World*, glm::ivec3);
-	std::vector<float> GenerateMultisideBlock(World*, glm::ivec3);
-	std::vector<float> GenerateFlower(World*, glm::ivec3);
+	std::vector<float> GenerateGeometryFor(BlockType, World*, glm::ivec3 global, glm::ivec3 local);
+	std::vector<float> GenerateBlock(World*, glm::ivec3 global, glm::ivec3 local);
+	std::vector<float> GenerateMultisideBlock(World*, glm::ivec3 global, glm::ivec3 local);
+	std::vector<float> GenerateFlower(World*, glm::ivec3 global, glm::ivec3 local);
 
 	bool _state;
 	glm::ivec3 _position;

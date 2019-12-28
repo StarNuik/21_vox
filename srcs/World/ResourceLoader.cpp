@@ -147,4 +147,7 @@ void ResourceLoader::LoadMaterials() {
 	_materials[(int)BlockType::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f);
 	_materials[(int)BlockType::Log] = new Material("./resources/Textures/Log/Log", 1.f);
 	_materials[(int)BlockType::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f);
+	_materials[(int)BlockType::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 1.f);
+	_materials[(int)BlockType::Water] = new Material("./resources/Textures/Water/Water", 1.f);
+	_materials[(int)BlockType::Ice] = new Material("./resources/Textures/Ice/Ice", 1.f);
 };
