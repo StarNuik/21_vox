@@ -345,8 +345,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.approximateElevation = 1.f;
       column.exactElevation =  1;
-      column.firstBlockLayer = BlockType::Planks; // it should be water ofc
-      column.lastBlockLayer = BlockType::Planks; // it should be water ofc
+      column.firstBlockLayer = BlockType::Water;
+      column.lastBlockLayer = BlockType::Water;
     }
       break;
     case GenerationType::GrassLand:
@@ -375,9 +375,9 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
       if (column.approximateElevation > 75 && column.approximateElevation < 86)
-        column.lastBlockLayer = BlockType::Planks; //As planned, it should be snowing
+        column.lastBlockLayer = BlockType::SnowGrass;
       else if (column.approximateElevation >= 86)
-        column.lastBlockLayer = BlockType::Grass; //As planned, it should be ice
+        column.lastBlockLayer = BlockType::Ice;
     }
       break;
     default:
