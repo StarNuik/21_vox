@@ -17,7 +17,7 @@
 // #include <cstdint>
 #include "FastNoise.h"
 #include "Types.h"
-#define MAX_DIST_TO_SMOOTHING 15
+#define MAX_DIST_TO_SMOOTHING 25
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 
 class MapGeneration
@@ -73,16 +73,15 @@ private:
     float LandGenerationColumn(glm::ivec2 pos);
     float BeachGenerationColumn(glm::ivec2 pos);
     float HighLandGenerationColumn(glm::ivec2 pos);
+    float SnowLangGenerationColumn(glm::ivec2);
 
     float TreeGeneration(glm::ivec2 pos);
-
 
     float ShapeCavesGeneration(glm::ivec2 pos);
     float ElevationCavesGeneration(glm::ivec2 pos);
 
     float SecondShapeCavesGeneration(glm::ivec2 pos);
     float SecondElevationCavesGeneration(glm::ivec2 pos);
-
 
     float CrevicesGeneration(glm::ivec2 pos);
   

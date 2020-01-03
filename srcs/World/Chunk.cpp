@@ -49,9 +49,9 @@ void Chunk::Generate() {
 			}
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
 
-			if (block.biom != MapGeneration::Ocean) // caves generation
+			if (block.biom != MapGeneration::Ocean)
 			{
-				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;
+				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;// caves generation
 				if (elevation != 0)
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
@@ -62,7 +62,7 @@ void Chunk::Generate() {
 					}
 				}
 
-				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;
+				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
 				if (elevation != 0)
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
@@ -72,36 +72,36 @@ void Chunk::Generate() {
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
 					}
 				}
-			}
 
-			elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Crevices).exactElevation; // Crevices generation
-			if (elevation != 0)
-			{
-				for (int y = cavesDepth; y < 255; y++){
+				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Crevices).exactElevation; // Crevices generation
+				if (elevation != 0)
+				{
+					for (int y = cavesDepth; y < 255; y++){
 					w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
-				}
-			}
-			else if (block.biom == MapGeneration::GrassLand && (x > 3 && x < 13 && z > 3 && z < 13) // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
-			&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).approximateElevation == 1.f)
-			{
-				int treeHeight = lastLayerBorder + 5;
-				for (int y = lastLayerBorder + 1; y < treeHeight; y++){
-					w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Log);
-					int globalTreeHeight = (treeHeight << 1) - y - 1;
-					int distanceToLogX = x - 2;
-					int distanceToLogZ = z - 2;
-
-					// Leaves for tree generation, sorry for "IF"
-					for (int xn = distanceToLogX; xn < distanceToLogX + 5; xn++){
-						for (int zn = distanceToLogZ; zn < distanceToLogZ + 5; zn++){
-							if ((!((xn == distanceToLogX && zn == distanceToLogZ) || (xn == distanceToLogX + 4 && zn == distanceToLogZ)
-							|| (xn == distanceToLogX + 4 && zn == distanceToLogZ + 4) || (xn == distanceToLogX && zn == distanceToLogZ + 4))))
-								w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight, _position.y * 16 + zn), BlockType::Leaves);
-						}
 					}
-					for (int xn = distanceToLogX + 1; xn < distanceToLogX + 4; xn++){
-						for (int zn = distanceToLogZ + 1; zn < distanceToLogZ + 4; zn++){
-							w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight + 1, _position.y * 16 + zn), BlockType::Leaves);
+				}
+				else if (block.biom == MapGeneration::GrassLand && (x > 3 && x < 13 && z > 3 && z < 13) // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
+					&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).approximateElevation == 1.f)
+				{
+					int treeHeight = lastLayerBorder + 5;
+					for (int y = lastLayerBorder + 1; y < treeHeight; y++){
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Log);
+						int globalTreeHeight = (treeHeight << 1) - y - 1;
+						int distanceToLogX = x - 2;
+						int distanceToLogZ = z - 2;
+
+						// Leaves for tree generation, sorry for "IF"
+						for (int xn = distanceToLogX; xn < distanceToLogX + 5; xn++){
+							for (int zn = distanceToLogZ; zn < distanceToLogZ + 5; zn++){
+								if ((!((xn == distanceToLogX && zn == distanceToLogZ) || (xn == distanceToLogX + 4 && zn == distanceToLogZ)
+								|| (xn == distanceToLogX + 4 && zn == distanceToLogZ + 4) || (xn == distanceToLogX && zn == distanceToLogZ + 4))))
+									w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight, _position.y * 16 + zn), BlockType::Leaves);
+							}
+						}
+						for (int xn = distanceToLogX + 1; xn < distanceToLogX + 4; xn++){
+							for (int zn = distanceToLogZ + 1; zn < distanceToLogZ + 4; zn++){
+								w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight + 1, _position.y * 16 + zn), BlockType::Leaves);
+							}
 						}
 					}
 				}
@@ -113,6 +113,8 @@ void Chunk::Generate() {
 }
 
 void Chunk::SetActive(bool state) {
+	if (_state == state)
+		return;
 	_state = state;
 	for (int i = 0; i < 16; i++) {
 		_shards[i]->SetActive(state);

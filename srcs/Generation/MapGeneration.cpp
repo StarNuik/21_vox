@@ -177,6 +177,22 @@ float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
   return elevation;
 }
 
+float MapGeneration::SnowLangGenerationColumn(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Snow];
+  float terraceValue = _terraceValue;
+
+  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
+  float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
+  float e2 = 0.25f * (noise.GetNoise(4.f * pos.x, 4.f * pos.y));
+  float e3 = 0.13f * (noise.GetNoise(8.f * pos.x, 8.f * pos.y));
+
+  e += e1 + e2 + e3;
+  
+  float elevation = round(e * terraceValue) / terraceValue;
+  return elevation;
+}
+
 float MapGeneration::BeachGenerationColumn(glm::ivec2 pos)
 {
 	FastNoise& noise = _noises[Beach];
@@ -236,6 +252,9 @@ float MapGeneration::CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int o
         break;
       case GenerationType::Beach:
         ret = BeachGenerationColumn(nextBlock);
+        break;
+      case GenerationType::Snow:
+        ret = SnowLangGenerationColumn(nextBlock);
         break;
       case GenerationType::HighLand:
         ret = HighLandGenerationColumn(nextBlock);
@@ -314,8 +333,8 @@ int MapGeneration::BiomeDefinition(int elevation)
   //   return TUNDRA;
   // else if (elevation == 7)
   //   return SNOW;
-  // else if (elevation == 8)
-  //   return SNOW;
+  else if (elevation == 8)
+    return Snow;
   else if (elevation == 9)
     return HighLand;
   else
@@ -378,6 +397,15 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.lastBlockLayer = BlockType::SnowGrass;
       else if (column.approximateElevation >= 86)
         column.lastBlockLayer = BlockType::Ice;
+    }
+      break;
+    case GenerationType::Snow:
+    {
+      column.approximateElevation = SnowLangGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
+      column.firstBlockLayer = BlockType::Dirt;
+      column.lastBlockLayer = BlockType::SnowGrass;
     }
       break;
     default:
@@ -469,11 +497,11 @@ MapGeneration::MapGeneration()
   _exp = 2.2f;
   _terraceValue = 32.f;
 
-  _noises[Biomes].SetNoiseType(FastNoise::Cellular);
+  _noises[Biomes].SetNoiseType(FastNoise::Simplex);
   _noises[Biomes].SetSeed(1339);
   _noises[Biomes].SetFrequency(0.01);
-  _noises[Biomes].SetCellularReturnType(FastNoise::CellValue);
-  _noises[Biomes].SetCellularDistanceFunction(FastNoise::Natural);
+  // _noises[Biomes].SetCellularReturnType(FastNoise::CellValue);
+  // _noises[Biomes].SetCellularDistanceFunction(FastNoise::Natural);
 
   _noises[Tree].SetNoiseType(FastNoise::WhiteNoise);
   _noises[Tree].SetSeed(200);
@@ -503,12 +531,16 @@ MapGeneration::MapGeneration()
   _noises[Beach].SetNoiseType(FastNoise::Simplex);
   _noises[Beach].SetFrequency(0.01);
 
+  _noises[Snow].SetNoiseType(FastNoise::Perlin);
+  _noises[Snow].SetFrequency(0.01);
+
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
 
   _noiseNames[Basic] = "Basic";
   _noiseNames[GrassLand] = "GrassLand";
   _noiseNames[Beach] = "Beach";
+  _noiseNames[Snow] = "Snow";
   _noiseNames[HighLand] = "HighLand";
   _noiseNames[Biomes] = "BiomeDefinition";
   _noiseNames[Tree] = "Tree";
