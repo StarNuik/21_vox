@@ -19,6 +19,8 @@ Player::Player(Game* game) {
 	_rotation = glm::identity<glm::quat>();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
+	_world = _game->GetWorld();
+	MovementProperty _movementPropety;
 }
 
 Player::~Player() {
@@ -27,8 +29,59 @@ Player::~Player() {
 	delete _camera;
 }
 
+float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
+{
+	BlockType block;
+	glm::vec3 tmpDirection;
+
+	if (rayStep >= rayLength)
+		rayStep *= 0.25f;
+
+	tmpDirection = glm::vec3(direction.x * rayStep, direction.y * rayStep, direction.z * rayStep);
+	direction = glm::vec3(0.f);
+	for (float step = 0.f; step <= rayLength; step += rayStep)
+	{
+		block = _world->GetBlock(glm::ivec3(_position + direction));
+		if (block != BlockType::Air)
+			return step;
+		direction += tmpDirection;
+	}
+	return INFINITY;
+}
+
+void Player::PlayerCollision(glm::vec3& _position)
+{
+	const float halfObjectHeight = _movementPropety.objectHeight * 0.5f;
+
+	glm::vec3 lowerBody = glm::ivec3(_position.x, _position.y - _movementPropety.objectHeight * 0.75f, _position.z);
+	glm::vec3 upperBody = glm::ivec3(_position.x, _position.y, _position.z);
+
+	float lowerForwarDist = RayCastDist(lowerBody, _movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
+	float lowerRightDist = RayCastDist(lowerBody, _movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
+	float lowerLeftDist = RayCastDist(lowerBody, -_movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
+	float lowerBackforwardDist = RayCastDist(lowerBody, -_movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
+
+	float upperForwardDist = RayCastDist(upperBody, _movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
+	float upperRightDist = RayCastDist(upperBody, _movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
+	float upperLeftDist = RayCastDist(upperBody, -_movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
+	float upperBackforwardDist = RayCastDist(upperBody, -_movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
+
+	float upDist = RayCastDist(_position, _movementPropety.vecUp, halfObjectHeight, 0.02f);
+	float buttomDist = RayCastDist(_position, -_movementPropety.vecUp, _movementPropety.objectHeight + 1.f, 0.1f);
+
+	if (buttomDist > _movementPropety.objectHeight)
+		_position += -_movementPropety.vecUp;
+	else if (buttomDist < _movementPropety.objectHeight && upDist >= halfObjectHeight)
+		_position.y = (_position.y - buttomDist) + _movementPropety.objectHeight;
+
+	return;
+}
+
 void Player::Update(float delta) {
 	Input* input = _game->GetInput();
+	glm::vec3 forward;
+	glm::vec3 up;
+	glm::vec3 right;
 
 	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
@@ -42,10 +95,24 @@ void Player::Update(float delta) {
 		_camAngleY += mousePos.y;
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
+
+	if (input->KeyJustPressed(GLFW_KEY_G)) {
+		_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
+	}
+
 	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
-	glm::vec3 forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
-	glm::vec3 up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
-	glm::vec3 right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
+	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
+	up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
+	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
+
+	if (!_movementPropety.godMode) // It's DISGUSTING! Write it normally
+	{
+		forward.y = 0.f;
+		up.x = 0.f;
+		up.z = 0.f;
+		right.y = 0.f;
+	}
+
 	if (input->KeyPressed(GLFW_KEY_W)) {
 		_position += forward * delta;
 	}
@@ -67,6 +134,8 @@ void Player::Update(float delta) {
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);
 	}
+	if (!_movementPropety.godMode) // It's DISGUSTING! Write it normally
+		PlayerCollision(_position);
 	_camera->SetPosition(_position);
 }
 
