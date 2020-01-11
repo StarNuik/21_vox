@@ -53,19 +53,6 @@ void Player::PlayerCollision(glm::vec3& _position)
 {
 	const float halfObjectHeight = _movementPropety.objectHeight * 0.5f;
 
-	glm::vec3 lowerBody = glm::ivec3(_position.x, _position.y - _movementPropety.objectHeight * 0.75f, _position.z);
-	glm::vec3 upperBody = glm::ivec3(_position.x, _position.y, _position.z);
-
-	float lowerForwarDist = RayCastDist(lowerBody, _movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
-	float lowerRightDist = RayCastDist(lowerBody, _movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
-	float lowerLeftDist = RayCastDist(lowerBody, -_movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
-	float lowerBackforwardDist = RayCastDist(lowerBody, -_movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
-
-	float upperForwardDist = RayCastDist(upperBody, _movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
-	float upperRightDist = RayCastDist(upperBody, _movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
-	float upperLeftDist = RayCastDist(upperBody, -_movementPropety.vecRight, _movementPropety.avoidBlockDistance, 0.02f);
-	float upperBackforwardDist = RayCastDist(upperBody, -_movementPropety.vecForward, _movementPropety.avoidBlockDistance, 0.02f);
-
 	float upDist = RayCastDist(_position, _movementPropety.vecUp, halfObjectHeight, 0.02f);
 	float buttomDist = RayCastDist(_position, -_movementPropety.vecUp, _movementPropety.objectHeight + 1.f, 0.1f);
 
@@ -73,6 +60,19 @@ void Player::PlayerCollision(glm::vec3& _position)
 		_position += -_movementPropety.vecUp;
 	else if (buttomDist < _movementPropety.objectHeight && upDist >= halfObjectHeight)
 		_position.y = (_position.y - buttomDist) + _movementPropety.objectHeight;
+
+	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - _movementPropety.objectHeight * 0.75f, _position.z);
+	glm::vec3 upperBody = _position;
+
+	float lowerForwarDist = RayCastDist(lowerBody, _movementPropety.vecForward, 2.f, 0.08f);
+	float lowerRightDist = RayCastDist(lowerBody, _movementPropety.vecRight, 2.f, 0.08f);
+	float lowerLeftDist = RayCastDist(lowerBody, -_movementPropety.vecRight, 2.f, 0.08f);
+	float lowerBackforwardDist = RayCastDist(lowerBody, -_movementPropety.vecForward, 2.f, 0.08f);
+
+	float upperForwardDist = RayCastDist(upperBody, _movementPropety.vecForward, 2.f, 0.08f);
+	float upperRightDist = RayCastDist(upperBody, _movementPropety.vecRight, 2.f, 0.08f);
+	float upperLeftDist = RayCastDist(upperBody, -_movementPropety.vecRight, 2.f, 0.08f);
+	float upperBackforwardDist = RayCastDist(upperBody, -_movementPropety.vecForward, 2.f, 0.08f);
 
 	return;
 }
