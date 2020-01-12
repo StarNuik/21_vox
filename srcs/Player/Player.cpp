@@ -34,22 +34,23 @@ float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const 
 	BlockType block;
 	glm::vec3 tmpDirection;
 
+
 	if (rayStep >= rayLength)
 		rayStep *= 0.25f;
 
-	tmpDirection = glm::vec3(direction.x * rayStep, direction.y * rayStep, direction.z * rayStep);
-	direction = glm::vec3(0.f);
+	direction = glm::normalize(direction);
+
 	for (float step = 0.f; step <= rayLength; step += rayStep)
 	{
-		block = _world->GetBlock(glm::ivec3(_position + direction));
+		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
+		block = _world->GetBlock(glm::ivec3(_position + tmpDirection));
 		if (block != BlockType::Air)
 			return step;
-		direction += tmpDirection;
 	}
 	return INFINITY;
 }
 
-void Player::PlayerCollision(glm::vec3& _position)
+void Player::PlayerCollision(glm::vec3& _position, glm::vec3 forward, glm::vec3 right)
 {
 	const float halfObjectHeight = _movementPropety.objectHeight * 0.5f;
 
@@ -61,18 +62,21 @@ void Player::PlayerCollision(glm::vec3& _position)
 	else if (buttomDist < _movementPropety.objectHeight && upDist >= halfObjectHeight)
 		_position.y = (_position.y - buttomDist) + _movementPropety.objectHeight;
 
-	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - _movementPropety.objectHeight * 0.75f, _position.z);
+	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.75f) + 0.05f, _position.z);
 	glm::vec3 upperBody = _position;
 
-	float lowerForwarDist = RayCastDist(lowerBody, _movementPropety.vecForward, 2.f, 0.08f);
-	float lowerRightDist = RayCastDist(lowerBody, _movementPropety.vecRight, 2.f, 0.08f);
-	float lowerLeftDist = RayCastDist(lowerBody, -_movementPropety.vecRight, 2.f, 0.08f);
-	float lowerBackforwardDist = RayCastDist(lowerBody, -_movementPropety.vecForward, 2.f, 0.08f);
+	float lowerForwardDist = RayCastDist(lowerBody, forward, 1.f, 0.08f);
+	float lowerRightDist = RayCastDist(lowerBody, right, 1.f, 0.08f);
+	float lowerLeftDist = RayCastDist(lowerBody, -right, 1.f, 0.08f);
+	float lowerBackforwardDist = RayCastDist(lowerBody, -forward, 1.f, 0.08f);
 
-	float upperForwardDist = RayCastDist(upperBody, _movementPropety.vecForward, 2.f, 0.08f);
-	float upperRightDist = RayCastDist(upperBody, _movementPropety.vecRight, 2.f, 0.08f);
-	float upperLeftDist = RayCastDist(upperBody, -_movementPropety.vecRight, 2.f, 0.08f);
-	float upperBackforwardDist = RayCastDist(upperBody, -_movementPropety.vecForward, 2.f, 0.08f);
+	float upperForwardDist = RayCastDist(upperBody, forward, 1.f, 0.08f);
+	float upperRightDist = RayCastDist(upperBody, right, 1.f, 0.08f);
+	float upperLeftDist = RayCastDist(upperBody, -right, 1.f, 0.08f);
+	float upperBackforwardDist = RayCastDist(upperBody, -forward, 1.f, 0.08f);
+
+	if (upperForwardDist < _movementPropety.avoidBlockDistance)
+		_position = _movementPropety.oldObjectPos;
 
 	return;
 }
@@ -99,6 +103,7 @@ void Player::Update(float delta) {
 	if (input->KeyJustPressed(GLFW_KEY_G)) {
 		_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
 	}
+	_movementPropety.oldObjectPos = _position;
 
 	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
 	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
@@ -135,7 +140,7 @@ void Player::Update(float delta) {
 		_camera->SetRotation(_rotation);
 	}
 	if (!_movementPropety.godMode) // It's DISGUSTING! Write it normally
-		PlayerCollision(_position);
+		PlayerCollision(_position, forward, right);
 	_camera->SetPosition(_position);
 }
 
