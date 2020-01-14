@@ -21,7 +21,7 @@ public:
 	{
 		int godMode = 1;
 		const float objectHeight = 2.5f;
-		const float avoidBlockDistance = 0.25f;
+		const float avoidBlockDistance = 0.1f;
 		glm::vec3 oldObjectPos = glm::vec3(0);
 		glm::vec3 vecUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 vecRight = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -39,7 +39,7 @@ private:
 	float _camAngleX;
 	float _camAngleY;
 
-	void PlayerCollision(glm::vec3& _position, glm::vec3 forward, glm::vec3 rigjt);
+	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& rigjt);
 	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
 };
 

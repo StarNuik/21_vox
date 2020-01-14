@@ -50,32 +50,33 @@ float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const 
 	return INFINITY;
 }
 
-void Player::PlayerCollision(glm::vec3& _position, glm::vec3 forward, glm::vec3 right)
+void Player::PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& right)
 {
 	const float halfObjectHeight = _movementPropety.objectHeight * 0.5f;
 
 	float upDist = RayCastDist(_position, _movementPropety.vecUp, halfObjectHeight, 0.02f);
 	float buttomDist = RayCastDist(_position, -_movementPropety.vecUp, _movementPropety.objectHeight + 1.f, 0.1f);
 
+	forward.y = 0.f;
+	right.y = 0.f;
+
 	if (buttomDist > _movementPropety.objectHeight)
 		_position += -_movementPropety.vecUp;
 	else if (buttomDist < _movementPropety.objectHeight && upDist >= halfObjectHeight)
 		_position.y = (_position.y - buttomDist) + _movementPropety.objectHeight;
 
-	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.75f) + 0.05f, _position.z);
 	glm::vec3 upperBody = _position;
 
-	float lowerForwardDist = RayCastDist(lowerBody, forward, 1.f, 0.08f);
-	float lowerRightDist = RayCastDist(lowerBody, right, 1.f, 0.08f);
-	float lowerLeftDist = RayCastDist(lowerBody, -right, 1.f, 0.08f);
-	float lowerBackforwardDist = RayCastDist(lowerBody, -forward, 1.f, 0.08f);
+	float upperForwardDist = RayCastDist(upperBody, forward, 5.f, 0.1f);
+	float upperRightDist = RayCastDist(upperBody, right, 0.7f, 0.1f);
+	float upperLeftDist = RayCastDist(upperBody, -right, 0.7f, 0.1f);
+	float upperBackforwardDist = RayCastDist(upperBody, -forward, 0.7f, 0.1f);
 
-	float upperForwardDist = RayCastDist(upperBody, forward, 1.f, 0.08f);
-	float upperRightDist = RayCastDist(upperBody, right, 1.f, 0.08f);
-	float upperLeftDist = RayCastDist(upperBody, -right, 1.f, 0.08f);
-	float upperBackforwardDist = RayCastDist(upperBody, -forward, 1.f, 0.08f);
+	// std::cout << "upperBody[xyz]: " << upperBody.x << " " << upperBody.y << " " << upperBody.z << std::endl;
+	// std::cout<<"upperForward: "<< upperForwardDist << " upperRight: " << upperRightDist << " upperLeft: " << upperLeftDist << " upperBackforward: " << upperBackforwardDist << std::endl;
 
-	if (upperForwardDist < _movementPropety.avoidBlockDistance)
+	if (upperForwardDist < _movementPropety.avoidBlockDistance || upperBackforwardDist < _movementPropety.avoidBlockDistance
+	|| upperRightDist < _movementPropety.avoidBlockDistance || upperLeftDist < _movementPropety.avoidBlockDistance)
 		_position = _movementPropety.oldObjectPos;
 
 	return;
@@ -110,12 +111,9 @@ void Player::Update(float delta) {
 	up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
 	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
 
-	if (!_movementPropety.godMode) // It's DISGUSTING! Write it normally
-	{
-		forward.y = 0.f;
-		up.x = 0.f;
-		up.z = 0.f;
-		right.y = 0.f;
+
+	if (!_movementPropety.godMode) {
+		PlayerCollision(_position, forward, right);
 	}
 
 	if (input->KeyPressed(GLFW_KEY_W)) {
@@ -139,8 +137,7 @@ void Player::Update(float delta) {
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);
 	}
-	if (!_movementPropety.godMode) // It's DISGUSTING! Write it normally
-		PlayerCollision(_position, forward, right);
+
 	_camera->SetPosition(_position);
 }
 
