@@ -7,7 +7,6 @@
 #include "Engine/Entity.h"
 #include "World/World.h"
 
-
 #define SPEED 10.f
 
 class Player : public Entity {
@@ -39,7 +38,19 @@ private:
 	float _camAngleX;
 	float _camAngleY;
 
+	struct RayCastHitInfo
+	{
+		glm::vec3 hitRayPos;
+		glm::vec3 lastRayStep;
+		BlockType hitBlockType;
+	};
+
 	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& rigjt);
+
+	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
+	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
+
 	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
+	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);
 };
 

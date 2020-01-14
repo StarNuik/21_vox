@@ -43,11 +43,68 @@ float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const 
 	for (float step = 0.f; step <= rayLength; step += rayStep)
 	{
 		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
-		block = _world->GetBlock(glm::ivec3(_position + tmpDirection));
+		block = _world->GetBlock(glm::vec3(_position + tmpDirection));
 		if (block != BlockType::Air)
 			return step;
 	}
 	return INFINITY;
+}
+
+Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
+{
+
+	RayCastHitInfo ray;
+	glm::vec3 tmpDirection;
+
+	if (rayStep >= rayLength)
+		rayStep *= 0.25f;
+
+	direction = glm::normalize(direction);
+	ray.hitRayPos = glm::vec3(0.f, 0.f, 0.f);
+	for (float step = 0.f; step <= rayLength; step += rayStep)
+	{
+		ray.lastRayStep = ray.hitRayPos;
+		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
+		ray.hitRayPos = glm::vec3(_position + tmpDirection);
+		ray.hitBlockType = _world->GetBlock(ray.hitRayPos);
+		if (ray.hitBlockType != BlockType::Air)
+			return ray;
+	}
+	ray.hitRayPos = glm::vec3(INFINITY, INFINITY, INFINITY);
+	ray.lastRayStep = glm::vec3(INFINITY, INFINITY, INFINITY);
+	return ray;
+}
+
+void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType)
+{
+	const float maxBlockDist = 4.f;
+	BlockType lastBlock;
+	RayCastHitInfo ray;
+
+	ray = RayCast(_position, forward, maxBlockDist, 0.25f);
+	lastBlock = _world->GetBlock(ray.lastRayStep);
+	// std::cout << "currBlockHitPos[xyz]: " << ray.hitRayPos.x << " " << ray.hitRayPos.y << " " << ray.hitRayPos.z << std::endl;
+	// std::cout << "lastBlockHitPos[xyz]: " << ray.lastRayStep.x << " " << ray.lastRayStep.y << " " << ray.lastRayStep.z << std::endl;
+	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && lastBlock == BlockType::Air) {
+		_world->PlayerSetBlock(glm::ivec3(ray.lastRayStep), blockType);
+	}
+
+	return;
+}
+
+void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
+{
+	RayCastHitInfo ray;
+	const float maxBlockDist = 4.f;
+
+	ray = RayCast(_position, forward, maxBlockDist, 0.5f);
+	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && (!_movementPropety.godMode && ray.hitBlockType != BlockType::Bedrock)) {
+		_world->PlayerSetBlock(glm::ivec3(ray.hitRayPos), BlockType::Air);
+	}
+	else if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && _movementPropety.godMode) {
+		_world->PlayerSetBlock(glm::ivec3(ray.hitRayPos), BlockType::Air);
+	}
+	return;
 }
 
 void Player::PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& right)
@@ -112,6 +169,14 @@ void Player::Update(float delta) {
 	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
 
 
+	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+		DestroyBlock(_position, forward);
+	}
+
+	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
+		PutBlock(_position, forward, BlockType::Dirt);
+	}
+
 	if (!_movementPropety.godMode) {
 		PlayerCollision(_position, forward, right);
 	}
@@ -134,6 +199,7 @@ void Player::Update(float delta) {
 	if (input->KeyPressed(GLFW_KEY_A)) {
 		_position -= right * delta;
 	}
+
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);
 	}
