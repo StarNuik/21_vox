@@ -58,7 +58,7 @@ void Game::InitSystems() {
 	AddEntity(player);
 };
 
-#define WORLD_RADIUS 10
+#define WORLD_RADIUS 2
 
 void Game::InitWorld() {
 	Profiler::Prepare("Generation");

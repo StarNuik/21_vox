@@ -38,6 +38,8 @@ private:
 	float _camAngleX;
 	float _camAngleY;
 
+	RenderModel* _monkey;
+
 	struct RayCastHitInfo
 	{
 		glm::vec3 hitRayPos;

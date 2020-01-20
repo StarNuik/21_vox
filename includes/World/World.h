@@ -19,6 +19,8 @@ public:
 	void SetBlock(glm::ivec3 globalPosition, BlockType);
 	void PlayerSetBlock(glm::ivec3 globalPosition, BlockType);
 private:
+	glm::ivec2 Global2Chunk(glm::ivec3 globalP);
+	glm::ivec3 Global2Local(glm::ivec3 globalP);
 	Game* _game;
 	std::unordered_map<glm::ivec2, Chunk*> _chunks;
 };

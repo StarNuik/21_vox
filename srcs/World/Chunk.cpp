@@ -138,6 +138,8 @@ void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
 }
 
 void Chunk::PlayerSetBlock(glm::ivec3 pos, BlockType type) {
+	if (pos.y < 0 || pos.y >= 256)
+		return;
 	int y = pos.y / 16;
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
 	_shards[y]->UpdateGeometry();

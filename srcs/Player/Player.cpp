@@ -4,6 +4,8 @@
 #include "Render/GLRenderer.h"
 #include "Render/Camera.h"
 #include "Input/Input.h"
+#include "Render/RenderModel.h"
+#include "World/ResourceLoader.h"
 #include "UI/UIController.h"
 // #include <glm/gtx/euler_angles.hpp>
 // #include <glm/gtx/quaternion.hpp>
@@ -21,6 +23,8 @@ Player::Player(Game* game) {
 	_game->GetRenderer()->SetActiveCamera(_camera);
 	_world = _game->GetWorld();
 	MovementProperty _movementPropety;
+	ResourceLoader* rs = _game->GetResources();
+	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(BlockType::Cobblestone), rs->GetGeometry("BoxC"));
 }
 
 Player::~Player() {
@@ -167,6 +171,11 @@ void Player::Update(float delta) {
 	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f) * SPEED;
 	up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f) * SPEED;
 	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f) * SPEED;
+
+	if (input->KeyPressed(GLFW_KEY_R)) {
+		RayCastHitInfo info = RayCast(_position, forward, 25.f, 0.1f);
+		_monkey->SetPosition(info.hitRayPos);
+	}
 
 
 	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
