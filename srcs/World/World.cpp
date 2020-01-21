@@ -64,33 +64,15 @@ glm::ivec2 World::Global2Chunk(const glm::ivec3 global) {
 
 glm::ivec3 World::Global2Local(const glm::ivec3 global) {
 	glm::ivec3 local;
-	// local.x = global.x % 16;
-	// local.z = global.z % 16;
-	// local.x = global.x < 0 ? 15 + (global.x + 1) % 16 : local.x;
-	// local.z = global.z < 0 ? 15 + (global.z + 1) % 16 : local.z;
 	local.x = global.x >= 0 ? global.x % 16 : 15 + (global.x + 1) % 16;
 	local.z = global.z >= 0 ? global.z % 16 : 15 + (global.z + 1) % 16;
 	local.y = global.y;
 	return local;
-
 }
 
-// x
-// -16 -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0   1   2   3   4
-// x % 16
-//   0 -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0   1   2   3   4
-// (x + 1) % 16
-// -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0   1   2   3   4   5
-// 15 - (x + 1) % 16
-//   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15   0   1   2   3   4
-
-
-
-// res
-//   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15   0   1   2   3   4
-
-
-
+BlockType World::GetBlock(const glm::vec3 global) {
+	return GetBlock(glm::ivec3(glm::floor(global)));
+}
 
 BlockType World::GetBlock(const glm::ivec3 globalPos) {
 	//* Maybe optimize this
@@ -101,11 +83,19 @@ BlockType World::GetBlock(const glm::ivec3 globalPos) {
 	return chunk->GetBlock(Global2Local(globalPos));
 }
 
+void World::SetBlock(const glm::vec3 global, BlockType type) {
+	SetBlock(glm::ivec3(glm::floor(global)), type);
+}
+
 void World::SetBlock(glm::ivec3 globalPos, BlockType type) {
 	Chunk* chunk = _chunks[Global2Chunk(globalPos)];
 	if (chunk) {
 		chunk->SetBlock(Global2Local(globalPos), type);
 	}
+}
+
+void World::PlayerSetBlock(const glm::vec3 global, BlockType type) {
+	PlayerSetBlock(glm::ivec3(glm::floor(global)), type);
 }
 
 void World::PlayerSetBlock(glm::ivec3 globalPos, BlockType type) {
