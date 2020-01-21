@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Types.h"
+#include "World/Block.h"
 // #include "Render/Objects.h"
 // #include "World/World.h"
 
@@ -18,7 +19,7 @@ public:
 	Geometry* GetGeometry(std::string);
 	CubeMap* GetCubeMap(std::string);
 	Skybox* GetSkybox();
-	Material* GetMaterial(BlockType);
+	Material* GetMaterial(Block);
 	// Block* GetBlock(BlockType);
 private:
 	Game* _game;
@@ -29,7 +30,7 @@ private:
 	void LoadMaterials();
 	std::unordered_map<std::string, Shader*> _shaders;
 	std::unordered_map<std::string, Texture*> _textures;
-	std::unordered_map<int, Material*> _materials;
+	std::unordered_map<Block, Material*> _materials;
 	std::unordered_map<std::string, Geometry*> _geometries;
 	std::unordered_map<std::string, CubeMap*> _cubemaps;
 	Skybox* _skybox;

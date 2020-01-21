@@ -8,7 +8,7 @@
 #include "Render/Skybox.h"
 #include "Render/Material.h"
 #include "Utilities/Log.h"
-// #include "World/World.h"
+#include "World/Block.h"
 
 ResourceLoader::ResourceLoader(Game* game) {
 	_game = game;
@@ -44,7 +44,7 @@ Texture* ResourceLoader::GetTexture(std::string name) {return _textures[name];};
 Geometry* ResourceLoader::GetGeometry(std::string name) {return _geometries[name];};
 CubeMap* ResourceLoader::GetCubeMap(std::string name) {return _cubemaps[name];};
 Skybox* ResourceLoader::GetSkybox() {return _skybox;};
-Material* ResourceLoader::GetMaterial(BlockType type) {return _materials[(int)type];};
+Material* ResourceLoader::GetMaterial(Block block) {return _materials[block];};
 
 void ResourceLoader::LoadShaders() {
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
@@ -138,23 +138,23 @@ void ResourceLoader::LoadCubeMaps() {
 };
 
 void ResourceLoader::LoadMaterials() {
-	_materials[(int)BlockType::Bedrock] = new Material("./resources/Textures/Bedrock/Bedrock", 1.f);
-	_materials[(int)BlockType::Cobblestone] = new Material("./resources/Textures/Cobblestone/Cobblestone", 1.f);
-	_materials[(int)BlockType::Dirt] = new Material("./resources/Textures/Dirt/Dirt", 1.f);
-	_materials[(int)BlockType::Planks] = new Material("./resources/Textures/Planks/Planks", 1.f);
-	_materials[(int)BlockType::Sand] = new Material("./resources/Textures/Sand/Sand", 1.f);
-	_materials[(int)BlockType::Stone] = new Material("./resources/Textures/Stone/Stone", 1.f);
-	_materials[(int)BlockType::OreCoal] = new Material("./resources/Textures/CoalOre/CoalOre", 1.f);
-	_materials[(int)BlockType::OreDiamond] = new Material("./resources/Textures/DiamondOre/DiamondOre", 1.f);
-	_materials[(int)BlockType::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 32.f);
-	_materials[(int)BlockType::OreIron] = new Material("./resources/Textures/IronOre/IronOre", 1.f);
-	_materials[(int)BlockType::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f);
-	_materials[(int)BlockType::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f);
-	_materials[(int)BlockType::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f);
-	_materials[(int)BlockType::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f);
-	_materials[(int)BlockType::Log] = new Material("./resources/Textures/Log/Log", 1.f);
-	_materials[(int)BlockType::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f);
-	_materials[(int)BlockType::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f);
-	_materials[(int)BlockType::Water] = new Material("./resources/Textures/Water/Water", 32.f);
-	_materials[(int)BlockType::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f);
+	_materials[Block::Bedrock] = new Material("./resources/Textures/Bedrock/Bedrock", 1.f);
+	_materials[Block::Cobblestone] = new Material("./resources/Textures/Cobblestone/Cobblestone", 1.f);
+	_materials[Block::Dirt] = new Material("./resources/Textures/Dirt/Dirt", 1.f);
+	_materials[Block::Planks] = new Material("./resources/Textures/Planks/Planks", 1.f);
+	_materials[Block::Sand] = new Material("./resources/Textures/Sand/Sand", 1.f);
+	_materials[Block::Stone] = new Material("./resources/Textures/Stone/Stone", 1.f);
+	_materials[Block::OreCoal] = new Material("./resources/Textures/CoalOre/CoalOre", 1.f);
+	_materials[Block::OreDiamond] = new Material("./resources/Textures/DiamondOre/DiamondOre", 1.f);
+	_materials[Block::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 32.f);
+	_materials[Block::OreIron] = new Material("./resources/Textures/IronOre/IronOre", 1.f);
+	_materials[Block::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f);
+	_materials[Block::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f);
+	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f);
+	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f);
+	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f);
+	_materials[Block::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f);
+	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f);
+	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f);
+	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f);
 };

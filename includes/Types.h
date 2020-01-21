@@ -41,29 +41,6 @@ class Shard;
 class World;
 class NearestBlocks;
 class ShadowRenderer;
-
-enum class BlockType {
-	Air = 0,
-	Bedrock,
-	Cobblestone,
-	Dirt,
-	Planks,
-	Sand,
-	Stone,
-	OreCoal,
-	OreDiamond,
-	OreGold,
-	OreIron,
-	OreRedstone,
-	CraftingTable,
-	Grass,
-	Leaves,
-	Log,
-	Dandelion,
-	SnowGrass,
-	Water,
-	Ice,
-	First = Air,
-	Last = Ice,
-	Size = Last + 1
-};
+class BlockType;
+#include "World/BlockType.h"
+class Block;

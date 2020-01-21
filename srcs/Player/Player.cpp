@@ -35,7 +35,7 @@ Player::~Player() {
 
 float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
 {
-	BlockType block;
+	Block block;
 	glm::vec3 tmpDirection;
 
 
@@ -48,7 +48,7 @@ float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const 
 	{
 		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
 		block = _world->GetBlock(_position + tmpDirection);
-		if (block != BlockType::Air)
+		if (block != Block::Air)
 			return step;
 	}
 	return INFINITY;
@@ -70,8 +70,8 @@ Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 dire
 		ray.lastRayStep = ray.hitRayPos;
 		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
 		ray.hitRayPos = glm::vec3(_position + tmpDirection);
-		ray.hitBlockType = _world->GetBlock(ray.hitRayPos);
-		if (ray.hitBlockType != BlockType::Air)
+		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
+		if (ray.hitBlock != Block::Air)
 			return ray;
 	}
 	ray.hitRayPos = glm::vec3(INFINITY, INFINITY, INFINITY);
@@ -82,14 +82,14 @@ Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 dire
 void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType)
 {
 	const float maxBlockDist = 4.f;
-	BlockType lastBlock;
+	Block lastBlock;
 	RayCastHitInfo ray;
 
 	ray = RayCast(_position, forward, maxBlockDist, 0.25f);
 	lastBlock = _world->GetBlock(ray.lastRayStep);
 	// std::cout << "currBlockHitPos[xyz]: " << ray.hitRayPos.x << " " << ray.hitRayPos.y << " " << ray.hitRayPos.z << std::endl;
 	// std::cout << "lastBlockHitPos[xyz]: " << ray.lastRayStep.x << " " << ray.lastRayStep.y << " " << ray.lastRayStep.z << std::endl;
-	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && lastBlock == BlockType::Air) {
+	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && lastBlock == Block::Air) {
 		_world->PlayerSetBlock(ray.lastRayStep, blockType);
 	}
 
@@ -102,7 +102,7 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 	const float maxBlockDist = 4.f;
 
 	ray = RayCast(_position, forward, maxBlockDist, 0.5f);
-	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && (!_movementPropety.godMode && ray.hitBlockType != BlockType::Bedrock)) {
+	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && (!_movementPropety.godMode && ray.hitBlock != Block::Bedrock)) {
 		_world->PlayerSetBlock(ray.hitRayPos, BlockType::Air);
 	}
 	else if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && _movementPropety.godMode) {

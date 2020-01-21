@@ -6,6 +6,7 @@
 #include "Types.h"
 #include "Engine/Entity.h"
 #include "World/World.h"
+#include "World/Block.h"
 
 #define SPEED 10.f
 
@@ -44,7 +45,7 @@ private:
 	{
 		glm::vec3 hitRayPos;
 		glm::vec3 lastRayStep;
-		BlockType hitBlockType;
+		Block hitBlock;
 	};
 
 	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& rigjt);

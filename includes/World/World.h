@@ -15,10 +15,12 @@ public:
 	void ActivateChunk(glm::ivec2);
 	void SetChunkState(glm::ivec2, bool);
 	void DeactivateChunk(glm::ivec2);
-	BlockType GetBlock(glm::vec3 globalPosition);
+	// BlockType GetBlock(glm::vec3 globalPosition);
+	Block GetBlock(glm::vec3 globalPosition);
 	void SetBlock(glm::vec3 globalPosition, BlockType);
 	void PlayerSetBlock(glm::vec3 globalPosition, BlockType);
-	BlockType GetBlock(glm::ivec3 globalPosition);
+	// BlockType GetBlock(glm::ivec3 globalPosition);
+	Block GetBlock(glm::ivec3 globalPosition);
 	void SetBlock(glm::ivec3 globalPosition, BlockType);
 	void PlayerSetBlock(glm::ivec3 globalPosition, BlockType);
 private:

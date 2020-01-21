@@ -121,11 +121,11 @@ void Chunk::SetActive(bool state) {
 	}
 }
 
-BlockType Chunk::GetBlock(const glm::ivec3 pos) {
+Block Chunk::GetBlock(const glm::ivec3 pos) {
 	if (pos.y < 0)
-		return BlockType::Stone; //! Is this okay?
+		return Block::NoChunk;
 	if (pos.y >= 256)
-		return BlockType::Air;
+		return Block::Air;
 	int y = pos.y >> 4;
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
@@ -134,13 +134,13 @@ void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
 	if (pos.y < 0 || pos.y >= 256)
 		return;
 	int y = pos.y / 16;
-	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
+	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), Block(type)); //! Conversion plug
 }
 
 void Chunk::PlayerSetBlock(glm::ivec3 pos, BlockType type) {
 	if (pos.y < 0 || pos.y >= 256)
 		return;
 	int y = pos.y / 16;
-	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type);
+	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), Block(type)); //! Conversion plug
 	_shards[y]->UpdateGeometry();
 }

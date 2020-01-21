@@ -3,6 +3,7 @@
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "World/Chunk.h"
+#include "World/Block.h"
 
 #include "Utilities/Profiler.h"
 
@@ -70,15 +71,15 @@ glm::ivec3 World::Global2Local(const glm::ivec3 global) {
 	return local;
 }
 
-BlockType World::GetBlock(const glm::vec3 global) {
+Block World::GetBlock(const glm::vec3 global) {
 	return GetBlock(glm::ivec3(glm::floor(global)));
 }
 
-BlockType World::GetBlock(const glm::ivec3 globalPos) {
+Block World::GetBlock(const glm::ivec3 globalPos) {
 	//* Maybe optimize this
 	Chunk* chunk = _chunks[Global2Chunk(globalPos)];
 	if (!chunk) {
-		return BlockType::Stone; //! Is this okay?
+		return Block::NoChunk;
 	}
 	return chunk->GetBlock(Global2Local(globalPos));
 }
