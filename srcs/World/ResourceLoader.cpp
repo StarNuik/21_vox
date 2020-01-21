@@ -111,8 +111,9 @@ void ResourceLoader::LoadTextures() {
 };
 
 void ResourceLoader::LoadGeometries() {
-	// _geometries["Box"] = new Geometry("./resources/Models/Box.obj");
-	// _geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
+	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
+	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
+	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 };
 
 void ResourceLoader::LoadCubeMaps() {

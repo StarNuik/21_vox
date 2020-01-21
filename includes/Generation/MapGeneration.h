@@ -17,7 +17,7 @@
 // #include <cstdint>
 #include "FastNoise.h"
 #include "Types.h"
-#define MAX_DIST_TO_SMOOTHING 30
+#define MAX_DIST_TO_SMOOTHING 25
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 
 class MapGeneration
@@ -28,7 +28,8 @@ public:
 public:
     struct StoredMapData
     {
-        float elevation;
+        float approximateElevation;
+        int exactElevation;
         int biom;
         BlockType firstBlockLayer;
         BlockType lastBlockLayer;
@@ -42,6 +43,12 @@ public:
         GrassLand,
         Snow,
         HighLand,
+        ShapeCaves,
+        SecondShapeCaves,
+        ElevationCaves,
+        SecondElevationCaves,
+        Crevices,
+        Tree,
         Biomes,
         First = Basic,
         Last = Biomes,
@@ -66,8 +73,19 @@ private:
     float LandGenerationColumn(glm::ivec2 pos);
     float BeachGenerationColumn(glm::ivec2 pos);
     float HighLandGenerationColumn(glm::ivec2 pos);
+    float SnowLangGenerationColumn(glm::ivec2);
+
+    float TreeGeneration(glm::ivec2 pos);
+
+    float ShapeCavesGeneration(glm::ivec2 pos);
+    float ElevationCavesGeneration(glm::ivec2 pos);
+
+    float SecondShapeCavesGeneration(glm::ivec2 pos);
+    float SecondElevationCavesGeneration(glm::ivec2 pos);
+
+    float CrevicesGeneration(glm::ivec2 pos);
   
-    int BiomeGeneration(glm::ivec2 pos, glm::ivec2 blockPosition);
+    int BiomeGeneration(glm::ivec2 pos);
     int BiomeDefinition(int elevation);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
@@ -86,6 +104,7 @@ private:
     {
         return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
     }
+
     template <typename T> inline T _Lerp(const T &v0, const T &v1, float t)
     {
         return v0 + (v1 - v0) * std::max(0.f, std::min(1.f, t));
