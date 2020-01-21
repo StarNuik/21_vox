@@ -4,7 +4,7 @@
 #include "Render/Shader.h"
 #include "Render/RenderModel.h"
 #include "Render/Skybox.h"
-#include "Render/ShadowRenderer.h"
+// #include "Render/ShadowRenderer.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
@@ -14,9 +14,9 @@ void GLRenderer::RenderFrame() {
 	ResourceLoader* r = _game->GetResources();
 	UIController* ui = _game->GetUI();
 	Skybox* skybox = r->GetSkybox();
-	ShadowRenderer* shadows = skybox->GetShadowRenderer();
+	// ShadowRenderer* shadows = skybox->GetShadowRenderer();
 
-	shadows->Render(_rendered, _game->GetRuntime());
+	// shadows->Render(_rendered, _game->GetRuntime());
 
 	//* Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -33,11 +33,10 @@ void GLRenderer::RenderFrame() {
 	//* Blocks
 	for (RenderModel* model : _rendered) {
 		Shader* modelShader = model->Use(_activeCamera);
-		shadows->ApplySelf(modelShader);
+		// shadows->ApplySelf(modelShader);
 		skybox->ApplyDirLights(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
-	// shadows->Render(_rendered, _game->GetRuntime());
 
 	//* UI
 	ui->UpdateData();
