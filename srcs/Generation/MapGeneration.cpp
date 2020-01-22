@@ -86,6 +86,7 @@ float MapGeneration::SecondElevationCavesGeneration(glm::ivec2 pos)
 
   float heightDifference = pow(e, exp);
   float elevation = round(heightDifference * terraceValue) / terraceValue;
+
   return elevation;
 }
 
@@ -497,6 +498,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = LandGenerationColumn(pos);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     }
+      break;
   }
   column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
   return column;
@@ -559,6 +561,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = BlockType::Bedrock;
       column.lastBlockLayer = BlockType::Bedrock;
     }
+      break;
     case GenerationType::River:
     {
       column.approximateElevation = RiverElevationGeneration(pos);
