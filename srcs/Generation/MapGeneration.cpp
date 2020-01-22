@@ -262,6 +262,9 @@ MapGeneration::BiomeInfo MapGeneration::CheckingTheBiomeIntTheNextColumn(const g
   int topBlockBiome;
   int buttomBlockBiome;
 
+  if (maxDistToCheckBiome == 0)
+    return (BiomeInfo{biome, 0});
+
   while (distance < maxDistToCheckBiome)
   {
     rightBlockBiome = BiomeInPositionOfInterest(pos, glm::ivec2(distance, 0));
@@ -440,31 +443,10 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.exactElevation = 1;
       column.firstBlockLayer = BlockType::Water;
       column.lastBlockLayer = BlockType::Water;
-      // FastNoise& noise = _noises[BeachBordered];
-      // float test = (noise.GetNoise(pos.x, pos.y) * 0.5f + 0.5f);
-      // int pidor;
-      // if (test > 0.5f)
-      //   pidor = (int)test + test * 10 + 10;
-      // else
-      //   pidor = 0; 
-      // if (CheckingTheBiomeIntTheNextColumn(pos, column.biom, pidor).biome == Ocean)
-      // {
-      //   column.biom = Beach;
-      //   column.approximateElevation = BeachGenerationColumn(pos);
-      //   SmoothingButtJoint(column.approximateElevation, pos, column.biom);
-      //   column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      //   column.firstBlockLayer = BlockType::Sand;
-      //   column.lastBlockLayer = BlockType::Sand;
-      // }
     }
       break;
     case GenerationType::GrassLand:
     {
-      column.approximateElevation = LandGenerationColumn(pos);
-      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
-      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::Grass;
       FastNoise& noise = _noises[BeachBordered];
       float beachLength = (noise.GetNoise(pos.x, pos.y) * 0.5f + 0.5f); 
       int checkLength;
@@ -472,26 +454,19 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         checkLength = (int)beachLength + beachLength * 10;
       else
         checkLength = 0; 
+      column.approximateElevation = LandGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
+      column.firstBlockLayer = BlockType::Dirt;
+      column.lastBlockLayer = BlockType::Grass;
       if (CheckingTheBiomeIntTheNextColumn(pos, column.biom, checkLength).biome == Ocean)
       {
         column.biom = Beach;
-        column.approximateElevation = BeachGenerationColumn(pos);
-        SmoothingButtJoint(column.approximateElevation, pos, column.biom);
-        column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
         column.firstBlockLayer = BlockType::Sand;
         column.lastBlockLayer = BlockType::Sand;
       }
     }
       break;
-    // case GenerationType::Beach:
-    // {
-    //   column.approximateElevation = BeachGenerationColumn(pos);
-    //   SmoothingButtJoint(column.approximateElevation, pos, column.biom);
-    //   column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-    //   column.firstBlockLayer = BlockType::Sand;
-    //   column.lastBlockLayer = BlockType::Sand;
-    // }
-      // break;
     case GenerationType::HighLand:
     {
       column.approximateElevation = HighLandGenerationColumn(pos);
