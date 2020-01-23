@@ -140,15 +140,12 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 			_movementPropety.velocity = glm::vec3(0);
 		}
 	}
-	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isAir) {
+	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
 		upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.7f, 0.1f);
-		if (!_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			_movementPropety.velocity.y = 0.f;
-		}
-		else {
-			_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce * delta;
-			_movementPropety.isAir = true;
-		}
+
+		_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce * delta;
+		_movementPropety.isAir = true;
+		_movementPropety.isJump = false;
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
 		_movementPropety.velocity += right;
@@ -165,19 +162,21 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 		}
 	}
 
+	upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.5f, 0.1f);
+	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && _movementPropety.velocity.y > 0.f) {
+		_movementPropety.velocity.y = 0.f;
+	}
 	upperRayInfo = RayCast(_position, -_movementPropety.vecUp, _movementPropety.objectHeight + 0.50f, 0.20f);
 	if (!upperRayInfo.hit) {
 		_movementPropety.velocity.y += -(_movementPropety.g * delta);
 		_movementPropety.isAir = true;
+		_movementPropety.isJump = true;
 	}
 	else if (upperRayInfo.hit && _position.y - glm::ceil(upperRayInfo.hitRayPos.y) <= _movementPropety.objectHeight) {
 		_movementPropety.isAir = false;
+		_movementPropety.isJump = false;
 		_movementPropety.velocity.y = 0.f;
 		_position.y = glm::ceil(_position.y - upperRayInfo.distance) + _movementPropety.objectHeight;
-	}
-
-	if (!_movementPropety.isAir) {
-		_movementPropety.velocity.y = 0.f;
 	}
 }
 void Player::GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up)

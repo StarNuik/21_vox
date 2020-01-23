@@ -25,6 +25,7 @@ public:
 		const float g = 9.83f;
 		const float jumpForce = 400.f;
 		bool isAir = false;
+		bool isJump = false;
 		glm::vec3 velocity = glm::vec3(0);
 		glm::vec3 oldObjectPos = glm::vec3(0);
 		glm::vec3 vecUp = glm::vec3(0.0f, 1.0f, 0.0f);
