@@ -28,10 +28,10 @@ RenderModel::~RenderModel() {
 };
 
 void RenderModel::ApplySelf(Camera* camera, Shader* shader) {
-	glUseProgram(_shaderId);
-	// shader->Use();
-	// _geometry->Use();
-	glBindVertexArray(_geometryId);
+	// glUseProgram(_shaderId);
+	shader->Use();
+	_geometry->Use();
+	// glBindVertexArray(_geometryId);
 	// _material->Use(shader);
 	shader->SetMatrix4("model", GetAphineMatrix());
 	// shader->SetMatrix4("view", camera->GetViewMatrix());
