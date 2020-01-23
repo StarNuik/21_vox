@@ -20,8 +20,12 @@ public:
 	struct MovementProperty
 	{
 		int godMode = 1;
-		const float objectHeight = 2.5f;
-		const float avoidBlockDistance = 0.1f;
+		const float objectHeight = 1.80f;
+		const float avoidBlockDistance = 0.30f;
+		const float g = 9.83f;
+		const float jumpForce = 400.f;
+		bool isAir = false;
+		glm::vec3 velocity = glm::vec3(0);
 		glm::vec3 oldObjectPos = glm::vec3(0);
 		glm::vec3 vecUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 vecRight = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -43,12 +47,16 @@ private:
 
 	struct RayCastHitInfo
 	{
+		bool hit;
+		float distance;
 		glm::vec3 hitRayPos;
 		glm::vec3 lastRayStep;
 		Block hitBlock;
 	};
 
-	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& rigjt);
+	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& right);
+	void PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up, const float delta);
+	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
 	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
