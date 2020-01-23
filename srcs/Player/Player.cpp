@@ -120,6 +120,8 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 {
 	RayCastHitInfo upperRayInfo;
 	RayCastHitInfo lowerRayInfo;
+	glm::vec3 upperBody = _position;
+	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.75f), _position.z);
 
 	forward.y = 0.f;
 	right.y = 0.f;
@@ -127,16 +129,70 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 	up.z = 0.f;
 
 	if (input->KeyPressed(GLFW_KEY_W)) {
+		bool isUpperBlock = false;
+		bool isLowerBlock = false;
 		_movementPropety.velocity += forward;
-		upperRayInfo = RayCast(_position, _movementPropety.velocity, 0.7f, 0.1f);
+		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
 		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isUpperBlock = true;
+		}
+
+		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isLowerBlock = true;
+		}
+		if (isUpperBlock || isLowerBlock) {
 			_movementPropety.velocity = glm::vec3(0);
 		}
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
+		bool isUpperBlock = false;
+		bool isLowerBlock = false;
 		_movementPropety.velocity -= forward;
-		upperRayInfo = RayCast(_position, _movementPropety.velocity, 0.7f, 0.1f);
+		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
 		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isUpperBlock = true;
+		}
+
+		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isLowerBlock = true;
+		}
+		if (isUpperBlock || isLowerBlock) {
+			_movementPropety.velocity = glm::vec3(0);
+		}
+	}
+	if (input->KeyPressed(GLFW_KEY_D)) {
+		bool isUpperBlock = false;
+		bool isLowerBlock = false;
+		_movementPropety.velocity += right;
+		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isUpperBlock = true;
+		}
+
+		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isLowerBlock = true;
+		}
+		if (isUpperBlock || isLowerBlock) {
+			_movementPropety.velocity = glm::vec3(0);
+		}
+	}
+	if (input->KeyPressed(GLFW_KEY_A)) {
+		bool isUpperBlock = false;
+		bool isLowerBlock = false;
+		_movementPropety.velocity -= right;
+		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isUpperBlock = true;
+		}
+
+		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
+		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+			isLowerBlock = true;
+		}
+		if (isUpperBlock || isLowerBlock) {
 			_movementPropety.velocity = glm::vec3(0);
 		}
 	}
@@ -146,20 +202,6 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 		_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce;
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = false;
-	}
-	if (input->KeyPressed(GLFW_KEY_D)) {
-		_movementPropety.velocity += right;
-		upperRayInfo = RayCast(_position, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			_movementPropety.velocity = glm::vec3(0);
-		}
-	}
-	if (input->KeyPressed(GLFW_KEY_A)) {
-		_movementPropety.velocity -= right;
-		upperRayInfo = RayCast(_position, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			_movementPropety.velocity = glm::vec3(0);
-		}
 	}
 
 	upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.5f, 0.1f);
