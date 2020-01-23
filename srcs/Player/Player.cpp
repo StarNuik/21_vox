@@ -141,7 +141,7 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 		}
 	}
 	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isAir) {
-		upperRayInfo = RayCast(_position, _movementPropety.velocity, 0.7f, 0.1f);
+		upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.7f, 0.1f);
 		if (!_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
 			_movementPropety.velocity.y = 0.f;
 		}
@@ -174,9 +174,6 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 		_movementPropety.isAir = false;
 		_movementPropety.velocity.y = 0.f;
 		_position.y = glm::ceil(_position.y - upperRayInfo.distance) + _movementPropety.objectHeight;
-		std::cout << "distance: " << upperRayInfo.distance << std::endl;
-		std::cout << "normal distance: " << glm::ceil(_position.y - upperRayInfo.distance) + _movementPropety.objectHeight << std::endl;
-		std::cout << "res: " << _position.y << std::endl;
 	}
 
 	if (!_movementPropety.isAir) {
