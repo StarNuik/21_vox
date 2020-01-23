@@ -23,7 +23,7 @@ public:
 		const float objectHeight = 1.80f;
 		const float avoidBlockDistance = 0.30f;
 		const float g = 9.83f;
-		const float jumpForce = 400.f;
+		const float jumpForce = 2.5f;
 		bool isAir = false;
 		bool isJump = false;
 		glm::vec3 velocity = glm::vec3(0);

@@ -143,7 +143,7 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
 		upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.7f, 0.1f);
 
-		_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce * delta;
+		_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce;
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = false;
 	}
