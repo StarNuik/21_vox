@@ -11,8 +11,7 @@
 #include "Utilities/Log.h"
 // #include "Types.h"
 
-void	CheckShaderError(uint index, std::string source)
-{
+void CheckShaderError(uint index, std::string source) {
 	int		params = -1;
 	glGetShaderiv(index, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE) {
@@ -48,6 +47,7 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	glAttachShader(_id, _vs);
 	glAttachShader(_id, _fs);
 	glLinkProgram(_id);
+	Log::Important("Shader id: " + std::to_string(_id));
 };
 
 Shader::~Shader() {
@@ -60,47 +60,40 @@ void Shader::Use() {
 	glUseProgram(_id);
 }
 
-void	Shader::SetInt(std::string variableName, int value)
-{
+uint Shader::GetId() {return _id;};
+
+void Shader::SetInt(std::string variableName, int value) {
 	glUniform1i(glGetUniformLocation(_id, variableName.c_str()), value);
 }
 
-void	Shader::SetFloat(std::string variableName, float value)
-{
+void Shader::SetFloat(std::string variableName, float value) {
 	glUniform1f(glGetUniformLocation(_id, variableName.c_str()), value);
 }
 
-void	Shader::SetFloat2(std::string variableName, float x, float y)
-{
+void Shader::SetFloat2(std::string variableName, float x, float y) {
 	glUniform2f(glGetUniformLocation(_id, variableName.c_str()), x, y);
 }
 
-void	Shader::SetFloat3(std::string variableName, float x, float y, float z)
-{
+void Shader::SetFloat3(std::string variableName, float x, float y, float z) {
 	glUniform3f(glGetUniformLocation(_id, variableName.c_str()), x, y, z);
 }
 
-void	Shader::SetFloat4(std::string variableName, float x, float y, float z, float w)
-{
+void Shader::SetFloat4(std::string variableName, float x, float y, float z, float w) {
 	glUniform4f(glGetUniformLocation(_id, variableName.c_str()), x, y, z, w);
 }
 
-void	Shader::SetFloat2(std::string variableName, glm::vec2 vec)
-{
+void Shader::SetFloat2(std::string variableName, glm::vec2 vec) {
 	glUniform2f(glGetUniformLocation(_id, variableName.c_str()), vec.x, vec.y);
 }
 
-void	Shader::SetFloat3(std::string variableName, glm::vec3 vec)
-{
+void Shader::SetFloat3(std::string variableName, glm::vec3 vec) {
 	glUniform3f(glGetUniformLocation(_id, variableName.c_str()), vec.x, vec.y, vec.z);
 }
 
-void	Shader::SetFloat4(std::string variableName, glm::vec4 vec)
-{
+void Shader::SetFloat4(std::string variableName, glm::vec4 vec) {
 	glUniform4f(glGetUniformLocation(_id, variableName.c_str()), vec.x, vec.y, vec.z, vec.w);
 }
 
-void	Shader::SetMatrix4(std::string variableName, glm::mat4 value)
-{
+void Shader::SetMatrix4(std::string variableName, glm::mat4 value) {
 	glUniformMatrix4fv(glGetUniformLocation(_id, variableName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

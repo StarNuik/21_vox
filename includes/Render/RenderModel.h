@@ -20,6 +20,8 @@ public:
 	glm::mat4 GetAphineMatrix();
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
+	Material* GetMaterial();
+	bool operator<(const RenderModel&) const;
 private:
 	// void Init(Shader*, Texture*, Texture*, Geometry*);
 	Shader* _shader;
@@ -28,4 +30,7 @@ private:
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
 	GLRenderer* _renderer;
+	uint _shaderId;
+	uint _materialId;
+	uint _geometryId;
 };

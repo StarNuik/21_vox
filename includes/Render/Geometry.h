@@ -11,6 +11,7 @@ public:
 	Geometry(std::vector<float>);
 	~Geometry();
 	uint GetPolygonCount();
+	uint GetId();
 	void Use();
 	static std::vector<float> ReadGeometry(std::string);
 private:
