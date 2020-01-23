@@ -15,7 +15,6 @@
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
 
-
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
 	config.windowSize = glm::ivec2(1500, 900);
@@ -49,13 +48,13 @@ void Game::InitSystems() {
 	
 	_renderer = new GLRenderer(this, glConfig());
 	_input = new Input();
-	_resources = new ResourceLoader();
+	_resources = new ResourceLoader(this);
 	_ui = new UIController(this);
 	_world = new World(this);
 	_mpGen = new MapGeneration();
 
-	Entity* player = new Player(this);
-	AddEntity(player);
+	_player = new Player(this);
+	AddEntity(_player);
 };
 
 #define WORLD_RADIUS 10

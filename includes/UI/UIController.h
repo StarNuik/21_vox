@@ -4,8 +4,8 @@
 
 #include "Types.h"
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "examples/imgui_impl_glfw.h"
+#include "examples/imgui_impl_opengl3.h"
 #include "FastNoise.h"
 
 #define UI_PLOT_FRAMES 100

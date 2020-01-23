@@ -11,7 +11,7 @@ typedef char int8;
 
 typedef uint32 uint;
 
-#define SECONDS_IN_A_DAY (360.f)
+#define SECONDS_IN_A_DAY (120.f)
 
 class Entity;
 class Game;
@@ -40,29 +40,7 @@ class ResourceLoader;
 class Shard;
 class World;
 class NearestBlocks;
-
-enum class BlockType {
-	Air = 0,
-	Bedrock,
-	Cobblestone,
-	Dirt,
-	Planks,
-	Sand,
-	Stone,
-	OreCoal,
-	OreDiamond,
-	OreGold,
-	OreIron,
-	OreRedstone,
-	CraftingTable,
-	Grass,
-	Leaves,
-	Log,
-	Dandelion,
-	SnowGrass,
-	Water,
-	Ice,
-	First = Air,
-	Last = Ice,
-	Size = Last + 1
-};
+class ShadowRenderer;
+class BlockType;
+#include "World/BlockType.h"
+class Block;

@@ -7,10 +7,11 @@
 #include "Render/Geometry.h"
 #include "Render/Shader.h"
 #include "Render/Cubemap.h"
+#include "Render/ShadowRenderer.h"
 #include "Render/Camera.h"
 #include "Render/DirLight.h"
 
-Skybox::Skybox(Shader* shader, CubeMap* day, CubeMap* night) {
+Skybox::Skybox(Game* game, Shader* shader, CubeMap* day, CubeMap* night) {
 	_shader = shader;
 	_cubemap_day = day;
 	_cubemap_night = night;
@@ -22,12 +23,15 @@ Skybox::Skybox(Shader* shader, CubeMap* day, CubeMap* night) {
 
 	_sunLight = new DirLight();
 	_moonLight = new DirLight();
+	_shadows = new ShadowRenderer(game);
 	// _sunColor = glm::vec3(SUN_COLOR);
 	// _moonColor = glm::vec3(MOON_COLOR);
 };
 
 Skybox::~Skybox() {
 	delete _geometry;
+	delete _sunLight;
+	delete _moonLight;
 };
 
 Shader* Skybox::Use(Camera* camera, float lerpVal, float runtime) {
@@ -73,3 +77,5 @@ void Skybox::SetDirLights(float lerpVal, float runtime) {
 	_moonLight->SetAmbient(glm::vec3(MOON_AMBIENT) * (1.f - lerpVal));
 	_moonLight->SetDirection(glm::normalize(glm::vec3(0.f, 1.f, 0.f)));
 };
+
+ShadowRenderer* Skybox::GetShadowRenderer() {return _shadows;};

@@ -14,6 +14,8 @@ public:
 	void Update(GLFWwindow*);
 	bool KeyPressed(uint);
 	bool KeyJustPressed(uint);
+	bool MouseKeyPressed(uint);
+	bool MouseKeyJustPressed(uint);
 	glm::ivec2 MousePos();
 	glm::ivec2 MousePosDelta();
 private:
@@ -21,4 +23,6 @@ private:
 	glm::ivec2 _mousePosDelta;
 	std::unordered_map<uint32, bool> _pressMap;
 	std::unordered_map<uint32, bool> _justPressedMap;
+	std::unordered_map<uint32, bool> _mousePressMap;
+	std::unordered_map<uint32, bool> _mouseJustPressMap;
 };

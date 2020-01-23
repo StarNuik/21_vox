@@ -7,12 +7,36 @@
 #include "Render/Texture.h"
 #include "Utilities/Log.h"
 
-Texture::Texture() {};
+Texture::Texture() {
+	_loaded = false;
+};
 
 Texture::~Texture() {
 	if (_loaded) {
 		glDeleteTextures(1, &_id);
 	}
+};
+
+void Texture::New(TexFormat format, uint width, uint height, void* data) {
+	New(format, T_BYTE, width, height, data);
+};
+
+void Texture::New(TexFormat format, TexType type, uint width, uint height) {
+	New(format, type, width, height, NULL);
+};
+
+void Texture::New(TexFormat format, TexType type, uint width, uint height, void* data) {
+	glGenTextures(1, &_id);
+	glBindTexture(GL_TEXTURE_2D, _id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	_loaded = true;
 };
 
 void Texture::Load(std::string path) {
@@ -24,22 +48,12 @@ void Texture::Load(std::string path) {
 		stbi_image_free(data);
 		return;
 	}
-	glGenTextures(1, &_id);
-	glBindTexture(GL_TEXTURE_2D, _id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	New(F_RGBA, width, height, data);
 	stbi_image_free(data);
-	_loaded = true;
 };
-
-bool Texture::IsLoaded() {return _loaded;};
 
 void Texture::Use() {
 	glBindTexture(GL_TEXTURE_2D, _id);
 };
+
+bool Texture::IsLoaded() {return _loaded;};

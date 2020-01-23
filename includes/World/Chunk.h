@@ -11,7 +11,7 @@ public:
 	void Generate();
 	// void UpdateGeometry();
 	void SetActive(bool);
-	BlockType GetBlock(glm::ivec3);
+	Block GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, BlockType);
 	void PlayerSetBlock(glm::ivec3, BlockType);
 private:

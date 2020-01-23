@@ -1,13 +1,11 @@
 // #include "Base.h"
 #define TINYOBJLOADER_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
-// #include "Engine/Engine.h"
-// #include "Engine/Log.h"
-// #include "Generation/Map.h"
+#define GLEW_STATIC
 
-// #include "Render/Objects.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-// #include "Types.h"
 #include "Engine/Game.h"
 
 int	main() {

@@ -10,8 +10,11 @@
 RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Material* material, Geometry* geometry) {
 	_renderer = renderer;
 	_shader = shader;
+	_shaderId = _shader->GetId();
 	_material = material;
+	_materialId = _material->GetId();
 	_geometry = geometry;
+	_geometryId = _geometry->GetId();
 	_position = glm::vec3(0.f);
 	_scale = glm::vec3(1.f);
 	_rotation = glm::identity<glm::quat>();
@@ -24,14 +27,20 @@ RenderModel::~RenderModel() {
 	}
 };
 
-Shader* RenderModel::Use(Camera* camera) {
-	_shader->Use();
+void RenderModel::ApplySelf(Camera* camera, Shader* shader) {
+	// glUseProgram(_shaderId);
+	shader->Use();
 	_geometry->Use();
-	_material->Use(_shader);
-	_shader->SetMatrix4("model", GetAphineMatrix());
-	_shader->SetMatrix4("view", camera->GetViewMatrix());
-	_shader->SetMatrix4("projection", camera->GetProjectionMatrix());
-	_shader->SetFloat3("cameraPos", camera->GetPosition());
+	// glBindVertexArray(_geometryId);
+	// _material->Use(shader);
+	shader->SetMatrix4("model", GetAphineMatrix());
+	// shader->SetMatrix4("view", camera->GetViewMatrix());
+	// shader->SetMatrix4("projection", camera->GetProjectionMatrix());
+	// shader->SetFloat3("cameraPos", camera->GetPosition());
+};
+
+Shader* RenderModel::Use(Camera* camera) {
+	ApplySelf(camera, _shader);
 	return _shader;
 }
 
@@ -40,8 +49,12 @@ glm::mat4 RenderModel::GetAphineMatrix() {
 
 	aphine = glm::translate(aphine, _position);
 	aphine = aphine * glm::mat4_cast(_rotation);
-	aphine = glm::scale(aphine, _scale);
+	// aphine = glm::scale(aphine, _scale);
 	return aphine;
+};
+
+bool RenderModel::operator<(const RenderModel& t) const {
+	return ((_shaderId << 8) | _materialId) < ((t._shaderId << 8) | t._materialId);
 };
 
 void RenderModel::SetPosition(glm::vec3 position) {_position = position;};
@@ -52,3 +65,4 @@ glm::quat RenderModel::GetRotation() {return _rotation;};
 glm::vec3 RenderModel::GetScale() {return _scale;};
 uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};
+Material* RenderModel::GetMaterial() {return _material;};

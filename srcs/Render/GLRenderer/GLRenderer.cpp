@@ -1,8 +1,9 @@
 #include <GL/glew.h>
 #include <algorithm>
+
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "examples/imgui_impl_glfw.h"
+#include "examples/imgui_impl_opengl3.h"
 
 #include "Render/GLRenderer.h"
 #include "Utilities/Log.h"

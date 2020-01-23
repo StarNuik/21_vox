@@ -89,10 +89,10 @@ Geometry::~Geometry() {
 	glDeleteVertexArrays(1, &_vao);
 };
 
-uint Geometry::GetPolygonCount() {
-	return _polygonCount;
-}
+uint Geometry::GetPolygonCount() {return _polygonCount;}
+uint Geometry::GetId() {return _vao;};
 
 void Geometry::Use() {
 	glBindVertexArray(_vao);
 }
+

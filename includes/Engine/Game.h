@@ -24,6 +24,7 @@ public:
 	float GetRuntime();
 	float GetDayNightVal();
 	MapGeneration* _mpGen;
+	Player* GetPlayer();
 private:
 	void Update(float delta);
 
@@ -36,4 +37,5 @@ private:
 	UIController* _ui;
 	float _lastFrame;
 	float _runtime;
+	Player* _player;
 };

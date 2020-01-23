@@ -19,6 +19,7 @@ public:
 	void SetFloat3(std::string varName, glm::vec3 vector);
 	void SetFloat4(std::string varName, glm::vec4 vector);
 	void SetMatrix4(std::string varName, glm::mat4 matrix);
+	uint GetId();
 private:
 	uint _id, _vs, _fs;
 };

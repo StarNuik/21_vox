@@ -19,46 +19,43 @@ Shard::~Shard() {
 		delete model->GetGeometry();
 		delete model;
 	}
-	SetActive(false);
+	// SetActive(false);
 };
 
-void Shard::Generate() {}
-
-void Shard::SetActive(bool state) {
+void Shard::SetActive(bool newState) {
 	GLRenderer* r = _game->GetRenderer();
-	if (_state == false && state == true) {
+	if (_state == false && newState == true) {
 		UpdateGeometry();
-	} else if (_state == true && state == false) {
+	} else if (_state == true && newState == false) {
 		for (RenderModel* model : _models) {
 			delete model;
 		}
 		_models.clear();
 	}
-	_state = state;
+	_state = newState;
 }
 
-BlockType Shard::GetBlock(const glm::ivec3 pos) {
-	return _blocks[pos.x][pos.y][pos.z];
+Block Shard::GetBlock(const glm::ivec3 localP) {
+	return _blocks[localP.x][localP.y][localP.z];
 }
 
-void Shard::SetBlock(glm::ivec3 pos, BlockType type) {
-	BlockType oldBlock = _blocks[pos.x][pos.y][pos.z];
-	if (oldBlock != BlockType::Air) {
-		_blockTypePresent[(uint)oldBlock]--;
+void Shard::SetBlock(glm::ivec3 localP, Block newBlock) {
+	Block oldBlock = _blocks[localP.x][localP.y][localP.z];
+	if (newBlock == oldBlock) {
+		return;
 	}
-	if (type != BlockType::Air) {
-		_blockTypePresent[(uint)type]++;
-	}
-	_blocks[pos.x][pos.y][pos.z] = type;
+	_blockCount[(int)oldBlock]--;
+	_blockCount[(int)newBlock]++;
+	_blocks[localP.x][localP.y][localP.z] = newBlock;
 }
 
-bool Shard::HasType(BlockType type) {
-	if (_blockTypePresent[(uint)type] > 0) {
+bool Shard::HasBlock(Block block) {
+	if (_blockCount[(int)block] > 0) {
 		return true;
 	}
 	return false;
 }
 
-uint Shard::CountType(BlockType type) {
-	return _blockTypePresent[(uint)type];
+uint Shard::CountBlock(Block block) {
+	return _blockCount[(uint)block];
 }
