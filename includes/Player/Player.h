@@ -55,8 +55,7 @@ private:
 		Block hitBlock;
 	};
 
-	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& right);
-	void PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right);
+	bool CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
 	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
 	glm::vec3 PlayerVerticalMovement(Input* input, const float delta);
 	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);

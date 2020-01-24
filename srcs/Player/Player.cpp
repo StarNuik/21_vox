@@ -116,6 +116,29 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 	return;
 }
 
+bool Player::CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
+{
+	RayCastHitInfo upperRayInfo;
+	RayCastHitInfo lowerRayInfo;
+	bool isUpperBlock = false;
+	bool isLowerBlock = false;
+
+	_movementPropety.velocity += diretion;
+	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
+	if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+		isUpperBlock = true;
+	}
+
+	lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
+	if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+		isLowerBlock = true;
+	}
+	if (isUpperBlock || isLowerBlock) {
+		return true;
+	}
+	return false;
+}
+
 void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
 {
 	RayCastHitInfo upperRayInfo;
@@ -127,72 +150,20 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	right.y = 0.f;
 
 	if (input->KeyPressed(GLFW_KEY_W)) {
-		bool isUpperBlock = false;
-		bool isLowerBlock = false;
-		_movementPropety.velocity += forward;
-		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isUpperBlock = true;
-		}
-
-		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isLowerBlock = true;
-		}
-		if (isUpperBlock || isLowerBlock) {
+		if (CheckCollision(forward, upperBody, lowerBody))
 			_movementPropety.velocity = glm::vec3(0);
-		}
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
-		bool isUpperBlock = false;
-		bool isLowerBlock = false;
-		_movementPropety.velocity -= forward;
-		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isUpperBlock = true;
-		}
-
-		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isLowerBlock = true;
-		}
-		if (isUpperBlock || isLowerBlock) {
+		if (CheckCollision(-forward, upperBody, lowerBody))
 			_movementPropety.velocity = glm::vec3(0);
-		}
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
-		bool isUpperBlock = false;
-		bool isLowerBlock = false;
-		_movementPropety.velocity += right;
-		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isUpperBlock = true;
-		}
-
-		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isLowerBlock = true;
-		}
-		if (isUpperBlock || isLowerBlock) {
+		if (CheckCollision(right, upperBody, lowerBody))
 			_movementPropety.velocity = glm::vec3(0);
-		}
 	}
 	if (input->KeyPressed(GLFW_KEY_A)) {
-		bool isUpperBlock = false;
-		bool isLowerBlock = false;
-		_movementPropety.velocity -= right;
-		upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isUpperBlock = true;
-		}
-
-		lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
-		if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-			isLowerBlock = true;
-		}
-		if (isUpperBlock || isLowerBlock) {
+		if (CheckCollision(-right, upperBody, lowerBody))
 			_movementPropety.velocity = glm::vec3(0);
-		}
 	}
 }
 
@@ -298,8 +269,8 @@ void Player::Update(float delta) {
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
 		PlayerHorizontalMovement(input, forward, right);
-		glm::vec3 verticalVelocity = PlayerVerticalMovement(input, delta);
 		_movementPropety.velocity = glm::vec3(_movementPropety.velocity);
+		glm::vec3 verticalVelocity = PlayerVerticalMovement(input, delta);
 		_movementPropety.velocity.y = verticalVelocity.y;
 		_position += _movementPropety.velocity * delta * SPEED;
 	}
