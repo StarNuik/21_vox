@@ -116,7 +116,7 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 	return;
 }
 
-void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up, const float delta)
+void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
 {
 	RayCastHitInfo upperRayInfo;
 	RayCastHitInfo lowerRayInfo;
@@ -125,8 +125,6 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 
 	forward.y = 0.f;
 	right.y = 0.f;
-	up.x = 0.f;
-	up.z = 0.f;
 
 	if (input->KeyPressed(GLFW_KEY_W)) {
 		bool isUpperBlock = false;
@@ -196,31 +194,41 @@ void Player::PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, 
 			_movementPropety.velocity = glm::vec3(0);
 		}
 	}
-	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
-		upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.7f, 0.1f);
+}
 
-		_movementPropety.velocity += _movementPropety.vecUp * _movementPropety.jumpForce;
-		_movementPropety.isAir = true;
-		_movementPropety.isJump = false;
+glm::vec3 Player::PlayerVerticalMovement(Input* input, const float delta)
+{
+	RayCastHitInfo upperRayInfo;
+
+	glm::vec3 velocityY = _movementPropety.velocity;
+
+	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
+	upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.7f, 0.1f);
+	velocityY += _movementPropety.vecUp * _movementPropety.jumpForce;
+	_movementPropety.isAir = true;
+	_movementPropety.isJump = false;
 	}
 
 	upperRayInfo = RayCast(_position, _movementPropety.vecUp, 0.5f, 0.1f);
-	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && _movementPropety.velocity.y > 0.f) {
-		_movementPropety.velocity.y = 0.f;
+	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY.y > 0.f) {
+		velocityY.y = 0.f;
 	}
 	upperRayInfo = RayCast(_position, -_movementPropety.vecUp, _movementPropety.objectHeight + 0.50f, 0.20f);
 	if (!upperRayInfo.hit) {
-		_movementPropety.velocity.y += -(_movementPropety.g * delta);
+		velocityY.y += -(_movementPropety.g * delta);
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = true;
 	}
 	else if (upperRayInfo.hit && _position.y - glm::ceil(upperRayInfo.hitRayPos.y) <= _movementPropety.objectHeight) {
 		_movementPropety.isAir = false;
 		_movementPropety.isJump = false;
-		_movementPropety.velocity.y = 0.f;
+		velocityY.y = 0.f;
 		_position.y = glm::ceil(_position.y - upperRayInfo.distance) + _movementPropety.objectHeight;
 	}
+	return velocityY;
 }
+
+
 void Player::GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up)
 {
 	if (input->KeyPressed(GLFW_KEY_W)) {
@@ -289,7 +297,10 @@ void Player::Update(float delta) {
 
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
-		PlayerMovement(input, forward, right, up, delta);
+		PlayerHorizontalMovement(input, forward, right);
+		glm::vec3 verticalVelocity = PlayerVerticalMovement(input, delta);
+		_movementPropety.velocity = glm::vec3(_movementPropety.velocity);
+		_movementPropety.velocity.y = verticalVelocity.y;
 		_position += _movementPropety.velocity * delta * SPEED;
 	}
 	else {

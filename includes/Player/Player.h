@@ -56,7 +56,9 @@ private:
 	};
 
 	void PlayerCollision(glm::vec3& _position, glm::vec3& forward, glm::vec3& right);
-	void PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up, const float delta);
+	void PlayerMovement(Input* input, glm::vec3& forward, glm::vec3& right);
+	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
+	glm::vec3 PlayerVerticalMovement(Input* input, const float delta);
 	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
