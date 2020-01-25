@@ -120,10 +120,11 @@ bool Player::CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBod
 {
 	RayCastHitInfo upperRayInfo;
 	RayCastHitInfo lowerRayInfo;
+	float sideX;
+	float sideZ;
 	bool isUpperBlock = false;
 	bool isLowerBlock = false;
 
-	_movementPropety.velocity += diretion;
 	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
 	if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
 		isUpperBlock = true;
@@ -133,10 +134,56 @@ bool Player::CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBod
 	if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
 		isLowerBlock = true;
 	}
+
 	if (isUpperBlock || isLowerBlock) {
 		return true;
 	}
 	return false;
+}
+
+Player::CollisionInfo Player::UpgradeCheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
+{
+	RayCastHitInfo upperRayInfo;
+	RayCastHitInfo lowerRayInfo;
+	CollisionInfo col;
+	float sideX = 0.f;
+	float sideZ = 0.f;
+	bool isUpperBlock = false;
+	bool isLowerBlock = false;
+
+	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 2.5f, 0.1f);
+	if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+		isUpperBlock = true;
+		sideX = glm::abs(upperRayInfo.hitRayPos.x - (int)(upperRayInfo.hitRayPos.x));
+		sideZ = glm::abs(upperRayInfo.hitRayPos.z - (int)(upperRayInfo.hitRayPos.z));
+	}
+
+	lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 2.5f, 0.1f);
+	if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
+		isLowerBlock = true;
+		sideX = glm::abs(lowerRayInfo.hitRayPos.x - (int)(lowerRayInfo.hitRayPos.x));
+		sideZ = glm::abs(lowerRayInfo.hitRayPos.z - (int)(lowerRayInfo.hitRayPos.z));
+	}
+
+	if (!isUpperBlock && !isLowerBlock) {
+		col.isCollision = false;
+		col.side = glm::vec3(1.f, 0.f, 1.f);
+		return col;
+	}
+
+	if (sideX < 0.09f && sideZ >= 0.1f) // left side
+		col.side = glm::vec3(1.f, 0.f, 0.f);
+	else if (sideX >= 0.1f && sideZ < 0.09f) // up side
+		col.side = glm::vec3(0.f, 0.f, 1.f);
+	else if (sideX < sideZ && sideX > 0.09f && sideZ > 0.09f) // down side
+		col.side = glm::vec3(0.f, 0.f, 1.f);
+	else if (sideX > sideZ && sideX > 0.09f && sideZ > 0.09f) // right side
+		col.side = glm::vec3(1.f, 0.f, 0.f);
+	else
+		col.side = glm::vec3(0.f, 0.f, 0.f);
+
+	col.isCollision = true;
+	return col;
 }
 
 void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
@@ -149,22 +196,105 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	forward.y = 0.f;
 	right.y = 0.f;
 
+	glm::vec3 myMovement = glm::vec3(0.f);
 	if (input->KeyPressed(GLFW_KEY_W)) {
-		if (CheckCollision(forward, upperBody, lowerBody))
-			_movementPropety.velocity = glm::vec3(0);
+		myMovement = forward;
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
-		if (CheckCollision(-forward, upperBody, lowerBody))
-			_movementPropety.velocity = glm::vec3(0);
+		myMovement = -forward;
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
-		if (CheckCollision(right, upperBody, lowerBody))
-			_movementPropety.velocity = glm::vec3(0);
+		myMovement = right;
 	}
 	if (input->KeyPressed(GLFW_KEY_A)) {
-		if (CheckCollision(-right, upperBody, lowerBody))
-			_movementPropety.velocity = glm::vec3(0);
+		myMovement = -right;
 	}
+
+	_movementPropety.velocity += myMovement;
+	CollisionInfo col = UpgradeCheckCollision(myMovement, upperBody, lowerBody);
+	if (!col.isCollision) {
+		return;
+	}
+
+	_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, 0.f, _movementPropety.velocity.z * col.side.x);
+	return;
+
+	// if (input->KeyPressed(GLFW_KEY_W)) {
+	// 	_movementPropety.velocity += forward;
+	// 	CollisionInfo col = UpgradeCheckCollision(forward, upperBody, lowerBody);
+	// 	if (col.isCollision) {
+	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
+	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? -col.side : col.side);
+	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
+	// 		}
+	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? -col.side : col.side);
+	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
+	// 		}
+	// 	}
+	// }
+	// if (input->KeyPressed(GLFW_KEY_S)) {
+	// 	_movementPropety.velocity -= forward;
+	// 	CollisionInfo col = UpgradeCheckCollision(-forward, upperBody, lowerBody);
+	// 	if (col.isCollision) {
+	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
+	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? col.side : -col.side);
+	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
+	// 		}
+	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
+	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
+	// 		}
+	// 	}
+	// }
+	// if (input->KeyPressed(GLFW_KEY_D)) {
+	// 	_movementPropety.velocity += right;
+	// 	CollisionInfo col = UpgradeCheckCollision(right, upperBody, lowerBody);
+	// 	if (col.isCollision) {
+	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
+	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
+	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
+	// 		}
+	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? col.side : -col.side);
+	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
+	// 		}
+	// 	}
+	// }
+
+	// if (input->KeyPressed(GLFW_KEY_A)) {
+	// 	_movementPropety.velocity -= right;
+	// 	CollisionInfo col = UpgradeCheckCollision(-right, upperBody, lowerBody);
+	// 	if (col.isCollision) {
+	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
+	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
+	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
+	// 		}
+	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
+	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? -col.side : col.side);
+	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
+	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
+	// 		}
+	// 	}
+	// 	// if (CheckCollision(_movementPropety.velocity, upperBody, lowerBody))
+	// 	// 	_movementPropety.velocity = glm::vec3(0);
+	// }
+	// // if (input->KeyPressed(GLFW_KEY_A)) {
+	// 	_movementPropety.velocity -= right;
+	// 	if (CheckCollision(_movementPropety.velocity, upperBody, lowerBody))
+	// 		_movementPropety.velocity = glm::vec3(0);
+	// }
 }
 
 glm::vec3 Player::PlayerVerticalMovement(Input* input, const float delta)
@@ -269,7 +399,6 @@ void Player::Update(float delta) {
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
 		PlayerHorizontalMovement(input, forward, right);
-		_movementPropety.velocity = glm::vec3(_movementPropety.velocity);
 		glm::vec3 verticalVelocity = PlayerVerticalMovement(input, delta);
 		_movementPropety.velocity.y = verticalVelocity.y;
 		_position += _movementPropety.velocity * delta * SPEED;

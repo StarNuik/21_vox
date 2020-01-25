@@ -55,7 +55,16 @@ private:
 		Block hitBlock;
 	};
 
+	struct CollisionInfo
+	{
+		bool isCollision;
+		glm::vec3 side;
+	};
+
+
 	bool CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
+	CollisionInfo UpgradeCheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
+
 	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
 	glm::vec3 PlayerVerticalMovement(Input* input, const float delta);
 	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
