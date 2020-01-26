@@ -55,6 +55,15 @@ private:
 		Block hitBlock;
 	};
 
+	struct VoxelRayCastHitInfo
+	{
+		bool hit;
+		float distance;
+		glm::ivec3 hitRayPos;
+		Block hitBlock;
+		int side;
+	};
+
 	struct CollisionInfo
 	{
 		bool isCollision;
@@ -74,5 +83,6 @@ private:
 
 	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
 	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);
+	VoxelRayCastHitInfo VoxelRayCast(const glm::vec3 _position, glm::vec3 direction, int rayLength);
 };
 

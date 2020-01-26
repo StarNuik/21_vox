@@ -33,27 +33,6 @@ Player::~Player() {
 	delete _camera;
 }
 
-float Player::RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
-{
-	Block block;
-	glm::vec3 tmpDirection;
-
-
-	if (rayStep >= rayLength)
-		rayStep = rayLength * 0.25f;
-
-	direction = glm::normalize(direction);
-
-	for (float step = 0.f; step <= rayLength; step += rayStep)
-	{
-		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
-		block = _world->GetBlock(_position + tmpDirection);
-		if (block != Block::Air)
-			return step;
-	}
-	return INFINITY;
-}
-
 Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
 {
 
@@ -68,8 +47,8 @@ Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 dire
 	for (float step = 0.f; step <= rayLength; step += rayStep)
 	{
 		ray.lastRayStep = ray.hitRayPos;
-		tmpDirection = glm::vec3(direction.x * step, direction.y * step, direction.z * step);
-		ray.hitRayPos = glm::vec3(_position + tmpDirection);
+		tmpDirection = direction * step;
+		ray.hitRayPos = _position + tmpDirection;
 		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
 		if (ray.hitBlock != Block::Air)
 		{
@@ -81,6 +60,104 @@ Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 dire
 	ray.hitRayPos = glm::vec3(INFINITY, INFINITY, INFINITY);
 	ray.lastRayStep = glm::vec3(INFINITY, INFINITY, INFINITY);
 	ray.hit = false;
+	return ray;
+}
+
+Player::VoxelRayCastHitInfo Player::VoxelRayCast(const glm::vec3 position, glm::vec3 direction, int rayLength)
+{
+	VoxelRayCastHitInfo ray;
+	ray.distance = INFINITY;
+	ray.hit = false;
+	ray.hitRayPos = glm::ivec3(INFINITY, INFINITY, INFINITY);
+	ray.side = 0;
+
+	if (rayLength <= 0)
+		return ray;
+
+	direction = glm::normalize(direction);
+	int x = (int)position.x;
+	int y = (int)position.y;
+	int z = (int)position.z;
+
+	float sideDistX, sideDistY, sideDistZ = 0.f;
+	float sideX, sideY, sideZ = 0.f;
+	float deltaDistX = glm::abs(1.f / direction.x);
+	float deltaDistY = glm::abs(1.f / direction.y);
+	float deltaDistZ = glm::abs(1.f / direction.z);
+
+	int stepX, stepY, stepZ;
+
+	if (direction.x < 0.f) {
+		stepX = -1;
+		sideDistX = (position.x - x) * deltaDistX;
+	}
+	else {
+		stepX = 1;
+		sideDistX = (x + 1.f - position.x) * deltaDistY;
+	}
+
+	if (direction.y < 0.f) {
+		stepY = -1;
+		sideDistY = (position.y - y) * deltaDistY;
+	}
+	else {
+		stepY = 1;
+		sideDistY = (y + 1.f - position.y) * deltaDistY;
+	}
+
+	if (direction.z < 0.f) {
+		stepZ = -1;
+		sideDistZ = (position.z - z) * deltaDistZ;
+	}
+	else {
+		stepZ = 1;
+		sideDistZ = (z + 1.f - position.z) * deltaDistZ;
+	}
+
+	int rayStep = 0;
+	while (!ray.hit && rayStep < rayLength) {
+		if (sideDistX < sideDistZ && sideDistX < sideDistY) {
+			sideDistX += deltaDistX;
+			x += stepX;
+			ray.side = -1;
+        }
+        else if (sideDistZ < sideDistX && sideDistZ < sideDistY) {
+			sideDistZ += deltaDistZ;
+			z += stepZ;
+			ray.side = 1;
+        }
+		else {
+			sideDistY += deltaDistY;
+			y += stepY;
+			ray.side = 0;
+		}
+
+		Block block = _world->GetBlock(glm::ivec3(x, y, z));
+		if (block != Block::Air) {
+			ray.hit = true;
+			ray.hitBlock = block;
+		}
+		rayStep++;
+	}
+
+	if (!ray.hit) {
+		ray.hitRayPos = glm::ivec3(INFINITY);
+		ray.side = -2;
+		return ray;
+	}
+
+	if (ray.side == -1) {
+		ray.distance = (x - position.x + (1.f - stepX) / 2) / direction.x;
+	}
+	else if (ray.side == 1) {
+		ray.distance = (z - position.z + (1.f - stepZ) / 2) / direction.z;
+	}
+	else
+		ray.distance = (y - position.y + (1.f - stepY) / 2) / direction.y;
+
+	// ray.hitRayPos = position + direction * ray.distance;
+	ray.hitRayPos = glm::vec3(x, y, z);
+
 	return ray;
 }
 
@@ -318,6 +395,13 @@ void Player::Update(float delta) {
 
 	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
 		PutBlock(_position, forward, BlockType::Dirt);
+	}
+
+	if (input->KeyPressed(GLFW_KEY_X)) {
+		glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.75f), _position.z);
+		VoxelRayCastHitInfo info = VoxelRayCast(_position, forward, 10);
+		// std::cout << info.hitRayPos.x << " " << info.hitRayPos.y << " " << info.hitRayPos.z << std::endl;
+		_monkey->SetPosition(info.hitRayPos);
 	}
 
 
