@@ -11,20 +11,26 @@
 #include "UI/UIController.h"
 #include "Render/Camera.h"
 #include "Render/Material.h"
+#include "Render/Geometry.h"
+#include "Render/Texture.h"
+#include "Render/Framebuffer.h"
 
 void GLRenderer::RenderFrame() {
-	ResourceLoader* r = _game->GetResources();
+	ResourceLoader* rs = _game->GetResources();
 	UIController* ui = _game->GetUI();
-	Skybox* skybox = r->GetSkybox();
+	Skybox* skybox = rs->GetSkybox();
 
 	glm::mat4 view = _activeCamera->GetViewMatrix();
 	glm::mat4 projection = _activeCamera->GetProjectionMatrix();
 	glm::vec3 cameraPos = _activeCamera->GetPosition();
 
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// ShadowRenderer* shadows = skybox->GetShadowRenderer();
 
 	// shadows->Render(_rendered, _game->GetRuntime());
-
+	// glViewport(0, 0, _width, _height);
+	// glViewport(0, 0, _width * 2, _height * 2);
+	_framebuffer->Bind();
 	//* Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -60,10 +66,30 @@ void GLRenderer::RenderFrame() {
 		// shadows->ApplySelf(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	_framebuffer->Unbind();
+	
+	// glViewport(0, 0, _width, _height);
+	// glViewport(0, 0, _width * 2, _height * 2);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	// shadows->Render(_rendered, _game->GetRuntime());
+	Shader* postShader = rs->GetShader("Post Base");
+	postShader->Use();
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Geometry* quad = rs->GetGeometry("Screen Quad");
+	quad->Use();
+	Texture* color = _framebuffer->GetColorTexture();
+	postShader->SetInt("screenTexture", 0);
+	glActiveTexture(GL_TEXTURE0);
+	color->Use();
+	glDrawArrays(GL_TRIANGLES, 0, quad->GetPolygonCount() * 3);
+	glEnable(GL_DEPTH_TEST);
 
 	//* UI
 	ui->UpdateData();
 	ui->Draw();
+
+	// shadows->Render(_rendered, _game->GetRuntime());
 
 	//* Swap
 	glfwSwapBuffers(_window);

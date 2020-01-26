@@ -6,6 +6,7 @@
 #include "examples/imgui_impl_opengl3.h"
 
 #include "Render/GLRenderer.h"
+#include "Render/Framebuffer.h"
 #include "Utilities/Log.h"
 
 GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
@@ -74,6 +75,9 @@ GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
 	ImGui_ImplGlfw_InitForOpenGL(_window, true);
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 	_imguiOn = true;
+
+	_framebuffer = new Framebuffer();
+	_framebuffer->NewColor(config.windowSize);
 
 	Log::Success("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here

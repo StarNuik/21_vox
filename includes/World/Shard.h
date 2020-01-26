@@ -7,7 +7,7 @@
 #include "World/Block.h"
 #include "Render/VertexBuffers.h"
 
-#define USED_SHADER "Phong"
+#define USED_SHADER "Shadows"
 
 class Shard {
 public:

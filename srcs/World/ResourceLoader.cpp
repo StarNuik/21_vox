@@ -53,6 +53,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Normals"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/normals.frag");
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
 	_shaders["Shadows"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/shadows.frag");
+	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");
 	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
 	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 };
@@ -114,6 +115,7 @@ void ResourceLoader::LoadGeometries() {
 	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
 	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
 	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
+	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
 };
 
 void ResourceLoader::LoadCubeMaps() {

@@ -13,6 +13,7 @@ typedef uint32 uint;
 
 #define SECONDS_IN_A_DAY (120.f)
 
+
 class Entity;
 class Game;
 class Locator;
@@ -44,3 +45,4 @@ class ShadowRenderer;
 class BlockType;
 #include "World/BlockType.h"
 class Block;
+class Framebuffer;

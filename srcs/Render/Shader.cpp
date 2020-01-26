@@ -47,7 +47,6 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	glAttachShader(_id, _vs);
 	glAttachShader(_id, _fs);
 	glLinkProgram(_id);
-	Log::Important("Shader id: " + std::to_string(_id));
 };
 
 Shader::~Shader() {

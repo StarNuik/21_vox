@@ -19,7 +19,6 @@ Material::Material(std::string dirPath, float shininess) {
 		Log::Error("[Material::Material]\nCouldn't load diffuse map: " + dirPath + "_diffuse.png");
 		exit(1);
 	}
-	Log::Important("Material id: " + std::to_string(_id));
 }
 
 Material::~Material() {};
