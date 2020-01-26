@@ -6,7 +6,7 @@
 
 #include "Types.h"
 
-#define SHADOWMAP_SIDE (700) //* 336 is the side in 21 chunks
+#define SHADOWMAP_SIDE (8192) //* 336 is the side in 21 chunks
 #define TEXTURE_SLOT (GL_TEXTURE30)
 
 class ShadowRenderer {

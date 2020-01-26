@@ -26,8 +26,11 @@ ShadowRenderer::ShadowRenderer(Game* game) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOWMAP_SIDE, SHADOWMAP_SIDE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float borderColor[] = {1.f};
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, 1.f);
+		// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	// }
 	// _sunMap = tex[0];
 	// _moonMap = tex[1];
@@ -50,17 +53,25 @@ ShadowRenderer::~ShadowRenderer() {
 
 void ShadowRenderer::Render(std::vector<RenderModel*>& rendered, float runtime) {
 	//* Prepare gl
-	#ifdef __APPLE__ //? Retina
-		glViewport(0, 0, SHADOWMAP_SIDE * 2, SHADOWMAP_SIDE * 2);
-	#else
+	// #ifdef __APPLE__ //? Retina
+	// 	glViewport(0, 0, SHADOWMAP_SIDE * 2, SHADOWMAP_SIDE * 2);
+	// #else
 		glViewport(0, 0, SHADOWMAP_SIDE, SHADOWMAP_SIDE);
-	#endif
+	// #endif
 	glBindFramebuffer(GL_FRAMEBUFFER, _shadowFBO);
 	// glClearColor(0.5, 0, 0, 1.0);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	Player* player = _game->GetPlayer();
 
-	glm::mat4 view = glm::lookAt(glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-	glm::mat4 projection = glm::ortho(-168.f, 168.f, -168.f, 168.f, -200.f, 200.f);
+	float currentTime = std::fmod(runtime, SECONDS_IN_A_DAY);
+	float angle = currentTime / SECONDS_IN_A_DAY * 360.f;
+	glm::quat rotation = glm::quat(glm::vec3(glm::radians(angle), 0.f, 0.f));
+
+	glm::vec3 sunPos = glm::vec3(0.f, 0.f, 1.f) * rotation;
+	glm::vec3 playerPos = player->GetPosition();
+
+	glm::mat4 view = glm::lookAt(playerPos + sunPos, playerPos, glm::vec3(0.f, 1.f, 0.f));
+	glm::mat4 projection = glm::ortho(-128.f, 128.f, -128.f, 128.f, -128.f, 128.f);
 	_lightSpace = projection * view;
 
 	for (RenderModel* model : rendered) {
@@ -68,6 +79,7 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered, float runtime) 
 		model->ApplySelf(_camera, _shader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	// glCullFace(GL_BACK);
 
 	// _lightSpace = glm::scale(glm::mat4(1.f), glm::vec3(336.f) / (float)SHADOWMAP_SIDE) * _lightSpace;
 

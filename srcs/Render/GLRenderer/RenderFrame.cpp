@@ -4,7 +4,7 @@
 #include "Render/Shader.h"
 #include "Render/RenderModel.h"
 #include "Render/Skybox.h"
-// #include "Render/ShadowRenderer.h"
+#include "Render/ShadowRenderer.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
@@ -25,9 +25,9 @@ void GLRenderer::RenderFrame() {
 	glm::vec3 cameraPos = _activeCamera->GetPosition();
 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	// ShadowRenderer* shadows = skybox->GetShadowRenderer();
+	ShadowRenderer* shadows = skybox->GetShadowRenderer();
 
-	// shadows->Render(_rendered, _game->GetRuntime());
+	shadows->Render(_rendered, _game->GetRuntime());
 	// glViewport(0, 0, _width, _height);
 	// glViewport(0, 0, _width * 2, _height * 2);
 	_framebuffer->Bind();
@@ -63,7 +63,7 @@ void GLRenderer::RenderFrame() {
 			modelMaterial->Use(modelShader);
 			oldMaterial = modelMaterial;
 		}
-		// shadows->ApplySelf(modelShader);
+		shadows->ApplySelf(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 	_framebuffer->Unbind();
