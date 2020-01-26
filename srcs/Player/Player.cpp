@@ -198,16 +198,16 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 
 	glm::vec3 myMovement = glm::vec3(0.f);
 	if (input->KeyPressed(GLFW_KEY_W)) {
-		myMovement = forward;
+		myMovement += forward;
 	}
 	if (input->KeyPressed(GLFW_KEY_S)) {
-		myMovement = -forward;
+		myMovement -= forward;
 	}
 	if (input->KeyPressed(GLFW_KEY_D)) {
-		myMovement = right;
+		myMovement += right;
 	}
 	if (input->KeyPressed(GLFW_KEY_A)) {
-		myMovement = -right;
+		myMovement -= right;
 	}
 
 	_movementPropety.velocity += myMovement;
@@ -216,85 +216,10 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 		return;
 	}
 
-	_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, 0.f, _movementPropety.velocity.z * col.side.x);
+	_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, _movementPropety.velocity.y, _movementPropety.velocity.z * col.side.x);
+	if (_movementPropety.velocity != glm::vec3(0.f))
+		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
 	return;
-
-	// if (input->KeyPressed(GLFW_KEY_W)) {
-	// 	_movementPropety.velocity += forward;
-	// 	CollisionInfo col = UpgradeCheckCollision(forward, upperBody, lowerBody);
-	// 	if (col.isCollision) {
-	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
-	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? -col.side : col.side);
-	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
-	// 		}
-	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? -col.side : col.side);
-	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
-	// 		}
-	// 	}
-	// }
-	// if (input->KeyPressed(GLFW_KEY_S)) {
-	// 	_movementPropety.velocity -= forward;
-	// 	CollisionInfo col = UpgradeCheckCollision(-forward, upperBody, lowerBody);
-	// 	if (col.isCollision) {
-	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
-	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? col.side : -col.side);
-	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
-	// 		}
-	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
-	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
-	// 		}
-	// 	}
-	// }
-	// if (input->KeyPressed(GLFW_KEY_D)) {
-	// 	_movementPropety.velocity += right;
-	// 	CollisionInfo col = UpgradeCheckCollision(right, upperBody, lowerBody);
-	// 	if (col.isCollision) {
-	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
-	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
-	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
-	// 		}
-	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? col.side : -col.side);
-	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
-	// 		}
-	// 	}
-	// }
-
-	// if (input->KeyPressed(GLFW_KEY_A)) {
-	// 	_movementPropety.velocity -= right;
-	// 	CollisionInfo col = UpgradeCheckCollision(-right, upperBody, lowerBody);
-	// 	if (col.isCollision) {
-	// 		glm::vec3 tmpDirection = glm::normalize(_movementPropety.velocity);
-	// 		if (col.side == glm::vec3(1.f, 0.f, 0.f) || col.side == glm::vec3(-1.f, 0.f, 0.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.x >= 0.f ? col.side : -col.side);
-	// 			float newZDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, newZDirection);
-	// 		}
-	// 		else if (col.side == glm::vec3(0.f, 0.f, 1.f) || col.side == glm::vec3(0.f, 0.f, -1.f)) {
-	// 			glm::vec3 newMovementDirection = (forward.z >= 0.f ? -col.side : col.side);
-	// 			float newXDirection = glm::dot(tmpDirection, newMovementDirection) * 0.4f;
-	// 			_movementPropety.velocity = glm::vec3(newXDirection, _movementPropety.velocity.y, 0.f);
-	// 		}
-	// 	}
-	// 	// if (CheckCollision(_movementPropety.velocity, upperBody, lowerBody))
-	// 	// 	_movementPropety.velocity = glm::vec3(0);
-	// }
-	// // if (input->KeyPressed(GLFW_KEY_A)) {
-	// 	_movementPropety.velocity -= right;
-	// 	if (CheckCollision(_movementPropety.velocity, upperBody, lowerBody))
-	// 		_movementPropety.velocity = glm::vec3(0);
-	// }
 }
 
 glm::vec3 Player::PlayerVerticalMovement(Input* input, const float delta)
@@ -399,6 +324,7 @@ void Player::Update(float delta) {
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
 		PlayerHorizontalMovement(input, forward, right);
+		// _movementPropety.velocity = glm::normalize(_movementPropety.velocity);
 		glm::vec3 verticalVelocity = PlayerVerticalMovement(input, delta);
 		_movementPropety.velocity.y = verticalVelocity.y;
 		_position += _movementPropety.velocity * delta * SPEED;
