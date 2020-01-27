@@ -42,7 +42,7 @@ void VertexBuffers::Init() {
 	_buffers[Back] = new float[48] {
 		0.f, 0.f, 0.f,   0.f, 0.f, -1.f,  0.f, 0.f,
 		0.f, 1.f, 0.f,   0.f, 0.f, -1.f,  0.f, 1.f,
-		1.f, 1.f, 0.f,   0.f, 0.f, -1.f,  1.f, 1.f,g
+		1.f, 1.f, 0.f,   0.f, 0.f, -1.f,  1.f, 1.f,
 
 		1.f, 1.f, 0.f,   0.f, 0.f, -1.f,  1.f, 1.f,
 		1.f, 0.f, 0.f,   0.f, 0.f, -1.f,  1.f, 0.f,
