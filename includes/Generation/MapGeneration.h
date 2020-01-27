@@ -20,6 +20,8 @@
 #define MAX_DIST_TO_SMOOTHING 25
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 
+#define MAX_DIST_TO_CHECK_BIOME 5
+
 class MapGeneration
 {
 public:
@@ -40,6 +42,7 @@ public:
         Basic = 0,
         Ocean,
         Beach,
+        BeachBordered,
         GrassLand,
         Snow,
         HighLand,
@@ -49,6 +52,9 @@ public:
         SecondElevationCaves,
         Crevices,
         Tree,
+        River,
+        PerlinX,
+        PerlinY,
         Biomes,
         First = Basic,
         Last = Biomes,
@@ -67,7 +73,12 @@ private:
     float _exp; // For sharp mountain peaks
     float _terraceValue; // For terrace
     FastNoise _noises[Size];
-	std::string _noiseNames[Size]; 
+	std::string _noiseNames[Size];
+    struct BiomeInfo
+    {
+        int biome;
+        int distanceToTheNextBiome;
+    };
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);
@@ -83,13 +94,18 @@ private:
     float SecondShapeCavesGeneration(glm::ivec2 pos);
     float SecondElevationCavesGeneration(glm::ivec2 pos);
 
+    float RiverElevationGeneration(glm::ivec2 pos);
+
     float CrevicesGeneration(glm::ivec2 pos);
   
     int BiomeGeneration(glm::ivec2 pos);
-    int BiomeDefinition(int elevation);
+    int BiomeDefinition(int elevation, glm::ivec2 pos);
+    int TestBiomeDefinition(float e,  glm::ivec2 pos);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
-    float CheckingTheBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
+    BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    int BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
+    float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
     float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
 
 
