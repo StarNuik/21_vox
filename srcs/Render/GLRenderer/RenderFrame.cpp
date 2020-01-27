@@ -49,12 +49,14 @@ void GLRenderer::RenderFrame() {
 	Material* oldMaterial = nullptr;
 	for (RenderModel* model : _rendered) {
 		//* If shader changed
-		Shader* modelShader = model->Use(_activeCamera);
+		Shader* modelShader = model->GetShader();
 		if (oldShader != modelShader) {
+			modelShader->Use();
 			modelShader->SetMatrix4("view", view);
 			modelShader->SetMatrix4("projection", projection);
 			modelShader->SetFloat3("cameraPos", cameraPos);
 			skybox->ApplyDirLights(modelShader);
+			shadows->ApplySelf(modelShader);
 			oldShader = modelShader;
 		}
 		//* If material changed
@@ -63,7 +65,7 @@ void GLRenderer::RenderFrame() {
 			modelMaterial->Use(modelShader);
 			oldMaterial = modelMaterial;
 		}
-		shadows->ApplySelf(modelShader);
+		model->ApplySelf(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 	_framebuffer->Unbind();

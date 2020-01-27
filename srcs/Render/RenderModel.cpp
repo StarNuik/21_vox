@@ -39,6 +39,18 @@ void RenderModel::ApplySelf(Camera* camera, Shader* shader) {
 	// shader->SetFloat3("cameraPos", camera->GetPosition());
 };
 
+void RenderModel::ApplySelf(Shader* shader) {
+	// glUseProgram(_shaderId);
+	// shader->Use();
+	_geometry->Use();
+	// glBindVertexArray(_geometryId);
+	// _material->Use(shader);
+	shader->SetMatrix4("model", GetAphineMatrix());
+	// shader->SetMatrix4("view", camera->GetViewMatrix());
+	// shader->SetMatrix4("projection", camera->GetProjectionMatrix());
+	// shader->SetFloat3("cameraPos", camera->GetPosition());
+};
+
 Shader* RenderModel::Use(Camera* camera) {
 	ApplySelf(camera, _shader);
 	return _shader;
@@ -66,3 +78,4 @@ glm::vec3 RenderModel::GetScale() {return _scale;};
 uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};
 Material* RenderModel::GetMaterial() {return _material;};
+Shader* RenderModel::GetShader() {return _shader;};

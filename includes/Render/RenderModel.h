@@ -11,6 +11,7 @@ public:
 	~RenderModel();
 	Shader* Use(Camera* camera);
 	void ApplySelf(Camera*, Shader*);
+	void ApplySelf(Shader*);
 	void SetPosition(glm::vec3);
 	void SetRotation(glm::quat);
 	void SetScale(glm::vec3);
@@ -21,6 +22,7 @@ public:
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
 	Material* GetMaterial();
+	Shader* GetShader();
 	bool operator<(const RenderModel&) const;
 private:
 	// void Init(Shader*, Texture*, Texture*, Geometry*);

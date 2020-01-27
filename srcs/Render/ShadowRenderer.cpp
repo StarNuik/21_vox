@@ -74,9 +74,10 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered, float runtime) 
 	glm::mat4 projection = glm::ortho(-128.f, 128.f, -128.f, 128.f, -128.f, 128.f);
 	_lightSpace = projection * view;
 
+	_shader->Use();
+	_shader->SetMatrix4("lightSpace", _lightSpace);
 	for (RenderModel* model : rendered) {
-		_shader->SetMatrix4("lightSpace", _lightSpace);
-		model->ApplySelf(_camera, _shader);
+		model->ApplySelf(_shader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 	// glCullFace(GL_BACK);
