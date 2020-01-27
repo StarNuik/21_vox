@@ -157,8 +157,8 @@ void Player::Update(float delta) {
 	}
 	if (_rotateCamera) {
 		glm::ivec2 mousePos = input->MousePosDelta();
-		_camAngleX += mousePos.x;
-		_camAngleY += mousePos.y;
+		_camAngleX += mousePos.x * MOUSE_SENSITIVITY;
+		_camAngleY += mousePos.y * MOUSE_SENSITIVITY;
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 

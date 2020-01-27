@@ -9,6 +9,7 @@
 #include "World/Block.h"
 
 #define SPEED 10.f
+#define MOUSE_SENSITIVITY 0.75f
 
 class Player : public Entity {
 public:
