@@ -18,7 +18,8 @@ public:
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
 	glm::vec3 GetScale();
-	glm::mat4 GetAphineMatrix();
+	// glm::mat4 GetAphineMatrix();
+	void RecalculateModelMatrix();
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
 	Material* GetMaterial();
@@ -35,4 +36,5 @@ private:
 	uint _shaderId;
 	uint _materialId;
 	uint _geometryId;
+	glm::mat4 _model;
 };

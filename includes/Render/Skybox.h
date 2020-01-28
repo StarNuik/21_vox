@@ -14,19 +14,43 @@
 class Skybox {
 public:
 	Skybox(Game*, Shader*, CubeMap* day, CubeMap* night);
-	~Skybox();
+	// ~Skybox();
 	Shader* Use(Camera*, float lerpVal, float runtime);
 	void ApplyDirLights(Shader*);
-	void SetDirLights(float lerpVal, float runtime);
-	ShadowRenderer* GetShadowRenderer();
+	// void SetDirLights(float lerpVal, float runtime);
+	// ShadowRenderer* GetShadowRenderer();
+	void SetActiveCamera(Camera*);
+
+	Skybox();
+	~Skybox();
+	void Init(Game*);
+	void PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal);
+	void Render();
+	void Use();
 private:
-	CubeMap* _cubemap_day;
-	CubeMap* _cubemap_night;
+	//! Delete these
+	// CubeMap* _cubemap_day;
+	// CubeMap* _cubemap_night;
+	// Geometry* _geometry;
+	// ShadowRenderer* _shadows;
+
+	Game* _game;
 	Shader* _shader;
-	Geometry* _geometry;
-	// glm::vec3 _sunColor;
-	// glm::vec3 _moonColor;
+	CubeMap* _dayCubemap;
+	CubeMap* _nightCubemap;
+	Geometry* _skyGeometry;
+	RenderModel* _sunModel;
+	RenderModel* _moonModel;
 	DirLight* _sunLight;
 	DirLight* _moonLight;
-	ShadowRenderer* _shadows;
+	Camera* _activeCamera;
+
+	//* Render data
+	glm::mat4 _mvpSky;
+	glm::mat4 _mvpMoon;
+	glm::mat4 _projection;
+	float _sunVal;
+	bool _easySunApply;
+	float _moonVal;
+	bool _easyMoonApply;
 };

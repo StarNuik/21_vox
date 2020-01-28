@@ -17,6 +17,10 @@ void DirLight::ApplySelf(Shader* shader, int num) {
 	shader->SetFloat3("dirLight[" + std::to_string(num) + "].ambient", _ambient);
 };
 
+void DirLight::ApplySelfLight(Shader* shader, int num) {
+	shader->SetFloat3("dirLight[" + std::to_string(num) + "].direction", _direction);
+};
+
 void DirLight::SetDirection(glm::vec3 direction) {_direction = direction;};
 void DirLight::SetDiffuse(glm::vec3 diffuse) {_diffuse = diffuse;};
 void DirLight::SetAmbient(glm::vec3 ambient) {_ambient = ambient;};

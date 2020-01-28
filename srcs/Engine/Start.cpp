@@ -17,19 +17,12 @@
 
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
-	config.windowSize = glm::ivec2(1500, 900);
-	config.windowPos = glm::ivec2(900, 100);
-	config.windowName = std::string("Test");
+	config.windowSize = glm::ivec2(3840, 2160);
+	config.windowPos = glm::ivec2(0, 0);
+	config.windowName = std::string("V O X");
 	config.windowResizeable = false;
 	config.cursorEnabled = false;
 	config.cursorRaw = true;
-	config.glVersionMajor = 4;
-	config.glVersionMinor = 1;
-	config.glForwardCompatibility = true;
-	config.glDepthTest = true;
-	config.glCullFace = false;
-	config.glCullCounterClockwise = false;
-	config.glSeamlessCubeMap = true;
 	return config;
 }
 
@@ -45,16 +38,20 @@ Game::Game() {
 };
 
 void Game::InitSystems() {
-	
-	_renderer = new GLRenderer(this, glConfig());
+		
+	_renderer = new GLRenderer();
+	_renderer->Init(this, glConfig());
 	_input = new Input();
 	_resources = new ResourceLoader(this);
 	_ui = new UIController(this);
 	_world = new World(this);
 	_mpGen = new MapGeneration();
 
+	_renderer->InitChildren();
+
 	_player = new Player(this);
 	AddEntity(_player);
+
 };
 
 #define WORLD_RADIUS 10

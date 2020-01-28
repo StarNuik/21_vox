@@ -7,92 +7,137 @@
 
 #include "Render/GLRenderer.h"
 #include "Render/Framebuffer.h"
+#include "Render/Skybox.h"
+#include "Render/ShadowRenderer.h"
 #include "Utilities/Log.h"
 
-GLRenderer::GLRenderer(Game* game, RenderEngineConfig config) {
-	_game = game;
-	_glfwOn = false;
-	_imguiOn = false;
-	_window = nullptr;
-	_width = std::max((int)config.windowSize.x, 1);
-	_height = std::max((int)config.windowSize.y, 1);
-	_cursorEnabled = true;
+GLRenderer::GLRenderer() {
+	// _static.glfwOn = false;
+	// _static.imguiOn = false;
+	// _static.ready = false;
+	// _static.width = 1;
+	// _static.height = 1;
+	// _static.cursorEnabled = true;
+	// _static.window = nullptr;
+	// _static.rendered = std::vector<RenderModel*>();
+	// _static.activeCamera = nullptr;
+	// _static.game = nullptr;
+	// _static.framebuffer = nullptr;
+	_static = {0};
+	_static.framebuffer = new Framebuffer();
+	_static.skybox = new Skybox();
+	_static.shadows = new ShadowRenderer();
+	_static.rendered = std::vector<RenderModel*>();
+	_frame.view = glm::mat4(1.f);
+	_frame.projection = glm::mat4(1.f);
+	_frame.cameraPos = glm::vec3(0.f);
+	_frame.dayTime = 0.f;
+	_frame.sunAngle = 0.f;
+}
+
+GLRenderer::~GLRenderer() {
+	if (_static.imguiOn) {
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
+	if (_static.window) {
+		glfwDestroyWindow(_static.window);
+	}
+	if (_static.glfwOn) {
+		glfwTerminate();
+	}
+	delete _static.framebuffer;
+}
+
+namespace {
+GLFWwindow* InitGLFW(GLRenderer::RenderEngineConfig& config) {
+	GLFWwindow* window;
 
 	if (!glfwInit()) {
 		Log::Error("[GLRenderer::GLRenderer]\nCouldn't init glfw.");
 		//! Nice exit
 		exit(1);
 	}
-	_glfwOn = true;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, config.glVersionMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, config.glVersionMinor);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, config.glForwardCompatibility);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	_window = glfwCreateWindow(_width, _height, config.windowName.c_str(), nullptr, nullptr);
-	if (!_window) {
+	#ifdef __APPLE__
+		window = glfwCreateWindow(config.windowSize.x / 2, config.windowSize.y / 2, config.windowName.c_str(), nullptr, nullptr);
+	#else
+		window = glfwCreateWindow(config.windowSize.x, config.windowSize.y, config.windowName.c_str(), nullptr, nullptr);
+	#endif
+	if (!window) {
 		Log::Error("[GLRenderer::GLRenderer]\nCouldn't initialize glfw window.");
 		//! Nice exit
-		exit(1);
+		exit(2);
 	}
-	glfwSetInputMode(_window, GLFW_CURSOR, config.cursorEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-	glfwSetWindowAttrib(_window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
-	if (glfwRawMouseMotionSupported() && config.cursorRaw)
-	{
-		glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	glfwSetInputMode(window, GLFW_CURSOR, config.cursorEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	glfwSetWindowAttrib(window, GLFW_RESIZABLE, config.windowResizeable ? GLFW_TRUE : GLFW_FALSE);
+	if (glfwRawMouseMotionSupported() && config.cursorRaw) {
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	}
-	glfwSetWindowPos(_window, config.windowPos.x, config.windowPos.y);
-	glfwMakeContextCurrent(_window);
-	// glfwSetWindowUserPointer(_window, this); //! Change to Game later
+	glfwSetWindowPos(window, config.windowPos.x, config.windowPos.y);
+	glfwMakeContextCurrent(window);
+	// glfwSetWindowUserPointer(window, _static.game);
+	return window;
+}
 
+void InitGL(GLRenderer::RenderEngineConfig& config) {
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
 		Log::Error("[GLRenderer::GLRenderer]\nCouldn't initialize glew.");
 		//! Nice exit
-		exit(1);
+		exit(3);
 	}
-	if (config.glDepthTest) {
-		glEnable(GL_DEPTH_TEST);
-	}
-	if (config.glCullFace) {
-		glEnable(GL_CULL_FACE);
-		if (config.glCullCounterClockwise)
-			glFrontFace(GL_CCW);
-		else
-			glFrontFace(GL_CW);
-	}
-	if (config.glSeamlessCubeMap) {
-		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	}
+	// if (config.glDepthTest) {
+	// }
+	// if (config.glCullFace) {
+	// 	glEnable(GL_CULL_FACE);
+	// 	if (config.glCullCounterClockwise)
+	// 		glFrontFace(GL_CCW);
+	// 	else
+	// 		glFrontFace(GL_CW);
+	// }
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+};
 
+void InitImgui(GLFWwindow* window) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(_window, true);
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 410 core");
-	_imguiOn = true;
+}
+}
 
-	_framebuffer = new Framebuffer();
-	_framebuffer->NewColor(config.windowSize);
+void GLRenderer::Init(Game* game, RenderEngineConfig config) {
+	_static.game = game;
+	_static.windowSize = config.windowSize;
+
+	_static.window = InitGLFW(config);
+	_static.glfwOn = true;
+	InitGL(config);
+	InitImgui(_static.window);
+	_static.imguiOn = true;
+
+	_static.ready = true;
 
 	Log::Success("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
 	//! Turn on imgui here
 };
 
-GLRenderer::~GLRenderer() {
-	if (_imguiOn) {
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
-	if (_window) {
-		glfwDestroyWindow(_window);
-	}
-	if (_glfwOn) {
-		glfwTerminate();
-	}
-}
+void GLRenderer::InitChildren() {
+	_static.framebuffer->NewColor(_static.windowSize);
+	_static.skybox->Init(_static.game);
+	_static.shadows->Init(_static.game);
+};

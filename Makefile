@@ -22,7 +22,7 @@ INCL += -I PerlinNoise/
 
 # Additional settings
 #FLAGS = -Wall -Wextra -Werror
-FLAGS = -std=c++11 -O2
+FLAGS = -std=c++11 -O2 -g
 LIB = -lm -L ~/.brew/lib/ -lglfw -lglew
 FRAMEWORK = -framework OpenGL
 OBJS = $(SRCS:.cpp=.o)

@@ -18,7 +18,7 @@ ResourceLoader::ResourceLoader(Game* game) {
 	LoadGeometries();
 	LoadCubeMaps();
 	LoadMaterials();
-	_skybox = new Skybox(_game, _shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
+	// _skybox = new Skybox(_game, _shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
 	Log::Success("[ResourceLoader::ResourceLoader]\nResources loaded.");
 };
 
@@ -47,13 +47,19 @@ Skybox* ResourceLoader::GetSkybox() {return _skybox;};
 Material* ResourceLoader::GetMaterial(Block block) {return _materials[block];};
 
 void ResourceLoader::LoadShaders() {
+	//*Blocks
 	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
 	_shaders["DirLight"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/dirLight.frag");
 	_shaders["Phong"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/phong.frag");
 	_shaders["Normals"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/normals.frag");
-	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
 	_shaders["Shadows"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/shadows.frag");
+
+	//* Post-Processing
 	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");
+
+	//* Utilities
+	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
+	_shaders["Shadow Renderer"] = new Shader("./resources/Shaders/shadowRenderer.vert", "./resources/Shaders/shadowRenderer.frag");
 	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
 	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 };
@@ -135,8 +141,8 @@ void ResourceLoader::LoadCubeMaps() {
 		"./resources/CubeMaps/purplenebula_rt.tga",
 		"./resources/CubeMaps/purplenebula_lf.tga"
 	};
-	_cubemaps["Skybox Day"] = new CubeMap(pathsDay);
-	_cubemaps["Skybox Night"] = new CubeMap(pathsNight);
+	_cubemaps["Day"] = new CubeMap(pathsDay);
+	_cubemaps["Night"] = new CubeMap(pathsNight);
 };
 
 void ResourceLoader::LoadMaterials() {

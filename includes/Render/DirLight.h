@@ -9,6 +9,7 @@ public:
 	DirLight();
 	~DirLight();
 	void ApplySelf(Shader*, int);
+	void ApplySelfLight(Shader*, int);
 	void SetDirection(glm::vec3);
 	void SetDiffuse(glm::vec3);
 	void SetAmbient(glm::vec3);

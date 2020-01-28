@@ -9,8 +9,9 @@ public:
 	Framebuffer();
 	~Framebuffer();
 	void NewColor(glm::ivec2 windowSize);
-	void NewShadow();
+	void NewShadow(glm::ivec2 windowSize);
 	void Bind();
+	void Use();
 	void Unbind();
 	void Resize(glm::ivec2 newSize);
 	Texture* GetColorTexture();
