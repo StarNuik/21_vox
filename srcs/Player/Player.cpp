@@ -63,104 +63,6 @@ Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 dire
 	return ray;
 }
 
-Player::VoxelRayCastHitInfo Player::VoxelRayCast(const glm::vec3 position, glm::vec3 direction, int rayLength)
-{
-	VoxelRayCastHitInfo ray;
-	ray.distance = INFINITY;
-	ray.hit = false;
-	ray.hitRayPos = glm::ivec3(INFINITY, INFINITY, INFINITY);
-	ray.side = 0;
-
-	if (rayLength <= 0)
-		return ray;
-
-	direction = glm::normalize(direction);
-	int x = (int)position.x;
-	int y = (int)position.y;
-	int z = (int)position.z;
-
-	float sideDistX, sideDistY, sideDistZ = 0.f;
-	float sideX, sideY, sideZ = 0.f;
-	float deltaDistX = glm::abs(1.f / direction.x);
-	float deltaDistY = glm::abs(1.f / direction.y);
-	float deltaDistZ = glm::abs(1.f / direction.z);
-
-	int stepX, stepY, stepZ;
-
-	if (direction.x < 0.f) {
-		stepX = -1;
-		sideDistX = (position.x - x) * deltaDistX;
-	}
-	else {
-		stepX = 1;
-		sideDistX = (x + 1.f - position.x) * deltaDistY;
-	}
-
-	if (direction.y < 0.f) {
-		stepY = -1;
-		sideDistY = (position.y - y) * deltaDistY;
-	}
-	else {
-		stepY = 1;
-		sideDistY = (y + 1.f - position.y) * deltaDistY;
-	}
-
-	if (direction.z < 0.f) {
-		stepZ = -1;
-		sideDistZ = (position.z - z) * deltaDistZ;
-	}
-	else {
-		stepZ = 1;
-		sideDistZ = (z + 1.f - position.z) * deltaDistZ;
-	}
-
-	int rayStep = 0;
-	while (!ray.hit && rayStep < rayLength) {
-		if (sideDistX < sideDistZ && sideDistX < sideDistY) {
-			sideDistX += deltaDistX;
-			x += stepX;
-			ray.side = -1;
-        }
-        else if (sideDistZ < sideDistX && sideDistZ < sideDistY) {
-			sideDistZ += deltaDistZ;
-			z += stepZ;
-			ray.side = 1;
-        }
-		else {
-			sideDistY += deltaDistY;
-			y += stepY;
-			ray.side = 0;
-		}
-
-		Block block = _world->GetBlock(glm::ivec3(x, y, z));
-		if (block != Block::Air) {
-			ray.hit = true;
-			ray.hitBlock = block;
-		}
-		rayStep++;
-	}
-
-	if (!ray.hit) {
-		ray.hitRayPos = glm::ivec3(INFINITY);
-		ray.side = -2;
-		return ray;
-	}
-
-	if (ray.side == -1) {
-		ray.distance = (x - position.x + (1.f - stepX) / 2) / direction.x;
-	}
-	else if (ray.side == 1) {
-		ray.distance = (z - position.z + (1.f - stepZ) / 2) / direction.z;
-	}
-	else
-		ray.distance = (y - position.y + (1.f - stepY) / 2) / direction.y;
-
-	// ray.hitRayPos = position + direction * ray.distance;
-	ray.hitRayPos = glm::vec3(x, y, z);
-
-	return ray;
-}
-
 void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType)
 {
 	const float maxBlockDist = 4.f;
@@ -193,31 +95,6 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 	return;
 }
 
-bool Player::CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
-{
-	RayCastHitInfo upperRayInfo;
-	RayCastHitInfo lowerRayInfo;
-	float sideX;
-	float sideZ;
-	bool isUpperBlock = false;
-	bool isLowerBlock = false;
-
-	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 0.7f, 0.1f);
-	if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-		isUpperBlock = true;
-	}
-
-	lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 0.7f, 0.1f);
-	if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
-		isLowerBlock = true;
-	}
-
-	if (isUpperBlock || isLowerBlock) {
-		return true;
-	}
-	return false;
-}
-
 Player::CollisionInfo Player::UpgradeCheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
 {
 	RayCastHitInfo upperRayInfo;
@@ -228,14 +105,14 @@ Player::CollisionInfo Player::UpgradeCheckCollision(const glm::vec3& diretion, c
 	bool isUpperBlock = false;
 	bool isLowerBlock = false;
 
-	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 2.5f, 0.1f);
+	upperRayInfo = RayCast(upperBody, _movementPropety.velocity, 2.0f, 0.1f);
 	if (upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance) {
 		isUpperBlock = true;
 		sideX = glm::abs(upperRayInfo.hitRayPos.x - (int)(upperRayInfo.hitRayPos.x));
 		sideZ = glm::abs(upperRayInfo.hitRayPos.z - (int)(upperRayInfo.hitRayPos.z));
 	}
 
-	lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 2.5f, 0.1f);
+	lowerRayInfo = RayCast(lowerBody, _movementPropety.velocity, 2.0f, 0.1f);
 	if (lowerRayInfo.hit && lowerRayInfo.distance <= _movementPropety.avoidBlockDistance) {
 		isLowerBlock = true;
 		sideX = glm::abs(lowerRayInfo.hitRayPos.x - (int)(lowerRayInfo.hitRayPos.x));
@@ -263,6 +140,56 @@ Player::CollisionInfo Player::UpgradeCheckCollision(const glm::vec3& diretion, c
 	return col;
 }
 
+Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
+{
+	CollisionInfo col;
+	col.isCollision = false;
+	col.side = glm::vec3(1.f, 0.f, 1.f);
+	bool isUpperBlock = false;
+	bool isLowerBlock = false;
+
+	if (!diretion.x && !diretion.z) {
+		return col;
+	}
+	glm::vec3 tmpPosition = position;
+	tmpPosition.x = glm::abs(tmpPosition.x);
+	tmpPosition.z = glm::abs(tmpPosition.z);
+	float distX = tmpPosition.x - floorf(tmpPosition.x);
+	float distZ = tmpPosition.z - floorf(tmpPosition.z);
+	distX = (distX > 0.5f ? 1.f - distX : distX);
+	distZ = (distZ > 0.5f ? 1.f - distZ : distZ);
+	std::cout << " dist[xz]: " << distX << " " << distZ << std::endl;
+	if (distX > _movementPropety.avoidBlockDistance && distZ > _movementPropety.avoidBlockDistance)
+		return col;
+
+	// glm::vec3 tmpDirection = glm::normalize(diretion) * 0.1f;
+	// glm::vec3 tmpDirectiom = glm::normalize(diretion);
+	glm::vec3 tmpDirection = glm::normalize(diretion);
+	// glm::vec2 checkPos;
+	// checkPos.x = (tmpDirection.x > 0 ? tmpDirection.x + _movementPropety.avoidBlockDistance : tmpDirection.x - _movementPropety.avoidBlockDistance);
+	// checkPos.y = (tmpDirection.y > 0 ? tmpDirection.y + _movementPropety.avoidBlockDistance : tmpDirection.y - _movementPropety.avoidBlockDistance);
+	// std::cout << "direction[xyz]: " << tmpDirection.x << " " << tmpDirection.y << " " << tmpDirection.z << std::endl;
+	// std::cout << "checkPos[xyz]: " << checkPos.x << " " << checkPos.y << " " <<std::endl;
+	glm::vec3 testMove = glm::vec3(position.x + tmpDirection.x , lowerBody.y, position.z + tmpDirection.z);
+	Block block = _world->GetBlock(testMove);
+	// std::cout << "block[" << (int)block << "] in pos[xyz]: " << testMove.x << " " << testMove.y << " " << testMove.z << std::endl;
+	// std::cout << "dist[xz]: " << distX << " " << distZ << std::endl;
+	if (block != Block::Air) {
+		if (distX <= _movementPropety.avoidBlockDistance) {
+			col.side = glm::vec3(1.f, 0.f, 0.f);
+			col.isCollision = true;
+		}
+		else if (distZ <= _movementPropety.avoidBlockDistance) {
+			col.side = glm::vec3(0.f, 0.f, 1.f);
+			col.isCollision = true;
+		}
+		// std::cout << "side normal[xyz]: " << col.side.x << " " << col.side.y << " " << col.side.z << std::endl;
+		return col;
+	}
+
+	return col;
+}
+
 void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
 {
 	RayCastHitInfo upperRayInfo;
@@ -286,9 +213,18 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	if (input->KeyPressed(GLFW_KEY_A)) {
 		myMovement -= right;
 	}
+	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+		_movementPropety.isCrouch = true;
+	}
+	else {
+		_movementPropety.isCrouch = false;
+	}
 
 	_movementPropety.velocity += myMovement;
-	CollisionInfo col = UpgradeCheckCollision(myMovement, upperBody, lowerBody);
+	CollisionInfo col;
+	if (_movementPropety.velocity != glm::vec3(0.f))
+		col = CheckBlock(_position, myMovement, upperBody, lowerBody);
+
 	if (!col.isCollision) {
 		return;
 	}
@@ -370,6 +306,7 @@ void Player::Update(float delta) {
 		glm::ivec2 mousePos = input->MousePosDelta();
 		_camAngleX += mousePos.x;
 		_camAngleY += mousePos.y;
+		// std::cout << "cam angle: " << _camAngleX << " " << _camAngleY << std::endl;
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 
@@ -396,14 +333,6 @@ void Player::Update(float delta) {
 	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
 		PutBlock(_position, forward, BlockType::Dirt);
 	}
-
-	if (input->KeyPressed(GLFW_KEY_X)) {
-		glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.75f), _position.z);
-		VoxelRayCastHitInfo info = VoxelRayCast(_position, forward, 10);
-		// std::cout << info.hitRayPos.x << " " << info.hitRayPos.y << " " << info.hitRayPos.z << std::endl;
-		_monkey->SetPosition(info.hitRayPos);
-	}
-
 
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);

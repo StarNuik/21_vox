@@ -9,6 +9,7 @@
 #include "World/Block.h"
 
 #define SPEED 10.f
+#define SLIDING_SPEED 0.2f // % of original speed
 
 class Player : public Entity {
 public:
@@ -29,8 +30,7 @@ public:
 		glm::vec3 velocity = glm::vec3(0);
 		glm::vec3 oldObjectPos = glm::vec3(0);
 		glm::vec3 vecUp = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 vecRight = glm::vec3(1.0f, 0.0f, 0.0f);
-		glm::vec3 vecForward = glm::vec3(0.0f, 0.0f, -1.0f);
+		float cameraXAngle;
 	};
 
 private:
@@ -55,15 +55,6 @@ private:
 		Block hitBlock;
 	};
 
-	struct VoxelRayCastHitInfo
-	{
-		bool hit;
-		float distance;
-		glm::ivec3 hitRayPos;
-		Block hitBlock;
-		int side;
-	};
-
 	struct CollisionInfo
 	{
 		bool isCollision;
@@ -71,8 +62,9 @@ private:
 	};
 
 
-	bool CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
+	CollisionInfo CheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
 	CollisionInfo UpgradeCheckCollision(const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
+	CollisionInfo CheckBlock(const glm::vec3& position, const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody);
 
 	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
 	glm::vec3 PlayerVerticalMovement(Input* input, const float delta);
@@ -83,6 +75,6 @@ private:
 
 	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
 	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);
-	VoxelRayCastHitInfo VoxelRayCast(const glm::vec3 _position, glm::vec3 direction, int rayLength);
+	// VoxelRayCastHitInfo VoxelRayCast(const glm::vec3 _position, glm::vec3 direction, int rayLength);
 };
 
