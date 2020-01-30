@@ -134,5 +134,5 @@ void GLRenderer::InitChildren() {
 	_static.rs = _static.game->GetResources();
 	_static.ui = _static.game->GetUI();
 	_static.postQuad = _static.rs->GetGeometry("Screen Quad");
-	SetPostShader("Post Base");
+	SetPostShader("Post HDR Basic");
 };

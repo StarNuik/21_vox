@@ -13,7 +13,7 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
 	_color = new Texture();
-	_color->New(Texture::F_RGB, Texture::T_UBYTE, winSize.x, winSize.y);
+	_color->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
 	_depth = new Texture();
 	_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
 

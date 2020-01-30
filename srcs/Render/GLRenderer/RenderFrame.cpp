@@ -20,6 +20,7 @@ void GLRenderer::RenderFrame() {
 	PrepareData();
 	_static.shadows->Render(_static.rendered);
 	_static.screenFbo->Bind();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_static.skybox->Render();
 	RenderBlocks();
 	RenderPostprocess();
@@ -32,7 +33,6 @@ void GLRenderer::RenderBlocks() {
 	Shader* lastShader = nullptr;
 	Material* lastMaterial = nullptr;
 
-	glClear(GL_DEPTH_BUFFER_BIT);
 	for (RenderModel* model : _static.rendered) {
 		Shader* shader = model->GetShader();
 		if (shader != lastShader) {
