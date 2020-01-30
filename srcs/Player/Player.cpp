@@ -31,11 +31,6 @@ Player::~Player() {
 	_game->RemoveEntity(this);
 	_game->GetRenderer()->SetActiveCamera(nullptr);
 	delete _camera;
-}	
-
-inline void	Player::Move(glm::vec3 &vel, const float& speed)
-{
-	_position += vel * _delta * speed;
 }
 
 Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
@@ -158,9 +153,9 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 {
 	RayCastHitInfo upperRayInfo;
 	RayCastHitInfo lowerRayInfo;
-	glm::vec3 upperBody = _position;
-	glm::vec3 middleBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.50f), _position.z);
-	glm::vec3 lowerBody = glm::vec3(_position.x, _position.y - (_movementPropety.objectHeight * 0.95f), _position.z);
+	_upperBody = GetUpperBody();
+	_middleBody = GetMiddleBody();
+	_lowerBody = GetLowerBody();
 
 	forward.y = 0.f;
 	right.y = 0.f;
@@ -182,7 +177,7 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	_movementPropety.velocity += myMovement;
 	CollisionInfo col;
 	if (_movementPropety.velocity != glm::vec3(0.f))
-		col = CheckCollision(myMovement, upperBody, middleBody, lowerBody);
+		col = CheckCollision(myMovement, _upperBody, _middleBody, _lowerBody);
 
 	if (!col.isCollision) {
 		return;
@@ -200,45 +195,43 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 void Player::PlayerVerticalMovement(Input* input)
 {
 	RayCastHitInfo upperRayInfo;
-	glm::vec3 upperBody = _position;
 	glm::vec3 velocityY = _movementPropety.velocity;
-	float height = _movementPropety.objectHeight;
 
 	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT) && !_movementPropety.isJump) {
 		_movementPropety.isCrouch = true;
-		height = _movementPropety.objectHeight * 0.75f;
-		upperBody = glm::vec3(upperBody.x, _position.y - (_movementPropety.objectHeight * 0.75f), upperBody.z);
+		_movementPropety.currObjectHeight = _movementPropety.maxObjectHeight * 0.75f;
+		_upperBody = glm::vec3(_upperBody.x, _position.y - _movementPropety.currObjectHeight, _upperBody.z);
 	}
 	else {
 		_movementPropety.isCrouch = false;
-		height = _movementPropety.objectHeight;
-		upperBody = _position;
+		_movementPropety.currObjectHeight = _movementPropety.maxObjectHeight;
+		_upperBody = GetUpperBody();
 	}
 
 	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
-	upperRayInfo = RayCast(upperBody, _movementPropety.vecUp, 0.7f, 0.1f);
+	upperRayInfo = RayCast(_upperBody, _movementPropety.vecUp, 0.7f, 0.1f);
 	velocityY += _movementPropety.vecUp * _movementPropety.jumpForce;
 	_movementPropety.isAir = true;
 	_movementPropety.isJump = false;
 	}
 
-	upperRayInfo = RayCast(upperBody, _movementPropety.vecUp, 0.5f, 0.1f);
+	upperRayInfo = RayCast(_upperBody, _movementPropety.vecUp, 0.5f, 0.1f);
 	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY.y > 0.f) {
 		velocityY.y = 0.f;
 	}
-	upperRayInfo = RayCast(upperBody, -_movementPropety.vecUp, height + 0.50f, 0.20f);
+	upperRayInfo = RayCast(_upperBody, -_movementPropety.vecUp, _movementPropety.currObjectHeight + 0.50f, 0.20f);
 	if (!upperRayInfo.hit) {
 		velocityY.y += -(_movementPropety.g * _delta);
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = true;
 	}
-	else if (upperRayInfo.hit && upperBody.y - glm::ceil(upperRayInfo.hitRayPos.y) <= height) {
+	else if (upperRayInfo.hit && _upperBody.y - glm::ceil(upperRayInfo.hitRayPos.y) <= _movementPropety.currObjectHeight) {
 		_movementPropety.isAir = false;
 		_movementPropety.isJump = false;
 		velocityY.y = 0.f;
-		upperBody.y = glm::ceil(upperBody.y - upperRayInfo.distance) + height;
+		_upperBody.y = glm::ceil(_upperBody.y - upperRayInfo.distance) + _movementPropety.currObjectHeight;
 	}
-	_position.y = upperBody.y;
+	_position.y = _upperBody.y;
 	_movementPropety.velocity.y = velocityY.y;
 	if (!_movementPropety.isCrouch) {
 		Move(_movementPropety.velocity, SPEED);

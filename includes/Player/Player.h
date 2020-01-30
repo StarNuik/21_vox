@@ -10,7 +10,6 @@
 
 #define SPEED 10.f
 #define CROUCHING_SPEED 2.f
-#define SLIDING_SPEED 0.2f // % of original speed
 
 class Player : public Entity {
 public:
@@ -22,7 +21,8 @@ public:
 	struct MovementProperty
 	{
 		int godMode = 1;
-		float objectHeight = 1.80f;
+		float currObjectHeight = 1.80f;
+		const float maxObjectHeight = 1.80f;
 		const float avoidBlockDistance = 0.12f;
 		const float g = 9.83f;
 		const float jumpForce = 2.1f;
@@ -41,6 +41,9 @@ private:
 	MovementProperty _movementPropety;
 	glm::vec3 _position;
 	glm::quat _rotation;
+	glm::vec3 _upperBody;
+	glm::vec3 _middleBody;
+	glm::vec3 _lowerBody;
 	bool _rotateCamera;
 	float _camAngleX;
 	float _camAngleY;
@@ -63,7 +66,25 @@ private:
 		glm::vec3 side;
 	};
 
-	void Move(glm::vec3 &vel, const float& speed);
+	inline void Move(glm::vec3 &vel, const float& speed)
+	{
+		_position += vel * _delta * speed;
+	}
+
+	inline glm::vec3 GetLowerBody()
+	{
+		return glm::vec3(_position.x, _position.y - (_movementPropety.currObjectHeight * 0.95f), _position.z);
+	}
+
+	inline glm::vec3 GetMiddleBody()
+	{
+		return glm::vec3(_position.x, _position.y - (_movementPropety.currObjectHeight * 0.50f), _position.z);
+	}
+
+	inline glm::vec3 GetUpperBody()
+	{
+		return _position;
+	}
 
 	CollisionInfo CheckCollision(const glm::vec3& direction, const glm::vec3& upperBody, const glm::vec3& middleBody, const glm::vec3& lowerBody);
 
@@ -74,7 +95,6 @@ private:
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
 	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
 
-	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
 	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);
 };
 
