@@ -23,7 +23,7 @@ public:
 	{
 		int godMode = 1;
 		float objectHeight = 1.80f;
-		const float avoidBlockDistance = 0.30f;
+		const float avoidBlockDistance = 0.12f;
 		const float g = 9.83f;
 		const float jumpForce = 2.5f;
 		bool isAir = false;

@@ -31,7 +31,7 @@ Player::~Player() {
 	_game->RemoveEntity(this);
 	_game->GetRenderer()->SetActiveCamera(nullptr);
 	delete _camera;
-}
+}	
 
 inline void	Player::Move(glm::vec3 &vel, const float& speed)
 {
@@ -145,7 +145,7 @@ Player::CollisionInfo Player::UpgradeCheckCollision(const glm::vec3& diretion, c
 	return col;
 }
 
-Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::vec3& diretion, const glm::vec3& upperBody, const glm::vec3& lowerBody)
+Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& upperBody, const glm::vec3& lowerBody)
 {
 	CollisionInfo col;
 	col.isCollision = false;
@@ -153,7 +153,7 @@ Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::v
 	bool isUpperBlock = false;
 	bool isLowerBlock = false;
 
-	if (!diretion.x && !diretion.z) {
+	if (!direction.x && !direction.z) {
 		return col;
 	}
 	glm::vec3 tmpPosition = position;
@@ -166,31 +166,28 @@ Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::v
 	// std::cout << " dist[xz]: " << distX << " " << distZ << std::endl;
 	if (distX > _movementPropety.avoidBlockDistance && distZ > _movementPropety.avoidBlockDistance)
 		return col;
+	else
+		col.isCollision = true;
+	//* Correct
 
-	// glm::vec3 tmpDirection = glm::normalize(diretion) * 0.1f;
-	// glm::vec3 tmpDirectiom = glm::normalize(diretion);
-	glm::vec3 tmpDirection = glm::normalize(diretion);
-	// glm::vec2 checkPos;
-	// checkPos.x = (tmpDirection.x > 0 ? tmpDirection.x + _movementPropety.avoidBlockDistance : tmpDirection.x - _movementPropety.avoidBlockDistance);
-	// checkPos.y = (tmpDirection.y > 0 ? tmpDirection.y + _movementPropety.avoidBlockDistance : tmpDirection.y - _movementPropety.avoidBlockDistance);
-	// std::cout << "direction[xyz]: " << tmpDirection.x << " " << tmpDirection.y << " " << tmpDirection.z << std::endl;
-	// std::cout << "checkPos[xyz]: " << checkPos.x << " " << checkPos.y << " " <<std::endl;
-	glm::vec3 testMove = glm::vec3(position.x + tmpDirection.x , lowerBody.y, position.z + tmpDirection.z);
-	Block block = _world->GetBlock(testMove);
-	// std::cout << "block[" << (int)block << "] in pos[xyz]: " << testMove.x << " " << testMove.y << " " << testMove.z << std::endl;
-	// std::cout << "dist[xz]: " << distX << " " << distZ << std::endl;
-	if (block != Block::Air) {
-		if (distX <= _movementPropety.avoidBlockDistance) {
-			col.side = glm::vec3(1.f, 0.f, 0.f);
-			col.isCollision = true;
+	if (distX < _movementPropety.avoidBlockDistance) {
+		static int i = 0;
+		i++;
+		glm::vec3 offset = glm::vec3(direction.x < 0 ? -.5f : .5f, 0.f, 0.f);
+		Block blockX = _world->GetBlock(lowerBody + offset);
+		if (blockX != Block::Air) {
+			// Log::Important("Collision on X axis #" + std::to_string(i));
+			col.side.z = 0;
 		}
-		else if (distZ <= _movementPropety.avoidBlockDistance) {
-			col.side = glm::vec3(0.f, 0.f, 1.f);
-			col.isCollision = true;
-		}
-		// std::cout << "side normal[xyz]: " << col.side.x << " " << col.side.y << " " << col.side.z << std::endl;
-		return col;
 	}
+	if (distZ < _movementPropety.avoidBlockDistance) {
+		glm::vec3 offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -.5f : .5f);
+		Block blockZ = _world->GetBlock(lowerBody + offset);
+		if (blockZ != Block::Air) {
+			col.side.x = 0;
+		}
+	}
+	// return col;
 
 	return col;
 }
@@ -225,12 +222,14 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 		col = CheckBlock(_position, myMovement, upperBody, lowerBody);
 
 	if (!col.isCollision) {
-		return;
+		return;g
 	}
-
-	_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, _movementPropety.velocity.y, _movementPropety.velocity.z * col.side.x);
-	if (_movementPropety.velocity != glm::vec3(0.f))
+	if (_movementPropety.velocity != glm::vec3(0.f)) {
 		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
+		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, _movementPropety.velocity.y, _movementPropety.velocity.z * col.side.x);
+	}
+	// if (_movementPropety.velocity != glm::vec3(0.f))
+	// 	_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
 	return;
 }
 
