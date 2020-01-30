@@ -10,6 +10,8 @@
 #include "Render/Skybox.h"
 #include "Render/ShadowRenderer.h"
 #include "Utilities/Log.h"
+#include "Engine/Game.h"
+#include "World/ResourceLoader.h"
 
 GLRenderer::GLRenderer() {
 	// _static.glfwOn = false;
@@ -25,6 +27,8 @@ GLRenderer::GLRenderer() {
 	// _static.framebuffer = nullptr;
 	_static = {0};
 	_static.framebuffer = new Framebuffer();
+	_static.screenFbo = new Framebuffer();
+	_static.shadowFbo = new Framebuffer();
 	_static.skybox = new Skybox();
 	_static.shadows = new ShadowRenderer();
 	_static.rendered = std::vector<RenderModel*>();
@@ -93,18 +97,10 @@ void InitGL(GLRenderer::RenderEngineConfig& config) {
 		//! Nice exit
 		exit(3);
 	}
-	// if (config.glDepthTest) {
-	// }
-	// if (config.glCullFace) {
-	// 	glEnable(GL_CULL_FACE);
-	// 	if (config.glCullCounterClockwise)
-	// 		glFrontFace(GL_CCW);
-	// 	else
-	// 		glFrontFace(GL_CW);
-	// }
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
 };
 
@@ -129,7 +125,6 @@ void GLRenderer::Init(Game* game, RenderEngineConfig config) {
 	InitGL(config);
 	InitImgui(_static.window);
 	_static.imguiOn = true;
-
 	_static.ready = true;
 
 	Log::Success("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
@@ -138,6 +133,12 @@ void GLRenderer::Init(Game* game, RenderEngineConfig config) {
 
 void GLRenderer::InitChildren() {
 	_static.framebuffer->NewColor(_static.windowSize);
+	_static.screenFbo->NewColor(_static.windowSize);
+	_static.shadowFbo->NewShadow(glm::ivec2(SHADOWMAP_SIDE, SHADOWMAP_SIDE));
 	_static.skybox->Init(_static.game);
 	_static.shadows->Init(_static.game);
+	_static.rs = _static.game->GetResources();
+	_static.ui = _static.game->GetUI();
+	_static.postQuad = _static.rs->GetGeometry("Screen Quad");
+	SetPostShader("Post Base");
 };

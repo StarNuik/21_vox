@@ -52,7 +52,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["DirLight"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/dirLight.frag");
 	_shaders["Phong"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/phong.frag");
 	_shaders["Normals"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/normals.frag");
-	_shaders["Shadows"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/shadows.frag");
+	_shaders["Shadows"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 
 	//* Post-Processing
 	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");

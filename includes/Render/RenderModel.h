@@ -24,6 +24,7 @@ public:
 	Geometry* GetGeometry();
 	Material* GetMaterial();
 	Shader* GetShader();
+	glm::mat4 GetModelMatrix();
 	bool operator<(const RenderModel&) const;
 private:
 	// void Init(Shader*, Texture*, Texture*, Geometry*);

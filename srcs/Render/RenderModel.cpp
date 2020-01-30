@@ -80,3 +80,4 @@ uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};
 Material* RenderModel::GetMaterial() {return _material;};
 Shader* RenderModel::GetShader() {return _shader;};
+glm::mat4 RenderModel::GetModelMatrix() {return _model;};

@@ -47,11 +47,10 @@ void Game::InitSystems() {
 	_world = new World(this);
 	_mpGen = new MapGeneration();
 
-	_renderer->InitChildren();
-
 	_player = new Player(this);
 	AddEntity(_player);
 
+	_renderer->InitChildren();
 };
 
 #define WORLD_RADIUS 10

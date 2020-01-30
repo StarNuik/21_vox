@@ -8,8 +8,8 @@ class Framebuffer {
 public:
 	Framebuffer();
 	~Framebuffer();
-	void NewColor(glm::ivec2 windowSize);
-	void NewShadow(glm::ivec2 windowSize);
+	void NewColor(glm::ivec2 bufferSize);
+	void NewShadow(glm::ivec2 bufferSize);
 	void Bind();
 	void Use();
 	void Unbind();
