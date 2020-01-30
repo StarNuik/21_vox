@@ -6,8 +6,8 @@
 #include "Types.h"
 
 #define SECONDS_IN_A_DAY (360.f)
-// #define SECONDS_IN_A_MOON_DAY (SECONDS_IN_A_DAY * 10.f)
-#define SECONDS_IN_A_MOON_DAY (10.f)
+#define SECONDS_IN_A_MOON_DAY (SECONDS_IN_A_DAY * 10.f)
+// #define SECONDS_IN_A_MOON_DAY (10.f)
 
 class Game {
 public:

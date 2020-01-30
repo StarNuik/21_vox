@@ -73,7 +73,7 @@ void GLRenderer::PrepareData() {
 	_frame.projection = _static.activeCamera->GetProjectionMatrix();
 	_frame.vp = _frame.projection * _frame.view;
 	_frame.cameraPos = _static.activeCamera->GetPosition();
-	_static.shadows->PrepareData(30);
+	_static.shadows->PrepareData(_static.game->GetSunAngle());
 	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
 	// _static.skybox->PrepareData(45, 0, 1, 0);
 	// _static.skybox->PrepareData(30, 10, 1, 0);
