@@ -163,20 +163,16 @@ Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::v
 	float distZ = tmpPosition.z - floorf(tmpPosition.z);
 	distX = (distX > 0.5f ? 1.f - distX : distX);
 	distZ = (distZ > 0.5f ? 1.f - distZ : distZ);
-	// std::cout << " dist[xz]: " << distX << " " << distZ << std::endl;
+
 	if (distX > _movementPropety.avoidBlockDistance && distZ > _movementPropety.avoidBlockDistance)
 		return col;
 	else
 		col.isCollision = true;
-	//* Correct
 
 	if (distX < _movementPropety.avoidBlockDistance) {
-		static int i = 0;
-		i++;
 		glm::vec3 offset = glm::vec3(direction.x < 0 ? -.5f : .5f, 0.f, 0.f);
 		Block blockX = _world->GetBlock(lowerBody + offset);
 		if (blockX != Block::Air) {
-			// Log::Important("Collision on X axis #" + std::to_string(i));
 			col.side.z = 0;
 		}
 	}
@@ -187,7 +183,6 @@ Player::CollisionInfo Player::CheckBlock(const glm::vec3& position, const glm::v
 			col.side.x = 0;
 		}
 	}
-	// return col;
 
 	return col;
 }
@@ -222,14 +217,14 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 		col = CheckBlock(_position, myMovement, upperBody, lowerBody);
 
 	if (!col.isCollision) {
-		return;g
+		return;
 	}
 	if (_movementPropety.velocity != glm::vec3(0.f)) {
+		float velY = _movementPropety.velocity.y;
 		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
-		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, _movementPropety.velocity.y, _movementPropety.velocity.z * col.side.x);
+		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, 0.f, _movementPropety.velocity.z * col.side.x);
+		_movementPropety.velocity.y = velY;
 	}
-	// if (_movementPropety.velocity != glm::vec3(0.f))
-	// 	_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
 	return;
 }
 
