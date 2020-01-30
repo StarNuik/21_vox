@@ -26,17 +26,13 @@ GLRenderer::GLRenderer() {
 	// _static.game = nullptr;
 	// _static.framebuffer = nullptr;
 	_static = {0};
-	_static.framebuffer = new Framebuffer();
 	_static.screenFbo = new Framebuffer();
-	_static.shadowFbo = new Framebuffer();
 	_static.skybox = new Skybox();
 	_static.shadows = new ShadowRenderer();
 	_static.rendered = std::vector<RenderModel*>();
 	_frame.view = glm::mat4(1.f);
 	_frame.projection = glm::mat4(1.f);
 	_frame.cameraPos = glm::vec3(0.f);
-	_frame.dayTime = 0.f;
-	_frame.sunAngle = 0.f;
 }
 
 GLRenderer::~GLRenderer() {
@@ -51,7 +47,7 @@ GLRenderer::~GLRenderer() {
 	if (_static.glfwOn) {
 		glfwTerminate();
 	}
-	delete _static.framebuffer;
+	delete _static.screenFbo;
 }
 
 namespace {
@@ -132,9 +128,7 @@ void GLRenderer::Init(Game* game, RenderEngineConfig config) {
 };
 
 void GLRenderer::InitChildren() {
-	_static.framebuffer->NewColor(_static.windowSize);
 	_static.screenFbo->NewColor(_static.windowSize);
-	_static.shadowFbo->NewShadow(glm::ivec2(SHADOWMAP_SIDE, SHADOWMAP_SIDE));
 	_static.skybox->Init(_static.game);
 	_static.shadows->Init(_static.game);
 	_static.rs = _static.game->GetResources();

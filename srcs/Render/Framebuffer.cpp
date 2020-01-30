@@ -13,17 +13,9 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
 	_color = new Texture();
-	#ifdef __APPLE__
-		_color->New(Texture::F_RGB, Texture::T_UBYTE, winSize.x, winSize.y);
-	#else
-		_color->New(Texture::F_RGB, Texture::T_UBYTE, winSize.x, winSize.y);
-	#endif
+	_color->New(Texture::F_RGB, Texture::T_UBYTE, winSize.x, winSize.y);
 	_depth = new Texture();
-	#ifdef __APPLE__
-		_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
-	#else
-		_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
-	#endif
+	_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
 
 	_color->Use();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _color->GetId(), 0);
@@ -44,11 +36,7 @@ void Framebuffer::NewShadow(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	
 	_depth = new Texture();
-	#ifdef __APPLE__
-		_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
-	#else
-		_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
-	#endif
+	_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
 	_depth->Use();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);

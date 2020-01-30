@@ -5,6 +5,10 @@
 
 #include "Types.h"
 
+#define SECONDS_IN_A_DAY (360.f)
+// #define SECONDS_IN_A_MOON_DAY (SECONDS_IN_A_DAY * 10.f)
+#define SECONDS_IN_A_MOON_DAY (10.f)
+
 class Game {
 public:
 	Game();
@@ -22,7 +26,10 @@ public:
 	World* GetWorld();
 	MapGeneration* GetGeneration();
 	float GetRuntime();
-	float GetDayNightVal();
+	float GetSunVal();
+	float GetSunAngle();
+	float GetMoonVal();
+	float GetMoonAngle();
 	MapGeneration* _mpGen;
 	Player* GetPlayer();
 private:

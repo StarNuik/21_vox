@@ -13,6 +13,8 @@
 #include "Render/Camera.h"
 #include "Render/DirLight.h"
 #include "Render/RenderModel.h"
+#include "Render/Material.h"
+#include "World/Block.h"
 
 //! Old constructor
 // Skybox::Skybox(Game* game, Shader* shader, CubeMap* day, CubeMap* night) {
@@ -70,8 +72,8 @@ void Skybox::Init(Game* game) {
 	_dayCubemap = rs->GetCubeMap("Day");
 	_nightCubemap = rs->GetCubeMap("Night");
 	//! Repair these
-	// _sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial("Sun"), rs->GetGeometry("Sun"));
-	// _sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial("Moon"), rs->GetGeometry("Sun"));
+	_sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Sun), rs->GetGeometry("Sun"));
+	_moonModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Moon), rs->GetGeometry("Sun"));
 
 	//* Pre-set static shader values
 	_shader->Use();
@@ -98,8 +100,8 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 	_sunVal = sunVal;
 	_moonVal = moonVal;
 	glm::mat4 view = glm::mat4(glm::mat3(_activeCamera->GetViewMatrix()));
-	glm::quat sunRotation = glm::quat(glm::vec3(glm::radians(sunAngle), 0.f, 0.f));
-	glm::quat moonRotation = glm::quat(glm::vec3(glm::radians(moonAngle), 27.498f, 13.379f));
+	glm::quat sunRotation = glm::quat(glm::vec3(glm::radians(-sunAngle), 0.f, 0.f));
+	glm::quat moonRotation = glm::quat(glm::vec3(glm::radians(-moonAngle), 27.498f, 0.f));
 	glm::mat4 skyModel = glm::mat4(1.f) * glm::mat4_cast(sunRotation);
 	glm::mat4 moonModel = glm::mat4(1.f) * glm::mat4_cast(moonRotation);
 	_mvpSky = _projection * view * skyModel;
@@ -107,13 +109,13 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 
 	_sunLight->SetDiffuse(glm::vec3(SUN_DIFFUSE) * sunVal);
 	_sunLight->SetAmbient(glm::vec3(SUN_AMBIENT) * sunVal);
-	glm::vec3 sunDir = glm::vec3(0.f, 0.f, 1.f) * sunRotation;
+	glm::vec3 sunDir = glm::vec3(0.f, 0.f, 1.f) * glm::quat(glm::vec3(glm::radians(sunAngle), 0.f, 0.f));
 	_sunLight->SetDirection(glm::normalize(sunDir));
 
 	_moonLight->SetDiffuse(glm::vec3(MOON_DIFFUSE) * moonVal);
 	_moonLight->SetAmbient(glm::vec3(MOON_AMBIENT) * moonVal);
-	glm::vec3 moonDir = glm::vec3(0.f, 0.f, 1.f) * moonRotation;
-	_moonLight->SetDirection(glm::normalize(glm::vec3(0.f, 1.f, 0.f)));
+	glm::vec3 moonDir = moonModel * glm::vec4(0.f, 0.f, 1.f, 0.f);
+	_moonLight->SetDirection(glm::normalize(moonDir));
 }
 
 void Skybox::Render() {
@@ -123,7 +125,19 @@ void Skybox::Render() {
 	_shader->SetMatrix4("mvp", _mvpSky);
 	_shader->SetFloat("sunVal", _sunVal);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
 	//! Draw sun and moon here later
+	Shader* shader = _sunModel->GetShader();
+	shader->Use();
+	_sunModel->GetMaterial()->Use(shader);
+	_sunModel->GetGeometry()->Use();
+
+	shader->SetMatrix4("mvp", _mvpSky);
+	glDrawArrays(GL_TRIANGLES, 0, _sunModel->GetPolygonCount() * 3);
+	_moonModel->GetMaterial()->Use(shader);
+	shader->SetMatrix4("mvp", _mvpMoon);
+	glDrawArrays(GL_TRIANGLES, 0, _sunModel->GetPolygonCount() * 3);
+
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -144,14 +158,8 @@ void Skybox::Render() {
 // };
 
 void Skybox::ApplyDirLights(Shader* shader) {
-	if (_easySunApply)
-		_sunLight->ApplySelfLight(shader, 0);
-	else
-		_sunLight->ApplySelf(shader, 0);
-	if (_easyMoonApply)
-		_moonLight->ApplySelfLight(shader, 1);
-	else
-		_moonLight->ApplySelf(shader, 1);
+	_sunLight->ApplySelf(shader, 0);
+	_moonLight->ApplySelf(shader, 1);
 };
 
 // void Skybox::SetDirLights(float lerpVal, float runtime) {

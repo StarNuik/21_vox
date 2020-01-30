@@ -15,7 +15,7 @@ void CheckShaderError(uint index, std::string source) {
 	int		params = -1;
 	glGetShaderiv(index, GL_COMPILE_STATUS, &params);
 	if (params != GL_TRUE) {
-		Log::Error("[CheckShaderError]\nShader didn't compile.");
+		Log::Error("[CheckShaderError]\nShader (" + source + ") didn't compile.");
 		int		max_length = 4096;
 		int		actual_length = 0;
 		char	shader_log[max_length];

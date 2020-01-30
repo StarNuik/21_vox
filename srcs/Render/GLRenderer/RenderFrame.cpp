@@ -73,11 +73,10 @@ void GLRenderer::PrepareData() {
 	_frame.projection = _static.activeCamera->GetProjectionMatrix();
 	_frame.vp = _frame.projection * _frame.view;
 	_frame.cameraPos = _static.activeCamera->GetPosition();
-	_frame.dayTime = std::fmod(_static.game->GetRuntime(), SECONDS_IN_A_DAY);
-	_frame.sunAngle = -_frame.dayTime / SECONDS_IN_A_DAY * 360.f;
-	_frame.moonAngle = 10.f;
-	_static.shadows->PrepareData(_frame.sunAngle);
-	_static.skybox->PrepareData(_frame.sunAngle, _frame.moonAngle, _static.game->GetDayNightVal(), 0.9f);
+	_static.shadows->PrepareData(30);
+	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
+	// _static.skybox->PrepareData(45, 0, 1, 0);
+	// _static.skybox->PrepareData(30, 10, 1, 0);
 	std::sort(_static.rendered.begin(), _static.rendered.end());
 }
 

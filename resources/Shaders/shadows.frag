@@ -14,6 +14,7 @@ struct Material {
 	sampler2D normal;
 	sampler2D specular;
 	float shininess;
+	float emission;
 };
 
 struct DirLight {

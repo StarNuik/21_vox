@@ -14,7 +14,6 @@ ResourceLoader::ResourceLoader(Game* game) {
 	_game = game;
 	VertexBuffers::Init();
 	LoadShaders();
-	LoadTextures();
 	LoadGeometries();
 	LoadCubeMaps();
 	LoadMaterials();
@@ -56,65 +55,14 @@ void ResourceLoader::LoadShaders() {
 
 	//* Post-Processing
 	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");
+	_shaders["Post HDR Basic"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdr0.frag");
 
 	//* Utilities
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
+	_shaders["Skybox Sun"] = new Shader("./resources/Shaders/sun.vert", "./resources/Shaders/sun.frag");
 	_shaders["Shadow Renderer"] = new Shader("./resources/Shaders/shadowRenderer.vert", "./resources/Shaders/shadowRenderer.frag");
 	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
 	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
-};
-
-void ResourceLoader::LoadTextures() {
-	// _textures["Diffuse Bedrock"] = new Texture("./resources/Textures/Bedrock.png");
-	// _textures["Diffuse Cobblestone"] = new Texture("./resources/Textures/Cobblestone.png");
-	// _textures["Diffuse Dirt"] = new Texture("./resources/Textures/Dirt.png");
-	// _textures["Diffuse Planks"] = new Texture("./resources/Textures/Planks.png");
-	// _textures["Diffuse Sand"] = new Texture("./resources/Textures/Sand.png");
-	// _textures["Diffuse Stone"] = new Texture("./resources/Textures/Stone.png");
-	// _textures["Diffuse CoalOre"] = new Texture("./resources/Textures/CoalOre.png");
-	// _textures["Diffuse DiamondOre"] = new Texture("./resources/Textures/DiamondOre.png");
-	// _textures["Diffuse GoldOre"] = new Texture("./resources/Textures/GoldOre.png");
-	// _textures["Diffuse IronOre"] = new Texture("./resources/Textures/IronOre.png");
-	// _textures["Diffuse RedstoneOre"] = new Texture("./resources/Textures/RedstoneOre.png");
-	// _textures["Diffuse CraftingTable"] = new Texture("./resources/Textures/CraftingTable.png");
-	// _textures["Diffuse Grass"] = new Texture("./resources/Textures/Grass.png");
-	// _textures["Diffuse Leaves"] = new Texture("./resources/Textures/Leaves.png");
-	// _textures["Diffuse Log"] = new Texture("./resources/Textures/Log.png");
-	// _textures["Diffuse Dandelion"] = new Texture("./resources/Textures/Dandelion.png");
-
-	// _textures["Normal Bedrock"] = new Texture("./resources/Textures/Bedrock.png");
-	// _textures["Normal Cobblestone"] = new Texture("./resources/Textures/Cobblestone.png");
-	// _textures["Normal Dirt"] = new Texture("./resources/Textures/Dirt.png");
-	// _textures["Normal Planks"] = new Texture("./resources/Textures/Planks.png");
-	// _textures["Normal Sand"] = new Texture("./resources/Textures/Sand.png");
-	// _textures["Normal Stone"] = new Texture("./resources/Textures/Stone.png");
-	// _textures["Normal CoalOre"] = new Texture("./resources/Textures/CoalOre.png");
-	// _textures["Normal DiamondOre"] = new Texture("./resources/Textures/DiamondOre.png");
-	// _textures["Normal GoldOre"] = new Texture("./resources/Textures/GoldOre.png");
-	// _textures["Normal IronOre"] = new Texture("./resources/Textures/IronOre.png");
-	// _textures["Normal RedstoneOre"] = new Texture("./resources/Textures/RedstoneOre.png");
-	// _textures["Normal CraftingTable"] = new Texture("./resources/Textures/CraftingTable.png");
-	// _textures["Normal Grass"] = new Texture("./resources/Textures/Grass.png");
-	// _textures["Normal Leaves"] = new Texture("./resources/Textures/Leaves.png");
-	// _textures["Normal Log"] = new Texture("./resources/Textures/Log.png");
-	// _textures["Normal Dandelion"] = new Texture("./resources/Textures/Dandelion.png");
-
-	// _textures["Specular Bedrock"] = new Texture("./resources/Textures/Bedrock.png");
-	// _textures["Specular Cobblestone"] = new Texture("./resources/Textures/Cobblestone.png");
-	// _textures["Specular Dirt"] = new Texture("./resources/Textures/Dirt.png");
-	// _textures["Specular Planks"] = new Texture("./resources/Textures/Planks.png");
-	// _textures["Specular Sand"] = new Texture("./resources/Textures/Sand.png");
-	// _textures["Specular Stone"] = new Texture("./resources/Textures/Stone.png");
-	// _textures["Specular CoalOre"] = new Texture("./resources/Textures/CoalOre.png");
-	// _textures["Specular DiamondOre"] = new Texture("./resources/Textures/DiamondOre.png");
-	// _textures["Specular GoldOre"] = new Texture("./resources/Textures/GoldOre.png");
-	// _textures["Specular IronOre"] = new Texture("./resources/Textures/IronOre.png");
-	// _textures["Specular RedstoneOre"] = new Texture("./resources/Textures/RedstoneOre.png");
-	// _textures["Specular CraftingTable"] = new Texture("./resources/Textures/CraftingTable.png");
-	// _textures["Specular Grass"] = new Texture("./resources/Textures/Grass.png");
-	// _textures["Specular Leaves"] = new Texture("./resources/Textures/Leaves.png");
-	// _textures["Specular Log"] = new Texture("./resources/Textures/Log.png");
-	// _textures["Specular Dandelion"] = new Texture("./resources/Textures/Dandelion.png");
 };
 
 void ResourceLoader::LoadGeometries() {
@@ -122,6 +70,7 @@ void ResourceLoader::LoadGeometries() {
 	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
 	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
+	_geometries["Sun"] = new Geometry("./resources/Models/Sun.obj");
 };
 
 void ResourceLoader::LoadCubeMaps() {
@@ -146,23 +95,25 @@ void ResourceLoader::LoadCubeMaps() {
 };
 
 void ResourceLoader::LoadMaterials() {
-	_materials[Block::Bedrock] = new Material("./resources/Textures/Bedrock/Bedrock", 1.f);
-	_materials[Block::Cobblestone] = new Material("./resources/Textures/Cobblestone/Cobblestone", 1.f);
-	_materials[Block::Dirt] = new Material("./resources/Textures/Dirt/Dirt", 1.f);
-	_materials[Block::Planks] = new Material("./resources/Textures/Planks/Planks", 1.f);
-	_materials[Block::Sand] = new Material("./resources/Textures/Sand/Sand", 1.f);
-	_materials[Block::Stone] = new Material("./resources/Textures/Stone/Stone", 1.f);
-	_materials[Block::OreCoal] = new Material("./resources/Textures/CoalOre/CoalOre", 1.f);
-	_materials[Block::OreDiamond] = new Material("./resources/Textures/DiamondOre/DiamondOre", 1.f);
-	_materials[Block::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 32.f);
-	_materials[Block::OreIron] = new Material("./resources/Textures/IronOre/IronOre", 1.f);
-	_materials[Block::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f);
-	_materials[Block::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f);
-	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f);
-	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f);
-	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f);
-	_materials[Block::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f);
-	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f);
-	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f);
-	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f);
+	_materials[Block::Bedrock] = new Material("./resources/Textures/Bedrock/Bedrock", 1.f, 0.f);
+	_materials[Block::Cobblestone] = new Material("./resources/Textures/Cobblestone/Cobblestone", 1.f, 0.f);
+	_materials[Block::Dirt] = new Material("./resources/Textures/Dirt/Dirt", 1.f, 0.f);
+	_materials[Block::Planks] = new Material("./resources/Textures/Planks/Planks", 1.f, 0.f);
+	_materials[Block::Sand] = new Material("./resources/Textures/Sand/Sand", 1.f, 0.f);
+	_materials[Block::Stone] = new Material("./resources/Textures/Stone/Stone", 1.f, 0.f);
+	_materials[Block::OreCoal] = new Material("./resources/Textures/CoalOre/CoalOre", 1.f, 0.f);
+	_materials[Block::OreDiamond] = new Material("./resources/Textures/DiamondOre/DiamondOre", 1.f, 0.f);
+	_materials[Block::OreGold] = new Material("./resources/Textures/GoldOre/GoldOre", 32.f, 0.f);
+	_materials[Block::OreIron] = new Material("./resources/Textures/IronOre/IronOre", 1.f, 0.f);
+	_materials[Block::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f, 0.f);
+	_materials[Block::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f, 0.f);
+	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f, 0.f);
+	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f, 0.f);
+	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f, 0.f);
+	_materials[Block::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f, 0.f);
+	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f, 0.f);
+	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
+	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
+	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 10.f);
+	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, 0.3f);
 };

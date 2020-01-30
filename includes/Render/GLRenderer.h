@@ -49,9 +49,7 @@ private:
 		Camera* activeCamera;
 		Skybox* skybox;
 		ShadowRenderer* shadows;
-		Framebuffer* framebuffer;
 		Framebuffer* screenFbo;
-		Framebuffer* shadowFbo;
 		Shader* postShader;
 		Geometry* postQuad;
 	};
@@ -61,9 +59,6 @@ private:
 		glm::mat4 projection;
 		glm::mat4 vp;
 		glm::vec3 cameraPos;
-		float dayTime;
-		float sunAngle;
-		float moonAngle;
 	};
 	StaticData _static;
 	FrameData _frame;

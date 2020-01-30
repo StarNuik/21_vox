@@ -9,12 +9,13 @@
 
 uint Material::__nextId = 0;
 
-Material::Material(std::string dirPath, float shininess) {
+Material::Material(std::string dirPath, float shininess, float emission) {
 	_id = ++__nextId;
 	_diffuseMap.Load(dirPath + "_diffuse.png");
 	_normalMap.Load(dirPath + "_normal.png");
 	_specularMap.Load(dirPath + "_specular.png");
 	_shininess = shininess;
+	_emission = emission;
 	if (!_diffuseMap.IsLoaded()) {
 		Log::Error("[Material::Material]\nCouldn't load diffuse map: " + dirPath + "_diffuse.png");
 		exit(1);
@@ -47,4 +48,5 @@ void Material::Use(Shader* shader) {
 	}
 
 	shader->SetFloat("material.shininess", _shininess);
+	shader->SetFloat("material.emission", _emission);
 };

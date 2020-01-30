@@ -4,7 +4,7 @@
 
 #include "Types.h"
 
-#define __BLOCK_TYPE uint8
+#define __BLOCK_TYPE uint16
 
 class Block
 {
@@ -36,6 +36,8 @@ public:
 		First = Bedrock,
 		Size = Last + 1,
 		NoChunk = (__BLOCK_TYPE)(-1),
+		Sun = (__BLOCK_TYPE)(-2),
+		Moon = (__BLOCK_TYPE)(-3),
 	};
 
 	Block() = default;
