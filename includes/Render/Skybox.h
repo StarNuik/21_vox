@@ -6,9 +6,9 @@
 
 #include "Types.h"
 
-#define SUN_DIFFUSE (.65f, .65f, .6f)
-#define SUN_AMBIENT (.375f, .375f, .3f)
-#define MOON_DIFFUSE (.1f, .1f, .15f)
+#define SUN_DIFFUSE (.9f, .9f, .85f)
+#define SUN_AMBIENT (.25f, .25f, .25f)
+#define MOON_DIFFUSE (.08f, .08f, .12f)
 #define MOON_AMBIENT (.05f, .05f, .05f)
 
 class Skybox {

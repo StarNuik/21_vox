@@ -35,9 +35,9 @@ void Texture::New(TexFormat format, TexType type, uint width, uint height, void*
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	if (_format == F_RGBA16 or _format == F_RGBA32)
+	if (_format == F_RGBA16 or _format == F_RGBA32 or _format == F_SRGBA)
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, GL_RGBA, _type, data);
-	else if (_format == F_RGB16 or _format == F_RGB32)
+	else if (_format == F_RGB16 or _format == F_RGB32 or _format == F_SRGB)
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, GL_RGB, _type, data);
 	else
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, _format, _type, data);
@@ -56,14 +56,14 @@ void Texture::Load(std::string path) {
 		stbi_image_free(data);
 		return;
 	}
-	New(F_RGBA, width, height, data);
+	New(F_SRGBA, width, height, data);
 	stbi_image_free(data);
 };
 
 void Texture::Resize(uint width, uint height) {
-	if (_format == F_RGBA16 or _format == F_RGBA32)
+	if (_format == F_RGBA16 or _format == F_RGBA32 or _format == F_SRGBA)
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, GL_RGBA, _type, 0);
-	else if (_format == F_RGB16 or _format == F_RGB32)
+	else if (_format == F_RGB16 or _format == F_RGB32 or _format == F_SRGB)
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, GL_RGB, _type, 0);
 	else
 		glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, _format, _type, 0);

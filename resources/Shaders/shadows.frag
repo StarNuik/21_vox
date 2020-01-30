@@ -76,7 +76,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 }
 
 void main() {
-	vec3 normal = vsOut.normal;
+	vec3 normal = normalize(vsOut.normal);
 	vec3 viewDir = normalize(cameraPos - vsOut.worldPos);
 
 	vec3 result = vec3(0.0);

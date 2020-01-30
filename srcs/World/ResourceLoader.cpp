@@ -56,6 +56,14 @@ void ResourceLoader::LoadShaders() {
 	//* Post-Processing
 	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");
 	_shaders["Post HDR Basic"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdr0.frag");
+	_shaders["Post Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postGamma.frag");
+	_shaders["Post HDR Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrGamma.frag");
+	_shaders["Post HDR Filmic Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrFilmicGamma.frag");
+	_shaders["Post HDR Uncharted Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrUnchartedGamma.frag");
+	_shaders["Post Main"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postMain.frag");
+	_shaders["Post Purple"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postPurple.frag");
+	_shaders["Post Inverse"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postInverse.frag");
+	_shaders["Post Grayscale"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postGrayscale.frag");
 
 	//* Utilities
 	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
@@ -114,6 +122,6 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f, 0.f);
 	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
 	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
-	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 10.f);
-	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, 0.3f);
+	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
+	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, 10.f);
 };
