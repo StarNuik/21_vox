@@ -8,10 +8,6 @@
 
 #include "Engine/Game.h"
 
-#include "World/Block.h"
-#include "Utilities/Log.h"
-#include <unordered_map>
-#include <string>
 int	main() {
 	Game* game = new Game();
 	game->InitSystems();

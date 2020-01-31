@@ -18,7 +18,7 @@ Texture::~Texture() {
 };
 
 void Texture::New(TexFormat format, uint width, uint height, void* data) {
-	New(format, T_BYTE, width, height, data);
+	New(format, T_UBYTE, width, height, data);
 };
 
 void Texture::New(TexFormat format, TexType type, uint width, uint height) {
@@ -26,13 +26,16 @@ void Texture::New(TexFormat format, TexType type, uint width, uint height) {
 };
 
 void Texture::New(TexFormat format, TexType type, uint width, uint height, void* data) {
+	_format = format;
+	_type = type;
+
 	glGenTextures(1, &_id);
 	glBindTexture(GL_TEXTURE_2D, _id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, _format, _type, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -52,8 +55,11 @@ void Texture::Load(std::string path) {
 	stbi_image_free(data);
 };
 
-void Texture::Use() {
-	glBindTexture(GL_TEXTURE_2D, _id);
+void Texture::Resize(uint width, uint height) {
+	glTexImage2D(GL_TEXTURE_2D, 0, _format, width, height, 0, _format, _type, 0);
 };
 
+void Texture::Use() {glBindTexture(GL_TEXTURE_2D, _id);};
+void Texture::Unbind() {glBindTexture(GL_TEXTURE_2D, 0);};
 bool Texture::IsLoaded() {return _loaded;};
+uint Texture::GetId() {return _id;};

@@ -33,6 +33,7 @@ private:
 	std::vector<RenderModel*> _rendered;
 	Camera* _activeCamera;
 	Game* _game;
+	Framebuffer* _framebuffer;
 };
 
 class GLRenderer::RenderEngineConfig {

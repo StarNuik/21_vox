@@ -37,8 +37,8 @@ Skybox::~Skybox() {
 Shader* Skybox::Use(Camera* camera, float lerpVal, float runtime) {
 	glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
 	float currentTime = std::fmod(runtime, SECONDS_IN_A_DAY);
-	float angleRadians = currentTime / SECONDS_IN_A_DAY * 2 * glm::pi<float>();
-	glm::quat rotation = glm::quat(glm::vec3(angleRadians, 0.f, 0.f));
+	float angle = currentTime / SECONDS_IN_A_DAY * 360.f;
+	glm::quat rotation = glm::quat(glm::vec3(glm::radians(angle), 0.f, 0.f));
 	glm::mat4 model = glm::identity<glm::mat4>() * glm::mat4_cast(rotation);
 
 	_shader->Use();

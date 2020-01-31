@@ -4,20 +4,33 @@
 #include "Render/Shader.h"
 #include "Render/RenderModel.h"
 #include "Render/Skybox.h"
-// #include "Render/ShadowRenderer.h"
+#include "Render/ShadowRenderer.h"
 #include "World/ResourceLoader.h"
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "UI/UIController.h"
+#include "Render/Camera.h"
+#include "Render/Material.h"
+#include "Render/Geometry.h"
+#include "Render/Texture.h"
+#include "Render/Framebuffer.h"
 
 void GLRenderer::RenderFrame() {
-	ResourceLoader* r = _game->GetResources();
+	ResourceLoader* rs = _game->GetResources();
 	UIController* ui = _game->GetUI();
-	Skybox* skybox = r->GetSkybox();
-	// ShadowRenderer* shadows = skybox->GetShadowRenderer();
+	Skybox* skybox = rs->GetSkybox();
 
-	// shadows->Render(_rendered, _game->GetRuntime());
+	glm::mat4 view = _activeCamera->GetViewMatrix();
+	glm::mat4 projection = _activeCamera->GetProjectionMatrix();
+	glm::vec3 cameraPos = _activeCamera->GetPosition();
 
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	ShadowRenderer* shadows = skybox->GetShadowRenderer();
+
+	shadows->Render(_rendered, _game->GetRuntime());
+	// glViewport(0, 0, _width, _height);
+	// glViewport(0, 0, _width * 2, _height * 2);
+	_framebuffer->Bind();
 	//* Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -31,16 +44,52 @@ void GLRenderer::RenderFrame() {
 	skybox->SetDirLights(_game->GetDayNightVal(), _game->GetRuntime());
 
 	//* Blocks
+	std::sort(_rendered.begin(), _rendered.end());
+	Shader* oldShader = nullptr;
+	Material* oldMaterial = nullptr;
 	for (RenderModel* model : _rendered) {
+		//* If shader changed
 		Shader* modelShader = model->Use(_activeCamera);
-		// shadows->ApplySelf(modelShader);
-		skybox->ApplyDirLights(modelShader);
+		if (oldShader != modelShader) {
+			modelShader->SetMatrix4("view", view);
+			modelShader->SetMatrix4("projection", projection);
+			modelShader->SetFloat3("cameraPos", cameraPos);
+			skybox->ApplyDirLights(modelShader);
+			oldShader = modelShader;
+		}
+		//* If material changed
+		Material* modelMaterial = model->GetMaterial();
+		if (oldMaterial != modelMaterial) {
+			modelMaterial->Use(modelShader);
+			oldMaterial = modelMaterial;
+		}
+		shadows->ApplySelf(modelShader);
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	_framebuffer->Unbind();
+	
+	// glViewport(0, 0, _width, _height);
+	// glViewport(0, 0, _width * 2, _height * 2);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	// shadows->Render(_rendered, _game->GetRuntime());
+	Shader* postShader = rs->GetShader("Post Base");
+	postShader->Use();
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Geometry* quad = rs->GetGeometry("Screen Quad");
+	quad->Use();
+	Texture* color = _framebuffer->GetColorTexture();
+	postShader->SetInt("screenTexture", 0);
+	glActiveTexture(GL_TEXTURE0);
+	color->Use();
+	glDrawArrays(GL_TRIANGLES, 0, quad->GetPolygonCount() * 3);
+	glEnable(GL_DEPTH_TEST);
 
 	//* UI
 	ui->UpdateData();
 	ui->Draw();
+
+	// shadows->Render(_rendered, _game->GetRuntime());
 
 	//* Swap
 	glfwSwapBuffers(_window);
