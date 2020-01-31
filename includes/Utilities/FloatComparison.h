@@ -29,12 +29,6 @@ inline bool FloatEqual(const float& a, const float& b)
     return std::abs(a - b) < eps;
 }
 
-inline bool FloatEqual(const float& a, const float& b)
-{
-    const float eps = 0.00001f;
-    return std::abs(a - b) < eps;
-}
-
 inline bool FloatEqual(const float& a, const float& b, const float& eps)
 {
     return std::abs(a - b) < eps;
