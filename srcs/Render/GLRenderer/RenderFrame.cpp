@@ -33,6 +33,9 @@ void GLRenderer::RenderBlocks() {
 	Shader* lastShader = nullptr;
 	Material* lastMaterial = nullptr;
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 	for (RenderModel* model : _static.rendered) {
 		Shader* shader = model->GetShader();
 		if (shader != lastShader) {
@@ -58,6 +61,7 @@ void GLRenderer::RenderBlocks() {
 void GLRenderer::RenderPostprocess() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	_static.postShader->Use();
 	_static.postQuad->Use();
 	Texture* color = _static.screenFbo->GetColorTexture();

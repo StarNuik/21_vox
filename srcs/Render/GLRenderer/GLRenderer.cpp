@@ -93,11 +93,8 @@ void InitGL(GLRenderer::RenderEngineConfig& config) {
 		//! Nice exit
 		exit(3);
 	}
-	glDisable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
-	glEnable(GL_BLEND);
 };
 
 void InitImgui(GLFWwindow* window) {
@@ -134,5 +131,5 @@ void GLRenderer::InitChildren() {
 	_static.rs = _static.game->GetResources();
 	_static.ui = _static.game->GetUI();
 	_static.postQuad = _static.rs->GetGeometry("Screen Quad");
-	SetPostShader("Post HDR Basic");
+	SetPostShader("Post Main");
 };
