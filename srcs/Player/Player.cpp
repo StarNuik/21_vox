@@ -1,5 +1,6 @@
 #include "Player/Player.h"
 #include "Utilities/Log.h"
+#include "Utilities/FloatComparison.h"
 #include "Engine/Game.h"
 #include "Render/GLRenderer.h"
 #include "Render/Camera.h"
@@ -219,13 +220,13 @@ void Player::PlayerVerticalMovement(Input* input)
 	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY.y > 0.f) {
 		velocityY.y = 0.f;
 	}
-	upperRayInfo = RayCast(_upperBody, -_movementPropety.vecUp, _movementPropety.currObjectHeight + 0.50f, 0.20f);
+	upperRayInfo = RayCast(_upperBody, -_movementPropety.vecUp, _movementPropety.currObjectHeight + 0.50f, 2.01f);
 	if (!upperRayInfo.hit) {
 		velocityY.y += -(_movementPropety.g * _delta);
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = true;
 	}
-	else if (upperRayInfo.hit && _upperBody.y - glm::ceil(upperRayInfo.hitRayPos.y) <= _movementPropety.currObjectHeight) {
+	else if (upperRayInfo.hit && FloatLessThan(_upperBody.y - glm::ceil(upperRayInfo.hitRayPos.y), _movementPropety.currObjectHeight)) {
 		_movementPropety.isAir = false;
 		_movementPropety.isJump = false;
 		velocityY.y = 0.f;
@@ -292,7 +293,6 @@ void Player::Update(float delta) {
 	if (input->KeyJustPressed(GLFW_KEY_G)) {
 		_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
 	}
-	_movementPropety.oldObjectPos = _position;
 
 	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
 	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -303,7 +303,6 @@ void Player::Update(float delta) {
 		RayCastHitInfo info = RayCast(_position, forward, 25.f, 0.1f);
 		_monkey->SetPosition(info.hitRayPos);
 	}
-
 
 	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 		DestroyBlock(_position, forward);
