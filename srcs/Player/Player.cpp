@@ -113,36 +113,40 @@ Player::CollisionInfo Player::CheckCollision(const glm::vec3& direction, const g
 
 	if (distX > _movementPropety.avoidBlockDistance && distZ > _movementPropety.avoidBlockDistance)
 		return col;
-	else
-		col.isCollision = true;
 
 	if (distX < _movementPropety.avoidBlockDistance) {
-		glm::vec3 offset = glm::vec3(direction.x < 0 ? -.5f : .5f, 0.f, 0.f);
+		glm::vec3 offset = glm::vec3(direction.x < 0 ? -0.5f : 0.5f, 0.f, 0.f);
 		Block blockX = _world->GetBlock(lowerBody + offset);
 		if (blockX != Block::Air) {
+			col.isCollision = true;
 			col.side.z = 0.f;
 		}
 		blockX = _world->GetBlock(middleBody + offset);
 		if (blockX != Block::Air){
+			col.isCollision = true;
 			col.side.z = 0.f;
 		}
 		blockX = _world->GetBlock(upperBody + offset);
 		if (blockX != Block::Air) {
+			col.isCollision = true;
 			col.side.z = 0.f;
 		}
 	}
 	if (distZ < _movementPropety.avoidBlockDistance) {
-		glm::vec3 offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -.5f : .5f);
+		glm::vec3 offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -0.5f : 0.5f);
 		Block blockZ = _world->GetBlock(lowerBody + offset);
 		if (blockZ != Block::Air) {
+			col.isCollision = true;
 			col.side.x = 0.f;
 		}
 		blockZ = _world->GetBlock(middleBody + offset);
 		if (blockZ != Block::Air) {
+			col.isCollision = true;
 			col.side.x = 0.f;
 		}
 		blockZ = _world->GetBlock(upperBody + offset);
 		if (blockZ != Block::Air) {
+			col.isCollision = true;
 			col.side.x = 0.f;
 		}
 	}
