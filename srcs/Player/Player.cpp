@@ -200,9 +200,16 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 void Player::PlayerVerticalMovement(Input* input)
 {
 	RayCastHitInfo upperRayInfo;
-	glm::vec3 velocityY = _movementPropety.velocity;
+	RayCastHitInfo lowerRayInfo;
+	float velocityY = _movementPropety.velocity.y;
 
-	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT) && !_movementPropety.isJump) {
+	if (input->KeyPressed(GLFW_KEY_SPACE) && !_movementPropety.isAir) {
+		velocityY += _movementPropety.jumpForce;
+		_movementPropety.isAir = true;
+		_movementPropety.isJump = true;
+	}
+
+	if (input->KeyPressed(GLFW_KEY_LEFT_SHIFT) && !_movementPropety.isJump && !_movementPropety.isAir) {
 		_movementPropety.isCrouch = true;
 		_movementPropety.currObjectHeight = _movementPropety.maxObjectHeight * 0.75f;
 		_upperBody = glm::vec3(_upperBody.x, _position.y - _movementPropety.currObjectHeight, _upperBody.z);
@@ -213,31 +220,26 @@ void Player::PlayerVerticalMovement(Input* input)
 		_upperBody = GetUpperBody();
 	}
 
-	if (input->KeyJustPressed(GLFW_KEY_SPACE) && !_movementPropety.isJump) {
+
 	upperRayInfo = RayCast(_upperBody, _movementPropety.vecUp, 0.7f, 0.1f);
-	velocityY += _movementPropety.vecUp * _movementPropety.jumpForce;
-	_movementPropety.isAir = true;
-	_movementPropety.isJump = false;
+	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY > 0.f) {
+		velocityY = 0.f;
 	}
 
-	upperRayInfo = RayCast(_upperBody, _movementPropety.vecUp, 0.5f, 0.1f);
-	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY.y > 0.f) {
-		velocityY.y = 0.f;
-	}
-	upperRayInfo = RayCast(_upperBody, -_movementPropety.vecUp, _movementPropety.currObjectHeight + 0.50f, 2.01f);
-	if (!upperRayInfo.hit) {
-		velocityY.y += -(_movementPropety.g * _delta);
-		_movementPropety.isAir = true;
-		_movementPropety.isJump = true;
-	}
-	else if (upperRayInfo.hit && FloatLessThan(_upperBody.y - glm::ceil(upperRayInfo.hitRayPos.y), _movementPropety.currObjectHeight)) {
+	lowerRayInfo = RayCast(_lowerBody, -_movementPropety.vecUp, 0.3f, 0.051f);
+	if (lowerRayInfo.hit && FloatLessThan(_lowerBody.y - glm::ceil(lowerRayInfo.hitRayPos.y), 0.12f) && !_movementPropety.isJump) {
 		_movementPropety.isAir = false;
-		_movementPropety.isJump = false;
-		velocityY.y = 0.f;
-		_upperBody.y = glm::ceil(_upperBody.y - upperRayInfo.distance) + _movementPropety.currObjectHeight;
+		velocityY = 0.f;
+		_upperBody.y = glm::ceil(_lowerBody.y - lowerRayInfo.distance) + _movementPropety.currObjectHeight;
 	}
+	else if (_movementPropety.isAir || !lowerRayInfo.hit) {
+		velocityY += -(_movementPropety.g * _delta);
+		_movementPropety.isAir = true;
+		_movementPropety.isJump = false;
+	}
+	
 	_position.y = _upperBody.y;
-	_movementPropety.velocity.y = velocityY.y;
+	_movementPropety.velocity.y = velocityY;
 	if (!_movementPropety.isCrouch) {
 		Move(_movementPropety.velocity, SPEED);
 	}
