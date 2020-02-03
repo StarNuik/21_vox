@@ -22,7 +22,9 @@ public:
 	struct CollisionInfo
 	{
 		bool isCollision;
-		glm::vec3 sideNormal;
+		float distX;
+		float distZ;
+		glm::vec3 sideNormal;;
 	};
 
 	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);

@@ -7,7 +7,7 @@ Physics::Physics(Game* game)
 	_world = _game->GetWorld();
 }
 
-Physics::RayCastHitInfo Physics::RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
+Physics::RayCastHitInfo Physics::RayCast(const glm::vec3 position, glm::vec3 direction, const float rayLength, float rayStep)
 {
 	RayCastHitInfo ray;
 	glm::vec3 tmpDirection;
@@ -21,7 +21,7 @@ Physics::RayCastHitInfo Physics::RayCast(const glm::vec3 _position, glm::vec3 di
 	{
 		ray.lastRayStep = ray.hitRayPos;
 		tmpDirection = direction * step;
-		ray.hitRayPos = _position + tmpDirection;
+		ray.hitRayPos = position + tmpDirection;
 		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
 		if (ray.hitBlock != Block::Air)
 		{
@@ -37,16 +37,19 @@ Physics::RayCastHitInfo Physics::RayCast(const glm::vec3 _position, glm::vec3 di
 }
 
 Physics::CollisionInfo Physics::CheckCollision(const glm::vec3& direction, const glm::vec3& upperBody, const glm::vec3& middleBody,
-													const glm::vec3& lowerBody, const glm::vec3& _position, const float& avoidBlockDistance)
+													const glm::vec3& lowerBody, const glm::vec3& position, const float& avoidBlockDistance)
 {
 	CollisionInfo col;
+	glm::vec3 offset;
 	col.isCollision = false;
+	col.distX = INFINITY;
+	col.distZ = INFINITY;
 	col.sideNormal = glm::vec3(1.f, 0.f, 1.f);
 
 	if (!direction.x && !direction.z)
 		return col;
 
-	glm::vec3 tmpPosition = _position;
+	glm::vec3 tmpPosition = position;
 	tmpPosition.x = glm::abs(tmpPosition.x);
 	tmpPosition.z = glm::abs(tmpPosition.z);
 	float distX = tmpPosition.x - floorf(tmpPosition.x);
@@ -54,52 +57,34 @@ Physics::CollisionInfo Physics::CheckCollision(const glm::vec3& direction, const
 	distX = (distX > 0.5f ? 1.f - distX : distX);
 	distZ = (distZ > 0.5f ? 1.f - distZ : distZ);
 
-	if (distX > avoidBlockDistance && distZ > avoidBlockDistance)
-		return col;
+	col.distX = distX - avoidBlockDistance;
+	col.distZ = distZ - avoidBlockDistance;
 
+	offset = glm::vec3(direction.x < 0 ? -0.5f : 0.5f, 0.f, 0.f);
+	Block blockX = _world->GetBlock(lowerBody + offset);
+	if (blockX != Block::Air)
+		col.sideNormal.z = 0.f;
+	blockX = _world->GetBlock(middleBody + offset);
+	if (blockX != Block::Air)
+		col.sideNormal.z = 0.f;
+	blockX = _world->GetBlock(upperBody + offset);
+	if (blockX != Block::Air)
+		col.sideNormal.z = 0.f;
 	if (distX < avoidBlockDistance)
-	{
-		glm::vec3 offset = glm::vec3(direction.x < 0 ? -0.5f : 0.5f, 0.f, 0.f);
-		Block blockX = _world->GetBlock(lowerBody + offset);
-		if (blockX != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.z = 0.f;
-		}
-		blockX = _world->GetBlock(middleBody + offset);
-		if (blockX != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.z = 0.f;
-		}
-		blockX = _world->GetBlock(upperBody + offset);
-		if (blockX != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.z = 0.f;
-		}
-	}
+		col.isCollision = true;
+
+	offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -0.5f : 0.5f);
+	Block blockZ = _world->GetBlock(lowerBody + offset);
+	if (blockZ != Block::Air)
+		col.sideNormal.x = 0.f;
+	blockZ = _world->GetBlock(middleBody + offset);
+	if (blockZ != Block::Air)
+		col.sideNormal.x = 0.f;
+	blockZ = _world->GetBlock(upperBody + offset);
+	if (blockZ != Block::Air)
+		col.sideNormal.x = 0.f;
 	if (distZ < avoidBlockDistance)
-	{
-		glm::vec3 offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -0.5f : 0.5f);
-		Block blockZ = _world->GetBlock(lowerBody + offset);
-		if (blockZ != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.x = 0.f;
-		}
-		blockZ = _world->GetBlock(middleBody + offset);
-		if (blockZ != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.x = 0.f;
-		}
-		blockZ = _world->GetBlock(upperBody + offset);
-		if (blockZ != Block::Air)
-		{
-			col.isCollision = true;
-			col.sideNormal.x = 0.f;
-		}
-	}
+		col.isCollision = true;
+
 	return col;
 }
