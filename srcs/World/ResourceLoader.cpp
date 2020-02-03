@@ -65,8 +65,10 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Post Main & Inverse"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaInverse.frag");
 	_shaders["Post Main & Grayscale"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaGrayscale.frag");
 	_shaders["Post Main & Gaussian Blur 3x3"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur3x3.frag");
+	_shaders["Post Main & Gaussian Blur 5x5"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur5x5.frag");
 	_shaders["Post Main & Sharpen"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaSharpen.frag");
-	_shaders["Post Main & Edge detection"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaEdge.frag");
+	_shaders["Post Main & Outline"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaOutline.frag");
+	_shaders["Post Main & Emboss"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaEmboss.frag");
 
 	//* Utilities
 	_shaders["Skybox"] = new Shader("./resources/Shaders/Vertex/skybox.vert", "./resources/Shaders/Fragment/skybox.frag");
