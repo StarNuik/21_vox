@@ -37,6 +37,7 @@ ResourceLoader* Game::GetResources() {return _resources;};
 UIController* Game::GetUI() {return _ui;};
 World* Game::GetWorld() {return _world;};
 MapGeneration* Game::GetGeneration() {return _mpGen;};
+Physics* Game::GetPhysics() {return _physics;};
 float Game::GetRuntime() {return _runtime;};
 Player* Game::GetPlayer() {return _player;};
 // uint Game::GetLastFrameTime() {return _lastFrameTime;};

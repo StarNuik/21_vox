@@ -15,6 +15,7 @@ typedef uint32 uint;
 
 class Entity;
 class Game;
+class Physics;
 class Locator;
 class MapGeneration;
 class Input;

@@ -21,9 +21,11 @@ public:
 	UIController* GetUI();
 	World* GetWorld();
 	MapGeneration* GetGeneration();
+	Physics* GetPhysics();
 	float GetRuntime();
 	float GetDayNightVal();
 	MapGeneration* _mpGen;
+	Physics* _physics;
 	Player* GetPlayer();
 private:
 	void Update(float delta);
