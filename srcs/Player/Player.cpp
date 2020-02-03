@@ -74,6 +74,8 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 
 	forward.y = 0.f;
 	right.y = 0.f;
+	forward = glm::normalize(forward);
+	right = glm::normalize(right);
 
 	glm::vec3 myMovement = glm::vec3(0.f);
 	if (input->KeyPressed(GLFW_KEY_W)) {
