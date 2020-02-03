@@ -81,7 +81,7 @@ void GLRenderer::PrepareData() {
 	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
 	// _static.skybox->PrepareData(45, 0, 1, 0);
 	// _static.skybox->PrepareData(30, 10, 1, 0);
-	std::sort(_static.rendered.begin(), _static.rendered.end());
+	std::sort(_static.rendered.begin(), _static.rendered.end(), RenderModelLess);
 }
 
 // void GLRenderer::RenderFrame() {

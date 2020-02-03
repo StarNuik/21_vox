@@ -5,6 +5,8 @@
 
 #include "Types.h"
 
+bool RenderModelLess(RenderModel*& x, RenderModel*& y);
+
 class RenderModel {
 public:
 	RenderModel(GLRenderer*, Shader*, Material*, Geometry*);
@@ -26,6 +28,8 @@ public:
 	Shader* GetShader();
 	glm::mat4 GetModelMatrix();
 	bool operator<(const RenderModel&) const;
+	uint _shaderId;
+	uint _materialId;
 private:
 	// void Init(Shader*, Texture*, Texture*, Geometry*);
 	Shader* _shader;
@@ -34,8 +38,6 @@ private:
 	glm::vec3 _position, _scale;
 	glm::quat _rotation;
 	GLRenderer* _renderer;
-	uint _shaderId;
-	uint _materialId;
 	uint _geometryId;
 	glm::mat4 _model;
 };
