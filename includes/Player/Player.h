@@ -30,13 +30,13 @@ public:
 		bool isJump = false;
 		bool isCrouch = false;
 		glm::vec3 velocity = glm::vec3(0);
-		glm::vec3 vecUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	};
 
 private:
 	Game* _game;
 	Camera* _camera;
 	World* _world;
+	Physics* _physics;
 	MovementProperty _movementPropety;
 	glm::vec3 _position;
 	glm::quat _rotation;
@@ -49,21 +49,6 @@ private:
 	float _delta;
 
 	RenderModel* _monkey;
-
-	struct RayCastHitInfo
-	{
-		bool hit;
-		float distance;
-		glm::vec3 hitRayPos;
-		glm::vec3 lastRayStep;
-		Block hitBlock;
-	};
-
-	struct CollisionInfo
-	{
-		bool isCollision;
-		glm::vec3 side;
-	};
 
 	inline void Move(glm::vec3 &vel, const float& speed)
 	{
@@ -85,15 +70,11 @@ private:
 		return _position;
 	}
 
-	CollisionInfo CheckCollision(const glm::vec3& direction, const glm::vec3& upperBody, const glm::vec3& middleBody, const glm::vec3& lowerBody);
-
 	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
 	void PlayerVerticalMovement(Input* input);
 	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
 	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
-
-	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);
 };
 

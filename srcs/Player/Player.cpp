@@ -1,4 +1,5 @@
 #include "Player/Player.h"
+#include "Engine/Physics.h"
 #include "Utilities/Log.h"
 #include "Utilities/FloatComparison.h"
 #include "Engine/Game.h"
@@ -16,6 +17,7 @@ Player::Player(Game* game) {
 	_camAngleY = 0.f;
 	_game = game;
 	_rotateCamera = true;
+	_physics = _game->GetPhysics();
 	//! Looks like a fucking costil
 	_game->GetUI()->SetPlayer(this);
 	_position = glm::vec3(0.f, 120.f, 3.f);
@@ -34,57 +36,26 @@ Player::~Player() {
 	delete _camera;
 }
 
-Player::RayCastHitInfo Player::RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep)
-{
-
-	RayCastHitInfo ray;
-	glm::vec3 tmpDirection;
-
-	if (rayStep >= rayLength)
-		rayStep = rayLength * 0.25f;
-
-	direction = glm::normalize(direction);
-	ray.hitRayPos = glm::vec3(0.f, 0.f, 0.f);
-	for (float step = 0.f; step <= rayLength; step += rayStep)
-	{
-		ray.lastRayStep = ray.hitRayPos;
-		tmpDirection = direction * step;
-		ray.hitRayPos = _position + tmpDirection;
-		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
-		if (ray.hitBlock != Block::Air)
-		{
-			ray.hit = true;
-			ray.distance = step;
-			return ray;
-		}
-	}
-	ray.hitRayPos = glm::vec3(INFINITY, INFINITY, INFINITY);
-	ray.lastRayStep = glm::vec3(INFINITY, INFINITY, INFINITY);
-	ray.hit = false;
-	return ray;
-}
-
 void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType)
 {
 	const float maxBlockDist = 4.f;
 	Block lastBlock;
-	RayCastHitInfo ray;
+	Physics::RayCastHitInfo ray;
 
-	ray = RayCast(_position, forward, maxBlockDist, 0.25f);
+	ray = _physics->RayCast(_position, forward, maxBlockDist, 0.25f);
 	lastBlock = _world->GetBlock(ray.lastRayStep);
 	if (ray.hit && lastBlock == Block::Air) {
 		_world->PlayerSetBlock(ray.lastRayStep, blockType);
 	}
-
 	return;
 }
 
 void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 {
-	RayCastHitInfo ray;
+	Physics::RayCastHitInfo ray;
 	const float maxBlockDist = 4.f;
 
-	ray = RayCast(_position, forward, maxBlockDist, 0.5f);
+	ray = _physics->RayCast(_position, forward, maxBlockDist, 0.5f);
 	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && (!_movementPropety.godMode && ray.hitBlock != Block::Bedrock)) {
 		_world->PlayerSetBlock(ray.hitRayPos, BlockType::Air);
 	}
@@ -94,70 +65,9 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 	return;
 }
 
-Player::CollisionInfo Player::CheckCollision(const glm::vec3& direction, const glm::vec3& upperBody, const glm::vec3& middleBody, const glm::vec3& lowerBody)
-{
-	CollisionInfo col;
-	col.isCollision = false;
-	col.side = glm::vec3(1.f, 0.f, 1.f);
-
-	if (!direction.x && !direction.z) {
-		return col;
-	}
-	glm::vec3 tmpPosition = _position;
-	tmpPosition.x = glm::abs(tmpPosition.x);
-	tmpPosition.z = glm::abs(tmpPosition.z);
-	float distX = tmpPosition.x - floorf(tmpPosition.x);
-	float distZ = tmpPosition.z - floorf(tmpPosition.z);
-	distX = (distX > 0.5f ? 1.f - distX : distX);
-	distZ = (distZ > 0.5f ? 1.f - distZ : distZ);
-
-	if (distX > _movementPropety.avoidBlockDistance && distZ > _movementPropety.avoidBlockDistance)
-		return col;
-
-	if (distX < _movementPropety.avoidBlockDistance) {
-		glm::vec3 offset = glm::vec3(direction.x < 0 ? -0.5f : 0.5f, 0.f, 0.f);
-		Block blockX = _world->GetBlock(lowerBody + offset);
-		if (blockX != Block::Air) {
-			col.isCollision = true;
-			col.side.z = 0.f;
-		}
-		blockX = _world->GetBlock(middleBody + offset);
-		if (blockX != Block::Air){
-			col.isCollision = true;
-			col.side.z = 0.f;
-		}
-		blockX = _world->GetBlock(upperBody + offset);
-		if (blockX != Block::Air) {
-			col.isCollision = true;
-			col.side.z = 0.f;
-		}
-	}
-	if (distZ < _movementPropety.avoidBlockDistance) {
-		glm::vec3 offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -0.5f : 0.5f);
-		Block blockZ = _world->GetBlock(lowerBody + offset);
-		if (blockZ != Block::Air) {
-			col.isCollision = true;
-			col.side.x = 0.f;
-		}
-		blockZ = _world->GetBlock(middleBody + offset);
-		if (blockZ != Block::Air) {
-			col.isCollision = true;
-			col.side.x = 0.f;
-		}
-		blockZ = _world->GetBlock(upperBody + offset);
-		if (blockZ != Block::Air) {
-			col.isCollision = true;
-			col.side.x = 0.f;
-		}
-	}
-
-	return col;
-}
-
 void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
 {
-	RayCastHitInfo upperRayInfo;
-	RayCastHitInfo lowerRayInfo;
+	Physics::CollisionInfo col;
 	_upperBody = GetUpperBody();
 	_middleBody = GetMiddleBody();
 	_lowerBody = GetLowerBody();
@@ -180,9 +90,8 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	}
 
 	_movementPropety.velocity += myMovement;
-	CollisionInfo col;
 	if (_movementPropety.velocity != glm::vec3(0.f))
-		col = CheckCollision(myMovement, _upperBody, _middleBody, _lowerBody);
+		col = _physics->CheckCollision(myMovement, _upperBody, _middleBody, _lowerBody, _position, _movementPropety.avoidBlockDistance);
 
 	if (!col.isCollision) {
 		return;
@@ -190,7 +99,7 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	if (_movementPropety.velocity != glm::vec3(0.f)) {
 		float velY = _movementPropety.velocity.y;
 		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
-		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.side.z, 0.f, _movementPropety.velocity.z * col.side.x);
+		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.sideNormal.z, 0.f, _movementPropety.velocity.z * col.sideNormal.x);
 		_movementPropety.velocity.y = velY;
 	}
 	return;
@@ -199,8 +108,8 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 
 void Player::PlayerVerticalMovement(Input* input)
 {
-	RayCastHitInfo upperRayInfo;
-	RayCastHitInfo lowerRayInfo;
+	Physics::RayCastHitInfo upperRayInfo;
+	Physics::RayCastHitInfo lowerRayInfo;
 	float velocityY = _movementPropety.velocity.y;
 
 	if (input->KeyPressed(GLFW_KEY_SPACE) && !_movementPropety.isAir) {
@@ -221,23 +130,23 @@ void Player::PlayerVerticalMovement(Input* input)
 	}
 
 
-	upperRayInfo = RayCast(_upperBody, _movementPropety.vecUp, 0.7f, 0.1f);
+	upperRayInfo = _physics->RayCast(_upperBody, glm::vec3(0.f, 1.f, 0.f), 0.7f, 0.1f);
 	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY > 0.f) {
 		velocityY = 0.f;
 	}
 
-	lowerRayInfo = RayCast(_lowerBody, -_movementPropety.vecUp, 0.3f, 0.051f);
+	lowerRayInfo = _physics->RayCast(_lowerBody, glm::vec3(0.f, -1.f, 0.f), 0.3f, 0.051f);
 	if (lowerRayInfo.hit && FloatLessThan(_lowerBody.y - glm::ceil(lowerRayInfo.hitRayPos.y), 0.12f) && !_movementPropety.isJump) {
 		_movementPropety.isAir = false;
 		velocityY = 0.f;
 		_upperBody.y = glm::ceil(_lowerBody.y - lowerRayInfo.distance) + _movementPropety.currObjectHeight;
 	}
-	else if (_movementPropety.isAir || !lowerRayInfo.hit) {
+	else {
 		velocityY += -(_movementPropety.g * _delta);
 		_movementPropety.isAir = true;
 		_movementPropety.isJump = false;
 	}
-	
+
 	_position.y = _upperBody.y;
 	_movementPropety.velocity.y = velocityY;
 	if (!_movementPropety.isCrouch) {
@@ -306,7 +215,7 @@ void Player::Update(float delta) {
 	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f);
 
 	if (input->KeyPressed(GLFW_KEY_R)) {
-		RayCastHitInfo info = RayCast(_position, forward, 25.f, 0.1f);
+		Physics::RayCastHitInfo info = _physics->RayCast(_position, forward, 25.f, 0.1f);
 		_monkey->SetPosition(info.hitRayPos);
 	}
 
