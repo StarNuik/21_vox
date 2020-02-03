@@ -20,7 +20,10 @@ namespace UIData {
 		std::deque<float> renderFull;
 	};
 
-	class DataRendering {};
+	class DataRendering {
+	public:
+		int selectedPostshader;
+	};
 
 	class DataPlayer {};
 

@@ -47,28 +47,31 @@ Material* ResourceLoader::GetMaterial(Block block) {return _materials[block];};
 
 void ResourceLoader::LoadShaders() {
 	//*Blocks
-	_shaders["Base"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/base.frag");
-	_shaders["DirLight"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/dirLight.frag");
-	_shaders["Phong"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/phong.frag");
-	_shaders["Normals"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/normals.frag");
-	_shaders["Shadows"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
+	_shaders["Base"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/base.frag");
+	_shaders["DirLight"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/dirLight.frag");
+	_shaders["Phong"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/phong.frag");
+	_shaders["Normals"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/normals.frag");
+	_shaders["Shadows"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/shadows.frag");
 
 	//* Post-Processing
-	_shaders["Post Base"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postBase.frag");
-	_shaders["Post HDR Basic"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdr0.frag");
-	_shaders["Post Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postGamma.frag");
-	_shaders["Post HDR Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrGamma.frag");
-	_shaders["Post HDR Filmic Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrFilmicGamma.frag");
-	_shaders["Post HDR Uncharted Gamma"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postHdrUnchartedGamma.frag");
-	_shaders["Post Main"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postMain.frag");
-	_shaders["Post Purple"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postPurple.frag");
-	_shaders["Post Inverse"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postInverse.frag");
-	_shaders["Post Grayscale"] = new Shader("./resources/Shaders/postBase.vert", "./resources/Shaders/postGrayscale.frag");
+	_shaders["Post None"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/none.frag");
+	_shaders["Post HDR Reinhard only"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrReinhard.frag");
+	_shaders["Post Gamma correction"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/gamma.frag");
+	_shaders["Post HDR Reinhard & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrReinhardGamma.frag");
+	_shaders["Post HDR Filmic & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrFilmicGamma.frag");
+	_shaders["Post HDR Uncharted & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrUnchartedGamma.frag");
+	_shaders["Post Main: HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesa.frag");
+	_shaders["Post Main & Purple"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaPurple.frag");
+	_shaders["Post Main & Inverse"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaInverse.frag");
+	_shaders["Post Main & Grayscale"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaGrayscale.frag");
+	_shaders["Post Main & Gaussian Blur 3x3"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur3x3.frag");
+	_shaders["Post Main & Sharpen"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaSharpen.frag");
+	_shaders["Post Main & Edge detection"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaEdge.frag");
 
 	//* Utilities
-	_shaders["Skybox"] = new Shader("./resources/Shaders/skybox.vert", "./resources/Shaders/skybox.frag");
-	_shaders["Skybox Sun"] = new Shader("./resources/Shaders/sun.vert", "./resources/Shaders/sun.frag");
-	_shaders["Shadow Renderer"] = new Shader("./resources/Shaders/shadowRenderer.vert", "./resources/Shaders/shadowRenderer.frag");
+	_shaders["Skybox"] = new Shader("./resources/Shaders/Vertex/skybox.vert", "./resources/Shaders/Fragment/skybox.frag");
+	_shaders["Skybox Sun"] = new Shader("./resources/Shaders/Vertex/sun.vert", "./resources/Shaders/Fragment/sun.frag");
+	_shaders["Shadow Renderer"] = new Shader("./resources/Shaders/Vertex/shadowRenderer.vert", "./resources/Shaders/Fragment/shadowRenderer.frag");
 	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
 	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 };

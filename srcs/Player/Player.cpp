@@ -184,7 +184,7 @@ void Player::Update(float delta) {
 	glm::vec3 up;
 	glm::vec3 right;
 
-	ChangePostShader();
+	// ChangePostShader();
 	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
 		_game->GetUI()->SetState(state);

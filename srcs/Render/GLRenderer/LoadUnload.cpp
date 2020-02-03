@@ -1,3 +1,4 @@
+#include <string>
 #include <GL/glew.h>
 #include "Render/GLRenderer.h"
 #include "Render/Skybox.h"
