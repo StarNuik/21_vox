@@ -3,14 +3,14 @@ in vec3 skyCoords;
 
 uniform samplerCube day;
 uniform samplerCube night;
-uniform float lerpVal;
+uniform float sunVal;
 
 out vec4 fragColor;
 
 void main() {
 	vec4 dayCol = texture(day, skyCoords);
 	vec4 nightCol = texture(night, skyCoords);
-	fragColor = mix(nightCol, dayCol, lerpVal);
+	fragColor = mix(nightCol, dayCol, sunVal);
 }
 
 // void main() {

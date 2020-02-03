@@ -11,16 +11,20 @@ public:
 	~RenderModel();
 	Shader* Use(Camera* camera);
 	void ApplySelf(Camera*, Shader*);
+	void ApplySelf(Shader*);
 	void SetPosition(glm::vec3);
 	void SetRotation(glm::quat);
 	void SetScale(glm::vec3);
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
 	glm::vec3 GetScale();
-	glm::mat4 GetAphineMatrix();
+	// glm::mat4 GetAphineMatrix();
+	void RecalculateModelMatrix();
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
 	Material* GetMaterial();
+	Shader* GetShader();
+	glm::mat4 GetModelMatrix();
 	bool operator<(const RenderModel&) const;
 private:
 	// void Init(Shader*, Texture*, Texture*, Geometry*);
@@ -33,4 +37,5 @@ private:
 	uint _shaderId;
 	uint _materialId;
 	uint _geometryId;
+	glm::mat4 _model;
 };

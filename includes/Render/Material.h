@@ -5,7 +5,7 @@
 
 class Material {
 public:
-	Material(std::string dirPath, float);
+	Material(std::string dirPath, float shininess, float emission);
 	~Material();
 	void Use(Shader*);
 	uint GetId();
@@ -14,6 +14,7 @@ private:
 	Texture _normalMap;
 	Texture _specularMap;
 	float _shininess;
+	float _emission;
 	uint _id;
 	static uint __nextId;
 };

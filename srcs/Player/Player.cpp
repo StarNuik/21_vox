@@ -201,12 +201,48 @@ void Player::GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm
 	}
 }
 
+void Player::ChangePostShader() {
+	Input* input = _game->GetInput();
+	
+	if (input->KeyJustPressed(GLFW_KEY_KP_0)) {
+		_game->GetRenderer()->SetPostShader("Post Main");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_1)) {
+		_game->GetRenderer()->SetPostShader("Post Base");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_2)) {
+		_game->GetRenderer()->SetPostShader("Post HDR Basic");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_3)) {
+		_game->GetRenderer()->SetPostShader("Post Gamma");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_4)) {
+		_game->GetRenderer()->SetPostShader("Post HDR Gamma");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_5)) {
+		_game->GetRenderer()->SetPostShader("Post HDR Filmic Gamma");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_6)) {
+		_game->GetRenderer()->SetPostShader("Post HDR Uncharted Gamma");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_7)) {
+		_game->GetRenderer()->SetPostShader("Post Purple");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_8)) {
+		_game->GetRenderer()->SetPostShader("Post Grayscale");
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_9)) {
+		_game->GetRenderer()->SetPostShader("Post Inverse");
+	}
+}
+
 void Player::Update(float delta) {
 	Input* input = _game->GetInput();
 	glm::vec3 forward;
 	glm::vec3 up;
 	glm::vec3 right;
 
+	ChangePostShader();
 	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
 		_game->GetUI()->SetState(state);
@@ -215,8 +251,8 @@ void Player::Update(float delta) {
 	}
 	if (_rotateCamera) {
 		glm::ivec2 mousePos = input->MousePosDelta();
-		_camAngleX += mousePos.x;
-		_camAngleY += mousePos.y;
+		_camAngleX += mousePos.x * MOUSE_SENSITIVITY;
+		_camAngleY += mousePos.y * MOUSE_SENSITIVITY;
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 

@@ -24,7 +24,6 @@ public:
 private:
 	Game* _game;
 	void LoadShaders();
-	void LoadTextures();
 	void LoadGeometries();
 	void LoadCubeMaps();
 	void LoadMaterials();

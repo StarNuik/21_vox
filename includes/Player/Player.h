@@ -9,6 +9,7 @@
 #include "World/Block.h"
 
 #define SPEED 10.f
+#define MOUSE_SENSITIVITY 0.75f
 
 class Player : public Entity {
 public:
@@ -61,6 +62,8 @@ private:
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
 	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
+
+	void ChangePostShader();
 
 	float RayCastDist(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep); // return the nearest distance to the block in the direction (limited by the max ray length). Else return inf
 	RayCastHitInfo RayCast(const glm::vec3 _position, glm::vec3 direction, const float rayLength, float rayStep);

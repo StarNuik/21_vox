@@ -1,9 +1,9 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "Types.h"
 
@@ -12,28 +12,56 @@ public:
 	class RenderEngineConfig;
 
 	GLRenderer(Game*, RenderEngineConfig config);
+	GLRenderer();
 	~GLRenderer();
-	GLFWwindow* GetWindow();
+	void Init(Game*, RenderEngineConfig config);
+	void InitChildren();
 
-	void AddModel(RenderModel*);
-	void RemoveModel(RenderModel*);
+	GLFWwindow* GetWindow();
+	void SetCursor(bool enabled);
 	void SetActiveCamera(Camera*);
 	Camera* GetActiveCamera();
 	glm::ivec2 GetWindowSize();
-	void SetCursor(bool enabled);
+	void SetPostShader(std::string);
 	
+	void AddModel(RenderModel*);
+	void RemoveModel(RenderModel*);
 	void RenderFrame();
 private:
-	bool _glfwOn;
-	bool _imguiOn;
-	uint _width;
-	uint _height;
-	bool _cursorEnabled;
-	GLFWwindow* _window;
-	std::vector<RenderModel*> _rendered;
-	Camera* _activeCamera;
-	Game* _game;
-	Framebuffer* _framebuffer;
+	void PrepareData();
+	void RenderBlocks();
+	void RenderPostprocess();
+
+	class StaticData {
+	public:
+		bool glfwOn;
+		bool imguiOn;
+		bool ready;
+		glm::ivec2 windowSize;
+		bool cursorEnabled;
+
+		GLFWwindow* window;
+		Game* game;
+		ResourceLoader* rs;
+		UIController* ui;
+
+		std::vector<RenderModel*> rendered;
+		Camera* activeCamera;
+		Skybox* skybox;
+		ShadowRenderer* shadows;
+		Framebuffer* screenFbo;
+		Shader* postShader;
+		Geometry* postQuad;
+	};
+	class FrameData {
+	public:
+		glm::mat4 view;
+		glm::mat4 projection;
+		glm::mat4 vp;
+		glm::vec3 cameraPos;
+	};
+	StaticData _static;
+	FrameData _frame;
 };
 
 class GLRenderer::RenderEngineConfig {
@@ -44,11 +72,6 @@ public:
 	bool windowResizeable;
 	bool cursorEnabled;
 	bool cursorRaw;
-	uint glVersionMajor;
-	uint glVersionMinor;
-	bool glForwardCompatibility;
-	bool glDepthTest;
 	bool glCullFace;
 	bool glCullCounterClockwise;
-	bool glSeamlessCubeMap;
 };
