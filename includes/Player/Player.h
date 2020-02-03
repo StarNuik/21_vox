@@ -50,7 +50,7 @@ private:
 
 	RenderModel* _monkey;
 
-	inline void Move(glm::vec3 &vel, const float& speed)
+	inline void Move(const glm::vec3 vel, const float& speed)
 	{
 		_position += vel * _delta * speed;
 	}

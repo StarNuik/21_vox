@@ -9,6 +9,7 @@
 #include "Render/RenderModel.h"
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
+#include "Utilities/Log.h"
 // #include <glm/gtx/euler_angles.hpp>
 // #include <glm/gtx/quaternion.hpp>
 
@@ -68,6 +69,8 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right)
 {
 	Physics::CollisionInfo col;
+	col.distX = INFINITY;
+	col.distZ = INFINITY;
 	_upperBody = GetUpperBody();
 	_middleBody = GetMiddleBody();
 	_lowerBody = GetLowerBody();
@@ -76,8 +79,8 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	right.y = 0.f;
 	forward = glm::normalize(forward);
 	right = glm::normalize(right);
-
 	glm::vec3 myMovement = glm::vec3(0.f);
+
 	if (input->KeyPressed(GLFW_KEY_W)) {
 		myMovement += forward;
 	}
@@ -95,15 +98,30 @@ void Player::PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec
 	if (_movementPropety.velocity != glm::vec3(0.f))
 		col = _physics->CheckCollision(myMovement, _upperBody, _middleBody, _lowerBody, _position, _movementPropety.avoidBlockDistance);
 
-	if (!col.isCollision) {
-		return;
+
+	if (col.isCollision) {
+		if (_movementPropety.velocity != glm::vec3(0.f)) {
+			float velY = _movementPropety.velocity.y;
+			_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
+			_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.sideNormal.z, 0.f, _movementPropety.velocity.z * col.sideNormal.x);
+			_movementPropety.velocity.y = velY;
+		}
 	}
-	if (_movementPropety.velocity != glm::vec3(0.f)) {
-		float velY = _movementPropety.velocity.y;
-		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
-		_movementPropety.velocity = glm::vec3(_movementPropety.velocity.x * col.sideNormal.z, 0.f, _movementPropety.velocity.z * col.sideNormal.x);
-		_movementPropety.velocity.y = velY;
+
+	if (!col.sideNormal.z && glm::abs(_movementPropety.velocity.x) * SPEED * _delta > col.distX) {
+		_movementPropety.velocity.x = col.distX / _delta / SPEED * (_movementPropety.velocity.x > 0.f ? 1.f : -1.f);
 	}
+	if (!col.sideNormal.x && glm::abs(_movementPropety.velocity.z) * SPEED * _delta  > col.distZ) {
+		_movementPropety.velocity.z = col.distZ / _delta / SPEED * (_movementPropety.velocity.z > 0.f ? 1.f : -1.f);
+	}
+
+	if (!_movementPropety.isCrouch) {
+		Move(glm::vec3(_movementPropety.velocity.x, 0.f, _movementPropety.velocity.z), SPEED);
+	}
+	else {
+		Move(glm::vec3(_movementPropety.velocity.x, 0.f, _movementPropety.velocity.z), CROUCHING_SPEED);
+	}
+
 	return;
 }
 
@@ -152,10 +170,10 @@ void Player::PlayerVerticalMovement(Input* input)
 	_position.y = _upperBody.y;
 	_movementPropety.velocity.y = velocityY;
 	if (!_movementPropety.isCrouch) {
-		Move(_movementPropety.velocity, SPEED);
+		Move(glm::vec3(0.f, velocityY, 0.f), SPEED);
 	}
 	else {
-		Move(_movementPropety.velocity, CROUCHING_SPEED);
+		Move(glm::vec3(0.f, velocityY, 0.f), CROUCHING_SPEED);
 	}
 }
 
