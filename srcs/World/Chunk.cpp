@@ -4,7 +4,7 @@
 #include "World/Chunk.h"
 #include "Engine/Game.h"
 #include "Generation/MapGeneration.h"
-#include "Generation/BiomeDefine.h"
+#include "Generation/TreeGeneration.h"
 
 Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_state = false;
@@ -83,27 +83,13 @@ void Chunk::Generate() {
 				else if (block.biom == MapGeneration::GrassLand && (x > 3 && x < 13 && z > 3 && z < 13) // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
 					&& mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Tree).approximateElevation == 1.f)
 				{
-					int treeHeight = lastLayerBorder + 5;
-					for (int y = lastLayerBorder + 1; y < treeHeight; y++){
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Log);
-						int globalTreeHeight = (treeHeight << 1) - y - 1;
-						int distanceToLogX = x - 2;
-						int distanceToLogZ = z - 2;
-
-						// Leaves for tree generation, sorry for "IF"
-						for (int xn = distanceToLogX; xn < distanceToLogX + 5; xn++){
-							for (int zn = distanceToLogZ; zn < distanceToLogZ + 5; zn++){
-								if ((!((xn == distanceToLogX && zn == distanceToLogZ) || (xn == distanceToLogX + 4 && zn == distanceToLogZ)
-								|| (xn == distanceToLogX + 4 && zn == distanceToLogZ + 4) || (xn == distanceToLogX && zn == distanceToLogZ + 4))))
-									w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight, _position.y * 16 + zn), BlockType::Leaves);
+					for (int y = 0; y < TREE_HEIGHT; y++)
+						for (int xn = 0; xn < TREE_SIZE; xn++)
+							for (int zn = 0; zn < TREE_SIZE; zn++)
+							{
+								if (TreeModels[0][y][xn][zn] != Block::Air)
+									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 2, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 2), TreeModels[TreeType::BasicTree][y][xn][zn]);
 							}
-						}
-						for (int xn = distanceToLogX + 1; xn < distanceToLogX + 4; xn++){
-							for (int zn = distanceToLogZ + 1; zn < distanceToLogZ + 4; zn++){
-								w->SetBlock(glm::ivec3(_position.x * 16 + xn, globalTreeHeight + 1, _position.y * 16 + zn), BlockType::Leaves);
-							}
-						}
-					}
 				}
 			}
 
