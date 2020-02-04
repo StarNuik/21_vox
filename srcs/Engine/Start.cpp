@@ -6,6 +6,7 @@
 
 #include "Render/GLRenderer.h"
 #include "Engine/Game.h"
+#include "Engine/Physics.h"
 #include "Input/Input.h"
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
@@ -46,7 +47,7 @@ void Game::InitSystems() {
 	_ui = new UIController(this);
 	_world = new World(this);
 	_mpGen = new MapGeneration();
-
+	_physics = new Physics(this);
 	_player = new Player(this);
 	AddEntity(_player);
 
@@ -85,4 +86,5 @@ Game::~Game() {
 	delete _resources;
 	delete _input;
 	delete _renderer;
+	delete _physics;
 };

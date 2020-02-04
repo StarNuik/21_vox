@@ -25,12 +25,14 @@ public:
 	UIController* GetUI();
 	World* GetWorld();
 	MapGeneration* GetGeneration();
+	Physics* GetPhysics();
 	float GetRuntime();
 	float GetSunVal();
 	float GetSunAngle();
 	float GetMoonVal();
 	float GetMoonAngle();
 	MapGeneration* _mpGen;
+	Physics* _physics;
 	Player* GetPlayer();
 private:
 	void Update(float delta);
