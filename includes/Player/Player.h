@@ -21,6 +21,20 @@ public:
 	glm::vec3 GetDirection();
 
 private:
+    struct MovementProperty
+    {
+        int godMode = 1;
+        float currObjectHeight = 1.80f;
+        const float maxObjectHeight = 1.80f;
+        const float avoidBlockDistance = 0.12f;
+        const float g = 9.83f;
+        const float jumpForce = 2.1f;
+        bool isAir = false;
+        bool isJump = false;
+        bool isCrouch = false;
+        glm::vec3 velocity = glm::vec3(0);
+    };
+
 	Game* _game;
 	Camera* _camera;
 	World* _world;
@@ -38,19 +52,6 @@ private:
 
 	RenderModel* _monkey;
 
-    struct MovementProperty
-    {
-        int godMode = 1;
-        float currObjectHeight = 1.80f;
-        const float maxObjectHeight = 1.80f;
-        const float avoidBlockDistance = 0.12f;
-        const float g = 9.83f;
-        const float jumpForce = 2.1f;
-        bool isAir = false;
-        bool isJump = false;
-        bool isCrouch = false;
-        glm::vec3 velocity = glm::vec3(0);
-    };
 
 	inline void Move(const glm::vec3 vel, const float& speed)
 	{
