@@ -80,8 +80,8 @@ void Chunk::Generate() {
 						for (int xn = 0; xn < TREE_SIZE; xn++)
 							for (int zn = 0; zn < TREE_SIZE; zn++)
 							{
-								if (TreeModels[TreeType::FirTree][y][xn][zn] != Block::Air)
-									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 2, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 2), TreeModels[TreeType::FirTree][y][xn][zn]);
+								if (TreeModels[TreeType::BasicTree][y][xn][zn] != Block::Air)
+									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 2, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 2), TreeModels[TreeType::BasicTree][y][xn][zn]);
 							}
 				}
 				// std::cout << (int)TreeModels[TreeType::FirTree][32][0][0] << std::endl;
