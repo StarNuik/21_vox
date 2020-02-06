@@ -15,6 +15,7 @@
 // #include "BiomeDefine.h"
 // #include "Engine/Engine.h"
 // #include <cstdint>
+#include "Trees.h"
 #include "FastNoise.h"
 #include "Types.h"
 #define MAX_DIST_TO_SMOOTHING 25
@@ -27,14 +28,16 @@ class MapGeneration
 public:
     MapGeneration();
     ~MapGeneration() {};
-public:
+    Trees tree;
+
     struct StoredMapData
     {
         float approximateElevation;
         int exactElevation;
         int biom;
-        BlockType firstBlockLayer;
-        BlockType lastBlockLayer;
+        __BLOCK_TYPE firstBlockLayer;
+        __BLOCK_TYPE lastBlockLayer;
+        __BLOCK_TYPE treeType;
         StoredMapData() {};
     };
 
@@ -70,6 +73,7 @@ public:
     void SetTerraceValue(float value);
 	std::string GetNoiseName(GenerationType);
 private:
+
     float _exp; // For sharp mountain peaks
     float _terraceValue; // For terrace
     FastNoise _noises[Size];

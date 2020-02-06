@@ -1,5 +1,4 @@
 #include "Generation/MapGeneration.h"
-// #include "Generation/BiomeDefine.h"
 #include <iostream>
 #define LERP MapGeneration::Lerp
 
@@ -162,7 +161,7 @@ float MapGeneration::TreeGeneration(glm::ivec2 pos)
   }
   if (noise.GetNoise(pos.x, pos.y) == max)
     return 1.f;
-  return -1.f;
+  return tree.Nothing;
 }
 
 float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
@@ -436,6 +435,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
 
   column.biom = BiomeGeneration(pos);
+  column.treeType = tree.Nothing;
   switch (column.biom)
   {
     case GenerationType::Ocean:
@@ -466,6 +466,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.firstBlockLayer = BlockType::Sand;
         column.lastBlockLayer = BlockType::Sand;
       }
+      else if (TreeGeneration(pos) != tree.Nothing)
+        column.treeType = tree.First + rand() % tree.OakTreeTypeTwo;
     }
       break;
     case GenerationType::HighLand:
@@ -489,6 +491,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = BlockType::Dirt;
       column.lastBlockLayer = BlockType::SnowGrass;
+      if (TreeGeneration(pos) != tree.Nothing)
+        column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
     }
       break;
     default:
@@ -578,6 +582,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       break;
   }
   column.biom = 0;
+  column.treeType = tree.Nothing;
   column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
   return column;
 }

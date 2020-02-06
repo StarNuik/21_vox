@@ -17,6 +17,7 @@ class Entity;
 class Game;
 class Locator;
 class MapGeneration;
+class TreeTypes;
 class Input;
 class Player;
 class Camera;
