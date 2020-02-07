@@ -224,8 +224,7 @@ float MapGeneration::LandGenerationColumn(glm::ivec2 pos)
   float e = 0.5f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
   e = (e * 0.5f + 0.5f);
   
-  float terrace = round(e * terraceValue) / terraceValue;  
-  float elevation = terrace;
+  float elevation = round(e * terraceValue) / terraceValue;
   return elevation;
 }
 
@@ -428,6 +427,44 @@ int MapGeneration::BiomeGeneration(glm::ivec2 pos)
   return TestBiomeDefinition(e, pos);
 }
 
+__BLOCK_TYPE MapGeneration::RegenerateDimond(glm::vec3 pos)
+{
+  FastNoise& noise = _noises[OreDimond];
+  float elevation = noise.GetNoise(pos.x, pos.y, pos.z) * 0.5f + 0.5f;
+  if (elevation < 0.5f)
+    return Block::OreDiamond;
+  return Block::Air;
+}
+
+__BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int blockHeight)
+{
+  if (elevation > 0.545f && elevation < 0.558f)
+    return Block::OreCoal;
+  else if (elevation > 0.166f && elevation < 0.168f)
+    return Block::OreIron;
+  else if (elevation > 0.8675f && elevation < 0.868f )
+    return Block::OreGold;
+  if (elevation > 0.9674f && elevation < 0.9680f && blockHeight <= 25)
+    return Block::OreDiamond;
+  else
+    return Block::Air;
+}
+
+MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int minHeight)
+{
+  StoredOreData ore;
+  FastNoise& noise = _noises[Ore];
+  float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
+  glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
+  ore.type = Block::Cobblestone;
+  float elevation = noise.GetNoise(pos.x, pos.y, pos.z) * 0.5f + 0.5f;
+  ore.type = OreDefinition(elevation, minHeight);
+  if (ore.type == Block::OreDiamond)
+    ore.type = RegenerateDimond(pos);
+
+  return ore;
+}
+
 MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition)
 {
   StoredMapData column;
@@ -573,6 +610,14 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.lastBlockLayer = BlockType::Water;
     }
       break;
+    case GenerationType::Ore:
+    {
+      column.approximateElevation = LandGenerationColumn(pos);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
+      column.firstBlockLayer = BlockType::Grass;
+      column.lastBlockLayer = BlockType::Grass;
+    }
+      break;
     default:
     {
       column.approximateElevation = BasicGenerationColumn(pos);
@@ -584,6 +629,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   column.biom = 0;
   column.treeType = tree.Nothing;
   column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
+  // std::cout << column.exactElevation << std::endl;
   return column;
 }
 
@@ -651,6 +697,15 @@ MapGeneration::MapGeneration()
   _noises[HighLand].SetNoiseType(FastNoise::Perlin);
   _noises[HighLand].SetFrequency(0.01);
 
+  _noises[Ore].SetNoiseType(FastNoise::Cellular);
+  _noises[Ore].SetFrequency(0.35);
+  _noises[Ore].SetCellularJitter(0.75);
+
+  _noises[OreDimond].SetNoiseType(FastNoise::Cellular);
+  _noises[OreDimond].SetSeed(1330);
+  _noises[OreDimond].SetFrequency(0.35);
+  _noises[OreDimond].SetCellularJitter(0.85);
+
   _noiseNames[Basic] = "Basic";
   _noiseNames[GrassLand] = "GrassLand";
   _noiseNames[Beach] = "Beach";
@@ -666,6 +721,8 @@ MapGeneration::MapGeneration()
   _noiseNames[Crevices] = "Crevices";
   _noiseNames[PerlinX] = "PerlinX";
   _noiseNames[PerlinY] = "PerlinY";
+  _noiseNames[Ore] = "Ore";
+  _noiseNames[OreDimond] = "OreDimond";
 }
 
 FastNoise& MapGeneration::GetNoise(MapGeneration::GenerationType genType) {return _noises[genType];};

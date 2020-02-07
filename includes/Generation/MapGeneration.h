@@ -41,6 +41,13 @@ public:
         StoredMapData() {};
     };
 
+    struct StoredOreData
+    {
+        glm::ivec3 pos;
+        __BLOCK_TYPE type;
+        StoredOreData() {};
+    };
+
     enum GenerationType {
         Basic = 0,
         Ocean,
@@ -54,6 +61,8 @@ public:
         ElevationCaves,
         SecondElevationCaves,
         Crevices,
+        Ore,
+        OreDimond,
         Tree,
         River,
         PerlinX,
@@ -66,6 +75,7 @@ public:
 
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
+    StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);
@@ -105,6 +115,9 @@ private:
     int BiomeGeneration(glm::ivec2 pos);
     int BiomeDefinition(int elevation, glm::ivec2 pos);
     int TestBiomeDefinition(float e,  glm::ivec2 pos);
+
+    __BLOCK_TYPE OreDefinition(float elevation, int blockHeight);
+    __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
     BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
