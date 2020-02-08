@@ -114,9 +114,9 @@ private:
   
     int BiomeGeneration(glm::ivec2 pos);
     int BiomeDefinition(int elevation, glm::ivec2 pos);
-    int TestBiomeDefinition(float e,  glm::ivec2 pos);
+    int TestBiomeDefinition(float e, glm::ivec2 pos);
 
-    __BLOCK_TYPE OreDefinition(float elevation, int blockHeight);
+    __BLOCK_TYPE OreDefinition(float elevation, int currBlockHeight, int maxBlockHeight);
     __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
