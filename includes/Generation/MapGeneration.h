@@ -18,10 +18,10 @@
 #include "Trees.h"
 #include "FastNoise.h"
 #include "Types.h"
+#define MAX_DIST_TO_CHECK_BIOME 5
 #define MAX_DIST_TO_SMOOTHING 25
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
-
-#define MAX_DIST_TO_CHECK_BIOME 5
+#define MIN_WATER_LEVEL 40
 
 class MapGeneration
 {
@@ -68,6 +68,7 @@ public:
         PerlinX,
         PerlinY,
         Biomes,
+        Nothing,
         First = Basic,
         Last = Biomes,
         Size = Last + 1
@@ -76,6 +77,7 @@ public:
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
     StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
+    float CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);
@@ -121,6 +123,7 @@ private:
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
     BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    BiomeInfo FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // Find biome of interesest
     int BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
     float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
     float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks

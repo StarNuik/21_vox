@@ -287,6 +287,40 @@ MapGeneration::BiomeInfo MapGeneration::CheckingTheBiomeIntTheNextColumn(const g
   return BiomeInfo{biome, 0};
 }
 
+MapGeneration::BiomeInfo MapGeneration::FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biomeOfInterest, const int maxDistToCheckBiome)
+{
+  int distance = 1;
+  int rightBlockBiome;
+  int leftBlockBiome;
+  int topBlockBiome;
+  int buttomBlockBiome;
+
+  if (maxDistToCheckBiome < distance)
+    return (BiomeInfo{Nothing, 0});
+
+  while (distance < maxDistToCheckBiome)
+  {
+    rightBlockBiome = BiomeInPositionOfInterest(pos, glm::ivec2(distance, 0));
+    if (rightBlockBiome == biomeOfInterest)
+      return (BiomeInfo{rightBlockBiome, distance});
+
+    leftBlockBiome = BiomeInPositionOfInterest(pos, glm::ivec2(-distance, 0));
+    if (leftBlockBiome == biomeOfInterest)
+      return (BiomeInfo{leftBlockBiome, distance});
+
+    topBlockBiome = BiomeInPositionOfInterest(pos, glm::ivec2(0, distance));
+    if (topBlockBiome == biomeOfInterest)
+      return (BiomeInfo{topBlockBiome, distance});
+
+    buttomBlockBiome = BiomeInPositionOfInterest(pos, glm::ivec2(0, -distance));
+    if (buttomBlockBiome == biomeOfInterest)
+      return (BiomeInfo{buttomBlockBiome, distance});
+
+    distance++;
+  }
+  return BiomeInfo{Nothing, 0};
+}
+
 float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y) // x,y - coord. z - bioms
 {
   float ret = -1;
@@ -461,8 +495,25 @@ MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, 
   ore.type = OreDefinition(elevation, pos.y, maxHeight);
   if (ore.type == Block::OreDiamond)
     ore.type = RegenerateDimond(pos);
-
   return ore;
+}
+
+float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
+{
+  FastNoise& noise = _noises[Crevices];
+
+  float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
+  glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
+  // if (FindTheBiomeIntTheNextColumn(glm::ivec2(pos.x, pos.z), Ocean, 3).biome == Ocean)
+  //   return -1.f;
+  float terraceValue = _terraceValue;
+  float e = noise.GetNoise(pos.x * 0.55f, pos.y, pos.z * 3.5f);
+  e = (e * 0.5f + 0.5f);
+  if (e < 0.815f)
+    return -1.f;
+
+  float terrace = round(e * terraceValue) / terraceValue;
+  return terrace;
 }
 
 MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition)

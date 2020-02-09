@@ -39,19 +39,10 @@ void Chunk::Generate() {
 
 			int cavesDepth = firstLayerBorder - 40;
 			int secondCavesDepth = firstLayerBorder - 40;
-			int crevicesDepth = firstLayerBorder - 15;
+			int crevicesDepth = firstLayerBorder - 30;
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = 60 + block.exactElevation - 1;
-			if ((x > 3 && x < 13 && z > 3 && z < 13) && block.treeType != mp.tree.Nothing) { // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
-				for (int y = 0; y < TREE_HEIGHT; y++)
-					for (int xn = 0; xn < TREE_SIZE; xn++)
-						for (int zn = 0; zn < TREE_SIZE; zn++)
-						{
-							if (mp.tree.TreeModels[block.treeType][y][xn][zn] != Block::Air)
-								w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 3, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 3), mp.tree.TreeModels[block.treeType][y][xn][zn]);
-						}
-			}
 
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
@@ -78,14 +69,28 @@ void Chunk::Generate() {
 					for (int y = secondCavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
 				}
-				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Crevices).exactElevation; // Crevices generation
-				if (elevation != 0)
-				{
-					for (int y = cavesDepth; y < 255; y++)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
+
+				int crevicesHeight = 0;
+
+				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
+						float e = mp.CrevicesGenerations(_position, glm::ivec3(x, y, z)); // Crevices generation				elevation = 
+						if (e != -1.f) {
+							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);	
+							crevicesHeight = y;
+						}
 				}
 
-				for (int y = 0; y < lastLayerBorder; y++) {
+				if (crevicesHeight < lastLayerBorder && (x > 3 && x < 13 && z > 3 && z < 13) && block.treeType != mp.tree.Nothing) { // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
+					for (int y = 0; y < TREE_HEIGHT; y++)
+						for (int xn = 0; xn < TREE_SIZE; xn++)
+							for (int zn = 0; zn < TREE_SIZE; zn++)
+							{
+								if (mp.tree.TreeModels[block.treeType][y][xn][zn] != Block::Air)
+									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 3, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 3), mp.tree.TreeModels[block.treeType][y][xn][zn]);
+							}
+				}
+
+				for (int y = 0; y < lastLayerBorder; y++) { // Ore Generation
 					__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z));
 					if(blockType == Block::Stone)
 					{
@@ -94,7 +99,6 @@ void Chunk::Generate() {
 							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), ore.type);
 					}
 				}
-
 			}
 
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), BlockType::Bedrock);
