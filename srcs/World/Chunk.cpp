@@ -25,6 +25,7 @@ void Chunk::Generate() {
 	World* w = _game->GetWorld();
 	MapGeneration mp = *_game->GetGeneration();
 	MapGeneration::StoredMapData block;
+	MapGeneration::StoredMapData sub;
 	MapGeneration::StoredOreData ore;
 
 	for (int x = 0; x < 16; x++)
@@ -36,19 +37,26 @@ void Chunk::Generate() {
 			int firstLayerBorder = 40 + block.exactElevation;
 			for (int y = 1; y < firstLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
-
 			int cavesDepth = firstLayerBorder - 40;
 			int secondCavesDepth = firstLayerBorder - 40;
 			int crevicesDepth = firstLayerBorder - 30;
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = 60 + block.exactElevation - 1;
-
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
 
-			if (block.biom != MapGeneration::Ocean)
+			if (block.biom == MapGeneration::River && block.aboveRiverBiome == MapGeneration::HighLand) { // river generation
+				sub = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::HighLand);
+				int lastSubLayerBorder = 60 + sub.exactElevation - 1;
+				for (int y = lastLayerBorder + (firstLayerBorder % 9) + 1; y < lastSubLayerBorder; y++) {
+					w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), sub.firstBlockLayer);
+				}
+				w->SetBlock(glm::ivec3(_position.x * 16 + x, lastSubLayerBorder, _position.y * 16 + z), sub.lastBlockLayer);
+			}
+
+			if (block.biom != MapGeneration::Ocean && block.biom != MapGeneration::River)
 			{
 				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;// caves generation
 				if (elevation != 0)

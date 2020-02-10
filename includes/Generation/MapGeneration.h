@@ -20,6 +20,7 @@
 #include "Types.h"
 #define MAX_DIST_TO_CHECK_BIOME 5
 #define MAX_DIST_TO_SMOOTHING 25
+#define MAX_DIAGONAL_DIST_TO_SMOITHING 5
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 #define MIN_WATER_LEVEL 40
 
@@ -38,6 +39,8 @@ public:
         __BLOCK_TYPE firstBlockLayer;
         __BLOCK_TYPE lastBlockLayer;
         __BLOCK_TYPE treeType;
+        int aboveRiverElevation;
+        int aboveRiverBiome;
         StoredMapData() {};
     };
 
@@ -51,6 +54,7 @@ public:
     enum GenerationType {
         Basic = 0,
         Ocean,
+        River,
         Beach,
         BeachBordered,
         GrassLand,
@@ -64,7 +68,6 @@ public:
         Ore,
         OreDimond,
         Tree,
-        River,
         PerlinX,
         PerlinY,
         Biomes,
@@ -115,6 +118,8 @@ private:
     float CrevicesGeneration(glm::ivec2 pos);
   
     int BiomeGeneration(glm::ivec2 pos);
+    int BiomeGenerationWithoutRiver(glm::ivec2 pos);
+
     int BiomeDefinition(int elevation, glm::ivec2 pos);
     int TestBiomeDefinition(float e, glm::ivec2 pos);
 
@@ -122,11 +127,19 @@ private:
     __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
+    void SmoothingButtJointWithoutRiver(float& elevation, glm::ivec2 pos, int biome);
+    // void SmoothingButtJointAround(const float& elevation, const glm::ivec2 pos, const int biome, const int maxDistance);
+
     BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    // BiomeInfo CheckingTheBiomeIntTheNextColumnWithoutRiver(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    
     BiomeInfo FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // Find biome of interesest
     int BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
     float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
-    float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
+    float CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
+    
+    // float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
+    float GetApprox(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7); // returns average height among nearby blocks
 
 
     float _Hash(const float n);
