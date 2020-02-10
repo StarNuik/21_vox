@@ -651,14 +651,18 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.approximateElevation = 1.f;
       column.exactElevation = 1;
-      column.firstBlockLayer = BlockType::Water;
       column.lastBlockLayer = BlockType::Water;
+      if (FindTheBiomeIntTheNextColumn(pos, Snow, 4).biome == Snow)
+        column.lastBlockLayer = BlockType::Ice;
+      column.firstBlockLayer = BlockType::Water;
     }
       break;
     case GenerationType::River:
     {
       column.aboveRiverBiome = BiomeGenerationWithoutRiver(pos);
       column.lastBlockLayer = BlockType::Water;
+      if (column.aboveRiverBiome == Snow)
+        column.lastBlockLayer = BlockType::Ice;
       column.firstBlockLayer = BlockType::Water;
       column.approximateElevation = 1.f;
       column.exactElevation = 1;
