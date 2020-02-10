@@ -17,7 +17,7 @@ void UIController::RenderingUI() {
 	UIData::DataRendering& data = _dataRendering;
 
 	ImGui::Text("Post-process Shader");
-	const int postSize = 19;
+	const int postSize = 21;
 	const char* postShaders[postSize] = {
 		"Main: Bloom & HDR Aces approximate & Gamma",
 		"None",
@@ -38,6 +38,8 @@ void UIController::RenderingUI() {
 		"Pre Bloom",
 		"Gaussian Blur 5x5",
 		"Main & Outline",
+		"Main & Hueshift",
+		"Main & Outline Moving",
 	};
 	ImGui::Combo("Post-process Shader", &_dataRendering.selectedPostshader, postShaders, postSize);
 	if (ImGui::Button("Set post shader")) {

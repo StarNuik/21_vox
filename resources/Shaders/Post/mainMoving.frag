@@ -43,18 +43,22 @@ vec3 HueShift(vec3 color, float hueShift) {
 	return color;
 }
 
+float mySin(float offset) {
+	return sin(runtime + offset) * 25.0;
+}
+
 vec3 EdgeDetect(vec3 color) {
 	vec2 texelSize = vec2(1.0 / textureSize(screenTexture, 0).x, 1.0 / textureSize(screenTexture, 0).y);
 	vec2 offsets[9] = vec2[](
-		vec2(-texelSize.x, texelSize.y),
-		vec2(0.0, texelSize.y),
-		vec2(texelSize.x, texelSize.y),
-		vec2(-texelSize.x, 0.0),
+		vec2(-texelSize.x * mySin(0.0), texelSize.y * mySin(1.0)),
+		vec2(0.0, texelSize.y * mySin(2.0)),
+		vec2(texelSize.x * mySin(3.0), texelSize.y * mySin(4.0)),
+		vec2(-texelSize.x * mySin(5.0), 0.0),
 		vec2(0.0, 0.0),
-		vec2(texelSize.x, 0.0),
-		vec2(-texelSize.x, -texelSize.y),
-		vec2(0.0, -texelSize.y),
-		vec2(texelSize.x, -texelSize.y)
+		vec2(texelSize.x * mySin(6.0), 0.0),
+		vec2(-texelSize.x * mySin(7.0), -texelSize.y * mySin(8.0)),
+		vec2(0.0, -texelSize.y * mySin(9.0)),
+		vec2(texelSize.x * mySin(10.0), -texelSize.y * mySin(11.0))
 	);
 	const float kernel[9] = float[] (
 		0.2, 0.2, 0.2,

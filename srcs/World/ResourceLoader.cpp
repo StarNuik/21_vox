@@ -74,6 +74,8 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Post Pre Bloom"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/preBloom.frag");
 	_shaders["Post Gaussian Blur 5x5"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/blur5x5.frag");
 	_shaders["Post Main & Outline"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/mainOutline.frag");
+	_shaders["Post Main & Hueshift"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/mainHueshift.frag");
+	_shaders["Post Main & Outline Moving"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/mainMoving.frag");
 
 	//* Utilities
 	_shaders["Skybox"] = new Shader("./resources/Shaders/Vertex/skybox.vert", "./resources/Shaders/Fragment/skybox.frag");
@@ -99,7 +101,7 @@ void ResourceLoader::LoadCubeMaps() {
 		"./resources/CubeMaps/day_top.png",
 		"./resources/CubeMaps/day_top.png",
 		"./resources/CubeMaps/day_top.png",
-		"./resources/CubeMaps/day_sun.png",
+		"./resources/CubeMaps/day_top.png",
 		"./resources/CubeMaps/day_top.png"
 	};
 	std::string pathsNight[6] = {
@@ -135,5 +137,5 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
 	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
-	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, 10.f);
+	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
 };

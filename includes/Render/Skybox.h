@@ -11,6 +11,8 @@
 #define MOON_DIFFUSE (.08f, .08f, .12f)
 #define MOON_AMBIENT (.03f, .03f, .03f)
 
+#define SKY_COLOR (.39f, .79f, 1.0f)
+
 class Skybox {
 public:
 	Skybox(Game*, Shader*, CubeMap* day, CubeMap* night);
@@ -24,7 +26,7 @@ public:
 	Skybox();
 	~Skybox();
 	void Init(Game*);
-	void PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal, float bloomCutoff);
+	void PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal);
 	void Render();
 	void Use();
 private:
@@ -53,5 +55,4 @@ private:
 	bool _easySunApply;
 	float _moonVal;
 	bool _easyMoonApply;
-	float _bloom;
 };

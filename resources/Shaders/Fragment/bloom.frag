@@ -28,15 +28,22 @@ uniform vec3 cameraPos;
 uniform DirLight dirLight[2];
 uniform Material material;
 uniform sampler2D shadowMap;
-uniform float bloomCutoff;
 
-vec3 BloomColor(vec3 color, float cutoff) {
+vec3 BloomColor(vec3 color) {
+	const float threshold = 0.5;
+	const float size = 0.4;
+	const float antisize = 1.0 / 0.2;
+
 	float lum = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float diff = lum - threshold;
 	vec3 bright;
-	if (lum >= bloomCutoff)
-		bright = color;
-	else
+	if (diff < 0.0) {
 		bright = vec3(0.0);
+	} else if (diff < size) {
+		bright = color * diff * antisize;
+	} else {
+		bright = color;
+	}
 	return bright;
 }
 
@@ -87,7 +94,7 @@ void main() {
 	for (int i = 0; i < 2; i++)
 		result += CalcDirLight(dirLight[i], normal, viewDir, shadow);
 
-	vec3 bright = BloomColor(result, bloomCutoff);
+	vec3 bright = BloomColor(result);
 
 	fragColor = vec4(result, 1.0);
 	brightColor = vec4(bright, 1.0);

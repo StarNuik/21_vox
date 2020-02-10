@@ -42,7 +42,6 @@ void GLRenderer::RenderBlocks() {
 		if (shader != lastShader) {
 			shader->Use();
 			shader->SetFloat3("cameraPos", _frame.cameraPos);
-			shader->SetFloat("bloomCutoff", _static.bloomCutoff);
 			_static.skybox->ApplyDirLights(shader);
 			_static.shadows->ApplySelf(shader);
 			lastShader = shader;
@@ -114,7 +113,7 @@ void GLRenderer::PrepareData() {
 	_frame.vp = _frame.projection * _frame.view;
 	_frame.cameraPos = _static.activeCamera->GetPosition();
 	_static.shadows->PrepareData(_static.game->GetSunAngle());
-	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal(), _static.bloomCutoff);
+	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
 	// _static.skybox->PrepareData(45, 0, 1, 0);
 	// _static.skybox->PrepareData(30, 10, 1, 0);
 	std::sort(_static.rendered.begin(), _static.rendered.end(), RenderModelLess);

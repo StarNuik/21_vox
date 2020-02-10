@@ -5,6 +5,8 @@
 
 #include "Types.h"
 
+#define VERTICE_SIZE 6
+
 class Geometry {
 public:
 	Geometry(std::string);
