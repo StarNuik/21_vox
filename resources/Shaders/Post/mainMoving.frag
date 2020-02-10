@@ -86,7 +86,7 @@ vec3 aces_approx(vec3 v)
 void main() {
 	const float gamma = 2.2;
 
-	vec3 hdrColor = texture(screenTexture, fragPos).rgb;
+	vec3 hdrColor = texture(screenTexture, fragPos+ vec2(sin(runtime + fragPos.y) * 0.008, sin(runtime + 1.25 + fragPos.x) * 0.008)).rgb;
 	vec3 bloomColor = texture(bloomTexture, fragPos).rgb;
 	vec3 totalColor = hdrColor + bloomColor;
 	totalColor = EdgeDetect(totalColor);
