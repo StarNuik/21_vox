@@ -68,12 +68,11 @@ void Skybox::Init(Game* game) {
 	vertices.insert(vertices.end(), buffer, buffer + 48 * 6);
 	_skyGeometry = new Geometry(vertices);
 
-	_shader = rs->GetShader("Skybox");
+	_shader = rs->GetShader("Skybox Bloom");
 	_dayCubemap = rs->GetCubeMap("Day");
 	_nightCubemap = rs->GetCubeMap("Night");
-	//! Repair these
-	_sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Sun), rs->GetGeometry("Sun"));
-	_moonModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Moon), rs->GetGeometry("Sun"));
+	_sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun Bloom"), rs->GetMaterial(Block::Sun), rs->GetGeometry("Sun"));
+	_moonModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun Bloom"), rs->GetMaterial(Block::Moon), rs->GetGeometry("Sun"));
 
 	//* Pre-set static shader values
 	_shader->Use();
@@ -94,7 +93,8 @@ void Skybox::SetActiveCamera(Camera* camera) {
 	// _shader->SetMatrix4("projection", camera->GetProjectionMatrix());
 };
 
-void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal) {
+void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal, float bloom) {
+	_bloom = bloom;
 	_easySunApply = _sunVal == sunVal ? true : false;
 	_easyMoonApply = _moonVal == moonVal ? true : false;
 	_sunVal = sunVal;
@@ -121,15 +121,18 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 void Skybox::Render() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 	_shader->Use();
 	_skyGeometry->Use();
 	_shader->SetMatrix4("mvp", _mvpSky);
 	_shader->SetFloat("sunVal", _sunVal);
+	_shader->SetFloat("bloomCutoff", _bloom);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	//! Draw sun and moon here later
 	Shader* shader = _sunModel->GetShader();
 	shader->Use();
+	shader->SetFloat("bloomCutoff", _bloom);
 	_sunModel->GetMaterial()->Use(shader);
 	_sunModel->GetGeometry()->Use();
 

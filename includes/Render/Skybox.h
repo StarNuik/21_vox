@@ -6,10 +6,10 @@
 
 #include "Types.h"
 
-#define SUN_DIFFUSE (.9f, .9f, .85f)
-#define SUN_AMBIENT (.25f, .25f, .25f)
+#define SUN_DIFFUSE (1.1f, 1.1f, .97f)
+#define SUN_AMBIENT (.20f, .20f, .20f)
 #define MOON_DIFFUSE (.08f, .08f, .12f)
-#define MOON_AMBIENT (.05f, .05f, .05f)
+#define MOON_AMBIENT (.03f, .03f, .03f)
 
 class Skybox {
 public:
@@ -24,7 +24,7 @@ public:
 	Skybox();
 	~Skybox();
 	void Init(Game*);
-	void PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal);
+	void PrepareData(float sunAngle, float moonAngle, float sunVal, float moonVal, float bloomCutoff);
 	void Render();
 	void Use();
 private:
@@ -53,4 +53,5 @@ private:
 	bool _easySunApply;
 	float _moonVal;
 	bool _easyMoonApply;
+	float _bloom;
 };

@@ -19,10 +19,11 @@
 void GLRenderer::RenderFrame() {
 	PrepareData();
 	_static.shadows->Render(_static.rendered);
-	_static.screenFbo->Bind();
+	_static.screenFbo->Use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_static.skybox->Render();
 	RenderBlocks();
+	RenderBloom();
 	RenderPostprocess();
 	_static.ui->UpdateData();
 	_static.ui->Draw();
@@ -41,6 +42,7 @@ void GLRenderer::RenderBlocks() {
 		if (shader != lastShader) {
 			shader->Use();
 			shader->SetFloat3("cameraPos", _frame.cameraPos);
+			shader->SetFloat("bloomCutoff", _static.bloomCutoff);
 			_static.skybox->ApplyDirLights(shader);
 			_static.shadows->ApplySelf(shader);
 			lastShader = shader;
@@ -58,18 +60,54 @@ void GLRenderer::RenderBlocks() {
 	}
 }
 
+void GLRenderer::RenderBloom() {
+	Texture* color;
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	
+	//* Copy bright texture to bloom
+	glViewport(0, 0, _static.windowSize.x / 4, _static.windowSize.y / 4);
+	_static.bloomFbo->Bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	_static.postQuad->Use();
+	_static.rs->GetShader("Post None")->Use();
+	glActiveTexture(GL_TEXTURE0);
+	color = _static.screenFbo->GetColorTexture(1);
+	color->Use();
+	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
+
+	_static.bloomShader->Use();
+	for (int i = 0; i < 6; i++) {
+		int one = i % 2;
+		_static.bloomFbo->Bind();
+		glDrawBuffer(GL_COLOR_ATTACHMENT1 - one);
+		color = _static.bloomFbo->GetColorTexture(one);
+		color->Use();
+		glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
+	}
+	glViewport(0, 0, _static.windowSize.x, _static.windowSize.y);
+	//* Resulting texture is ATTACHMENT0
+}
+
 void GLRenderer::RenderPostprocess() {
+	Texture* color;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 	_static.postShader->Use();
 	_static.postQuad->Use();
-	Texture* color = _static.screenFbo->GetColorTexture();
-	_static.postShader->SetInt("screenTexture", 0);
+	color = _static.screenFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE0);
 	color->Use();
+	color = _static.bloomFbo->GetColorTexture();
+	glActiveTexture(GL_TEXTURE1);
+	color->Use();
+	//! Debug
+	_static.postShader->SetFloat("bloomCutoff", _static.bloomCutoff);
+	//! Debug
 	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void GLRenderer::PrepareData() {
@@ -78,95 +116,8 @@ void GLRenderer::PrepareData() {
 	_frame.vp = _frame.projection * _frame.view;
 	_frame.cameraPos = _static.activeCamera->GetPosition();
 	_static.shadows->PrepareData(_static.game->GetSunAngle());
-	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
+	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal(), _static.bloomCutoff);
 	// _static.skybox->PrepareData(45, 0, 1, 0);
 	// _static.skybox->PrepareData(30, 10, 1, 0);
 	std::sort(_static.rendered.begin(), _static.rendered.end(), RenderModelLess);
 }
-
-// void GLRenderer::RenderFrame() {
-// 	ResourceLoader* rs = _static.game->GetResources();
-// 	UIController* ui = _static.game->GetUI();
-// 	// Skybox* skybox = rs->GetSkybox();
-
-// 	glm::mat4 view = _static.activeCamera->GetViewMatrix();
-// 	glm::mat4 projection = _static.activeCamera->GetProjectionMatrix();
-// 	glm::vec3 cameraPos = _static.activeCamera->GetPosition();
-// 	float currentTime = std::fmod(_static.game->GetRuntime(), SECONDS_IN_A_DAY);
-// 	float sunAngle = -currentTime / SECONDS_IN_A_DAY * 360.f;
-
-// 	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-// 	// ShadowRenderer* shadows = _static.skybox->GetShadowRenderer();
-
-// 	_static.shadows->PrepareData(sunAngle);
-// 	_static.shadows->Render(_static.rendered);
-// 	// glViewport(0, 0, _width, _height);
-// 	// glViewport(0, 0, _width * 2, _height * 2);
-// 	_static.framebuffer->Bind();
-// 	//* Clear
-// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-// 	//* Skybox
-// 	// glDepthMask(GL_FALSE);
-// 	_static.skybox->PrepareData(sunAngle, 30.f, _static.game->GetDayNightVal(), 0.5f);
-// 	_static.skybox->Render();
-// 	// skybox->Use(_static.activeCamera, _static.game->GetDayNightVal(), _static.game->GetRuntime());
-// 	// glDrawArrays(GL_TRIANGLES, 0, 36);
-// 	// glDepthMask(GL_TRUE);
-
-// 	//* Set directional lights
-// 	// skybox->SetDirLights(_static.game->GetDayNightVal(), _static.game->GetRuntime());
-
-// 	//* Blocks
-// 	std::sort(_static.rendered.begin(), _static.rendered.end());
-// 	Shader* oldShader = nullptr;
-// 	Material* oldMaterial = nullptr;
-// 	for (RenderModel* model : _static.rendered) {
-// 		//* If shader changed
-// 		Shader* modelShader = model->GetShader();
-// 		if (oldShader != modelShader) {
-// 			modelShader->Use();
-// 			modelShader->SetMatrix4("view", view);
-// 			modelShader->SetMatrix4("projection", projection);
-// 			modelShader->SetFloat3("cameraPos", cameraPos);
-// 			_static.skybox->ApplyDirLights(modelShader);
-// 			_static.shadows->ApplySelf(modelShader);
-// 			oldShader = modelShader;
-// 		}
-// 		//* If material changed
-// 		Material* modelMaterial = model->GetMaterial();
-// 		if (oldMaterial != modelMaterial) {
-// 			modelMaterial->Use(modelShader);
-// 			oldMaterial = modelMaterial;
-// 		}
-// 		model->ApplySelf(modelShader);
-// 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
-// 	}
-// 	_static.framebuffer->Unbind();
-	
-// 	// glViewport(0, 0, _static.windowSize.x, _static.windowSize.y);
-// 	// glViewport(0, 0, _width * 2, _height * 2);
-// 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-// 	glDisable(GL_DEPTH_TEST);
-// 	// shadows->Render(_static.rendered, _static.game->GetRuntime());
-// 	Shader* postShader = rs->GetShader("Post Base");
-// 	postShader->Use();
-// 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-// 	Geometry* quad = rs->GetGeometry("Screen Quad");
-// 	quad->Use();
-// 	Texture* color = _static.framebuffer->GetColorTexture();
-// 	postShader->SetInt("screenTexture", 0);
-// 	glActiveTexture(GL_TEXTURE0);
-// 	color->Use();
-// 	glDrawArrays(GL_TRIANGLES, 0, quad->GetPolygonCount() * 3);
-// 	glEnable(GL_DEPTH_TEST);
-
-// 	//* UI
-// 	ui->UpdateData();
-// 	ui->Draw();
-
-// 	// shadows->Render(_static.rendered, _static.game->GetRuntime());
-
-// 	//* Swap
-// 	glfwSwapBuffers(_static.window);
-// };

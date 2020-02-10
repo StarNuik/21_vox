@@ -1,6 +1,7 @@
 #version 400
 
-out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec4 brightColor;
 
 in VS_OUT {
 	vec3 worldPos;
@@ -27,9 +28,16 @@ uniform vec3 cameraPos;
 uniform DirLight dirLight[2];
 uniform Material material;
 uniform sampler2D shadowMap;
+uniform float bloomCutoff;
 
-float sin01(float f) {
-	return ((sin(f) + 1.0) * 0.5);
+vec3 BloomColor(vec3 color, float cutoff) {
+	float lum = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	vec3 bright;
+	if (lum >= bloomCutoff)
+		bright = color;
+	else
+		bright = vec3(0.0);
+	return bright;
 }
 
 float ShadowCalculation() {
@@ -69,6 +77,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow) {
 	float specPower = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 	vec3 specular = light.diffuse * specPower * vec3(texture(material.specular, vsOut.uv));
 
+	// shadows
+	
+
 	return ambient + shadow * (diffuse + specular);
 }
 
@@ -78,8 +89,12 @@ void main() {
 	float shadow = 1.0 - ShadowCalculation();
 
 	vec3 result = vec3(0.0);
+	
 	for (int i = 0; i < 2; i++)
 		result += CalcDirLight(dirLight[i], normal, viewDir, shadow);
 
+	vec3 bright = BloomColor(result, bloomCutoff);
+
 	fragColor = vec4(result, 1.0);
+	brightColor = vec4(bright, 1.0);
 }

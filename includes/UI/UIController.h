@@ -23,6 +23,7 @@ namespace UIData {
 	class DataRendering {
 	public:
 		int selectedPostshader;
+		float bloomCutoff;
 	};
 
 	class DataPlayer {};
