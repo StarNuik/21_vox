@@ -504,8 +504,7 @@ float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockP
 
   float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
   glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
-  // if (FindTheBiomeIntTheNextColumn(glm::ivec2(pos.x, pos.z), Ocean, 3).biome == Ocean)
-  //   return -1.f;
+
   float terraceValue = _terraceValue;
   float e = noise.GetNoise(pos.x * 0.55f, pos.y, pos.z * 3.5f);
   e = (e * 0.5f + 0.5f);
@@ -737,7 +736,7 @@ MapGeneration::MapGeneration()
   _noises[Basic].SetFrequency(0.1);
 
   _noises[GrassLand].SetNoiseType(FastNoise::Simplex);
-  _noises[GrassLand].SetFrequency(0.01);
+  _noises[GrassLand].SetFrequency(0.020214);
 
   _noises[Beach].SetNoiseType(FastNoise::Simplex);
   _noises[Beach].SetFrequency(0.01);
