@@ -63,16 +63,17 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Post HDR Filmic & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrFilmicGamma.frag");
 	_shaders["Post HDR Uncharted & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/hdrUnchartedGamma.frag");
 	_shaders["Post HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesa.frag");
-	_shaders["Post Main & Purple"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaPurple.frag");
-	_shaders["Post Main & Inverse"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaInverse.frag");
-	_shaders["Post Main & Grayscale"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaGrayscale.frag");
-	_shaders["Post Main & Gaussian Blur 3x3"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur3x3.frag");
-	_shaders["Post Main & Gaussian Blur 5x5"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur5x5.frag");
-	_shaders["Post Main & Sharpen"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaSharpen.frag");
-	_shaders["Post Main & Outline"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaOutline.frag");
-	_shaders["Post Main & Emboss"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaEmboss.frag");
+	_shaders["Post Acesa & Gamma & Purple"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaPurple.frag");
+	_shaders["Post Acesa & Gamma & Inverse"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaInverse.frag");
+	_shaders["Post Acesa & Gamma & Grayscale"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaGrayscale.frag");
+	_shaders["Post Acesa & Gamma & Gaussian Blur 3x3"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur3x3.frag");
+	_shaders["Post Acesa & Gamma & Gaussian Blur 5x5"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBlur5x5.frag");
+	_shaders["Post Acesa & Gamma & Sharpen"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaSharpen.frag");
+	_shaders["Post Acesa & Gamma & Outline"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaOutline.frag");
+	_shaders["Post Acesa & Gamma & Emboss"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaEmboss.frag");
 	_shaders["Post Pre Bloom"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/preBloom.frag");
 	_shaders["Post Gaussian Blur 5x5"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/blur5x5.frag");
+	_shaders["Post Main & Outline"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/mainOutline.frag");
 
 	//* Utilities
 	_shaders["Skybox"] = new Shader("./resources/Shaders/Vertex/skybox.vert", "./resources/Shaders/Fragment/skybox.frag");

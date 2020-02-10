@@ -5,6 +5,7 @@ out vec4 fragColor;
 in vec2 fragPos;
 
 uniform sampler2D screenTexture;
+uniform float bloomCutoff;
 
 void main() {
 	vec3 hdrColor = texture(screenTexture, fragPos).rgb;

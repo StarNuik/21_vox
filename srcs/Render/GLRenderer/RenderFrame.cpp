@@ -97,6 +97,7 @@ void GLRenderer::RenderPostprocess() {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	_static.postShader->Use();
+	_static.postShader->SetFloat("runtime", _static.game->GetRuntime());
 	_static.postQuad->Use();
 	color = _static.screenFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE0);
@@ -104,9 +105,6 @@ void GLRenderer::RenderPostprocess() {
 	color = _static.bloomFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE1);
 	color->Use();
-	//! Debug
-	_static.postShader->SetFloat("bloomCutoff", _static.bloomCutoff);
-	//! Debug
 	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
 }
 

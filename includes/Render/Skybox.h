@@ -6,7 +6,7 @@
 
 #include "Types.h"
 
-#define SUN_DIFFUSE (1.1f, 1.1f, .97f)
+#define SUN_DIFFUSE (1.3f, 1.3f, 1.15f)
 #define SUN_AMBIENT (.20f, .20f, .20f)
 #define MOON_DIFFUSE (.08f, .08f, .12f)
 #define MOON_AMBIENT (.03f, .03f, .03f)
