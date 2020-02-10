@@ -44,11 +44,16 @@ float MapGeneration::Lerp(float v0, float v1, float t)
 float MapGeneration::RiverElevationGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[River];
+  FastNoise& perlinX = _noises[PerlinX];
+  FastNoise& perlinY = _noises[PerlinY];
 
-  float e = noise.GetNoise(pos.x, pos.y) * 0.5f + 0.5f;
-  // std::cout<<e<<std::endl;
-  if (e < 0.2)
-    return (0);
+  float pX = perlinX.GetNoise(pos.x, pos.y) * 43.52124f;
+  float pY = perlinY.GetNoise(pos.x, pos.y) * 43.52124f;
+
+
+  float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
+  if (e > 0.525f)
+    return (0.f);
   return e;
 }
 
@@ -446,7 +451,6 @@ int MapGeneration::BiomeGeneration(glm::ivec2 pos)
   FastNoise& noise = _noises[Biomes];
   FastNoise& perlinX = _noises[PerlinX];
   FastNoise& perlinY = _noises[PerlinY];
-  float exp = _exp;
 
   float pX = perlinX.GetNoise(pos.x, pos.y) * 10.421f;
   float pY = perlinY.GetNoise(pos.x, pos.y) * 10.421f;
@@ -601,6 +605,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
 
   float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
+  column.firstBlockLayer = BlockType::Air;
+  column.lastBlockLayer = BlockType::Air;
 
   switch (genType)
   {
@@ -656,8 +662,11 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     case GenerationType::River:
     {
       column.approximateElevation = RiverElevationGeneration(pos);
-      column.firstBlockLayer = BlockType::Water;
-      column.lastBlockLayer = BlockType::Water;
+      if (column.approximateElevation != 0.f)
+      {
+        column.firstBlockLayer = BlockType::Water;
+        column.lastBlockLayer = BlockType::Water;
+      }
     }
       break;
     case GenerationType::Ore:
@@ -709,7 +718,7 @@ MapGeneration::MapGeneration()
 
   _noises[River].SetNoiseType(FastNoise::Cellular);
   _noises[River].SetSeed(1337);
-  _noises[River].SetFrequency(0.05);
+  _noises[River].SetFrequency(0.003);
   _noises[River].SetCellularReturnType(FastNoise::Distance2Sub);
   _noises[River].SetCellularDistanceFunction(FastNoise::Natural);
 
@@ -763,6 +772,7 @@ MapGeneration::MapGeneration()
   _noiseNames[HighLand] = "HighLand";
   _noiseNames[Biomes] = "BiomeDefinition";
   _noiseNames[BeachBordered] = "BeachBordered";
+  _noiseNames[River] = "River";
   _noiseNames[Tree] = "Tree";
   _noiseNames[ShapeCaves] = "ShapeCaves";
   _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
