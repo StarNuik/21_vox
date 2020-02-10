@@ -59,6 +59,7 @@ public:
         BeachBordered,
         GrassLand,
         Snow,
+        Desert,
         HighLand,
         ShapeCaves,
         SecondShapeCaves,
@@ -101,7 +102,7 @@ private:
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);
-    float BeachGenerationColumn(glm::ivec2 pos);
+    float DesertGenerationColumn(glm::ivec2 pos);
     float HighLandGenerationColumn(glm::ivec2 pos);
     float SnowLangGenerationColumn(glm::ivec2);
 

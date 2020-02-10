@@ -209,9 +209,9 @@ float MapGeneration::SnowLangGenerationColumn(glm::ivec2 pos)
   return elevation;
 }
 
-float MapGeneration::BeachGenerationColumn(glm::ivec2 pos)
+float MapGeneration::DesertGenerationColumn(glm::ivec2 pos)
 {
-	FastNoise& noise = _noises[Beach];
+	FastNoise& noise = _noises[Desert];
   float terraceValue = _terraceValue;
   float e = 1.f * (noise.GetNoise(1.f * pos.x, 1.f * pos.y));
   e = (e * 0.5f + 0.5f); // range 0..1;
@@ -343,15 +343,19 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
     {
       case GenerationType::GrassLand:
         ret = LandGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
-      case GenerationType::Beach:
-        ret = BeachGenerationColumn(nextBlock);
+      case GenerationType::Desert:
+        ret = DesertGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::Snow:
         ret = SnowLangGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::HighLand:
         ret = HighLandGenerationColumn(nextBlock) + 5.216f;
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::Ocean:
         ret = 0.2f;
@@ -383,15 +387,19 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(glm:
     {
       case GenerationType::GrassLand:
         ret = LandGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::Beach:
-        ret = BeachGenerationColumn(nextBlock);
+        ret = DesertGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::Snow:
         ret = SnowLangGenerationColumn(nextBlock);
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::HighLand:
         ret = HighLandGenerationColumn(nextBlock) + 5.216f;
+        SmoothingButtJoint(ret, nextBlock, biome);
         break;
       case GenerationType::Ocean:
         ret = 0.2f;
@@ -531,11 +539,13 @@ int MapGeneration::TestBiomeDefinition(float e,  glm::ivec2 pos)
 {
   if (e < 0.2)
     return Ocean;
-  if (e < 0.8)
+  else if (e < 0.31f)
+    return Desert;
+  else if (e < 0.8)
     return GrassLand;
-  if (e < 0.9)
+  else if (e < 0.9)
     return Snow;
-  if (e > 0.9f)
+  else if (e > 0.9f)
     return HighLand;
   return GrassLand;
 }
@@ -650,18 +660,6 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.aboveRiverBiome = BiomeGenerationWithoutRiver(pos);
       column.lastBlockLayer = BlockType::Water;
       column.firstBlockLayer = BlockType::Water;
-      // if (column.aboveRiverBiome == HighLand)
-      // {
-      //   float test = HighLandGenerationColumn(pos);
-      //   SmoothingButtJointWithoutRiver(test, pos, column.aboveRiverBiome);
-      //   column.aboveRiverElevation = (int)floorf(test + 5.216f);
-      //   column.firstBlockLayer = BlockType::Stone;
-      //   column.lastBlockLayer = BlockType::Stone;
-      //   if (column.aboveRiverElevation > 75 && column.approximateElevation < 86)
-      //     column.lastBlockLayer = BlockType::SnowGrass;
-      //   else if (column.aboveRiverElevation >= 86)
-      //     column.lastBlockLayer = BlockType::Ice;
-      // }
       column.approximateElevation = 1.f;
       column.exactElevation = 1;
 
@@ -691,13 +689,23 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.treeType = tree.First + rand() % tree.OakTreeTypeTwo;
     }
       break;
+    case GenerationType::Desert:
+    {
+      column.approximateElevation = DesertGenerationColumn(pos);
+      SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+      column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
+      column.firstBlockLayer = BlockType::Sand;
+      column.lastBlockLayer = BlockType::Sand;
+      // if (TreeGeneration(pos) != tree.Nothing)
+      //     column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
+    }
+      break;
     case GenerationType::HighLand:
     {
       column.approximateElevation = HighLandGenerationColumn(pos);
       column.approximateElevation += 5.216f;
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
-      // column.approximateElevation = (int)floorf(column.approximateElevation + );
       column.firstBlockLayer = BlockType::Stone;
       column.lastBlockLayer = BlockType::Stone;
       if (column.approximateElevation > 75 && column.approximateElevation < 86)
@@ -893,8 +901,8 @@ MapGeneration::MapGeneration()
   _noises[GrassLand].SetNoiseType(FastNoise::Simplex);
   _noises[GrassLand].SetFrequency(0.020214);
 
-  _noises[Beach].SetNoiseType(FastNoise::Simplex);
-  _noises[Beach].SetFrequency(0.01);
+  _noises[Desert].SetNoiseType(FastNoise::Simplex);
+  _noises[Desert].SetFrequency(0.01);
 
   _noises[Snow].SetNoiseType(FastNoise::Perlin);
   _noises[Snow].SetFrequency(0.01);
@@ -913,7 +921,7 @@ MapGeneration::MapGeneration()
 
   _noiseNames[Basic] = "Basic";
   _noiseNames[GrassLand] = "GrassLand";
-  _noiseNames[Beach] = "Beach";
+  _noiseNames[Desert] = "Desert";
   _noiseNames[Snow] = "Snow";
   _noiseNames[HighLand] = "HighLand";
   _noiseNames[Biomes] = "BiomeDefinition";
