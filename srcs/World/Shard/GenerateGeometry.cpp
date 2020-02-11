@@ -13,11 +13,11 @@ void Shard::AddSide(std::vector<float>& res, glm::ivec3 local, glm::ivec3 global
 		block = w->GetBlock(global + offset);
 	else
 		block = _blocks[local.x][local.y][local.z];
-	if (!block.IsTransparent())
-		return;
-	float *buffer = VertexBuffers::GetBuffer(side);
-	res.reserve(48 * sizeof(float));
-	res.insert(res.end(), buffer, buffer + 48);
+	if (block.IsTransparent() or block.IsFlower()) {
+		float *buffer = VertexBuffers::GetBuffer(side);
+		res.reserve(48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
+	}
 };
 
 void Shard::AddSideTransparent(std::vector<float>& res, glm::ivec3 local, glm::ivec3 global, glm::ivec3 offset, VertexBuffers::BufferType side, World* w, Block b) {
@@ -27,11 +27,11 @@ void Shard::AddSideTransparent(std::vector<float>& res, glm::ivec3 local, glm::i
 		block = w->GetBlock(global + offset);
 	else
 		block = _blocks[local.x][local.y][local.z];
-	if (!block.IsTransparent() or block == b)
-		return;
-	float *buffer = VertexBuffers::GetBuffer(side);
-	res.reserve(48 * sizeof(float));
-	res.insert(res.end(), buffer, buffer + 48);
+	if (block.IsTransparent() and block != b) {
+		float *buffer = VertexBuffers::GetBuffer(side);
+		res.reserve(48 * sizeof(float));
+		res.insert(res.end(), buffer, buffer + 48);
+	}
 };
 
 std::vector<float> Shard::GenerateTransparent(World* w, const glm::ivec3 globalP, const glm::ivec3 localP, const Block block) {
@@ -147,6 +147,6 @@ std::vector<float> Shard::GenerateFlower(World* w, glm::ivec3 globalBlockPos, co
 	std::vector<float> res = std::vector<float>();
 	float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Flower);
 	res.reserve(96 * sizeof(float));
-	res.insert(res.end(), buffer, buffer + 48);
+	res.insert(res.end(), buffer, buffer + 96);
 	return res;
 }

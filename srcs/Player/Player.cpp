@@ -148,12 +148,12 @@ void Player::PlayerVerticalMovement(Input* input)
 	}
 
 
-	upperRayInfo = _physics->RayCast(_upperBody, glm::vec3(0.f, 1.f, 0.f), 0.7f, 0.1f);
+	upperRayInfo = _physics->RayCastWalkthrough(_upperBody, glm::vec3(0.f, 1.f, 0.f), 0.7f, 0.1f);
 	if (_movementPropety.isAir && upperRayInfo.hit && upperRayInfo.distance <= _movementPropety.avoidBlockDistance && velocityY > 0.f) {
 		velocityY = 0.f;
 	}
 
-	lowerRayInfo = _physics->RayCast(_lowerBody, glm::vec3(0.f, -1.f, 0.f), 0.3f, 0.051f);
+	lowerRayInfo = _physics->RayCastWalkthrough(_lowerBody, glm::vec3(0.f, -1.f, 0.f), 0.3f, 0.051f);
 	if (lowerRayInfo.hit && FloatLessThan(_lowerBody.y - glm::ceil(lowerRayInfo.hitRayPos.y), 0.12f) && !_movementPropety.isJump) {
 		_movementPropety.isAir = false;
 		velocityY = 0.f;

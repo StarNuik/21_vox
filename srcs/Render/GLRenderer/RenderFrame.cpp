@@ -36,7 +36,7 @@ void GLRenderer::RenderBlocks() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glEnable(GL_CULL_FACE);
+	// glEnable(GL_CULL_FACE);
 	for (RenderModel* model : _static.rendered) {
 		Shader* shader = model->GetShader();
 		if (shader != lastShader) {
@@ -62,7 +62,7 @@ void GLRenderer::RenderBlocks() {
 void GLRenderer::RenderBloom() {
 	Texture* color;
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	
 	//* Copy bright texture to bloom
@@ -93,7 +93,7 @@ void GLRenderer::RenderPostprocess() {
 	Texture* color;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	_static.postShader->Use();
 	_static.postShader->SetFloat("runtime", _static.game->GetRuntime());
@@ -112,9 +112,10 @@ void GLRenderer::PrepareData() {
 	_frame.projection = _static.activeCamera->GetProjectionMatrix();
 	_frame.vp = _frame.projection * _frame.view;
 	_frame.cameraPos = _static.activeCamera->GetPosition();
-	_static.shadows->PrepareData(_static.game->GetSunAngle());
-	_static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
-	// _static.skybox->PrepareData(45, 0, 1, 0);
+	// _static.shadows->PrepareData(_static.game->GetSunAngle());
+	_static.shadows->PrepareData(45);
+	// _static.skybox->PrepareData(_static.game->GetSunAngle(), _static.game->GetMoonAngle(), _static.game->GetSunVal(), _static.game->GetMoonVal());
+	_static.skybox->PrepareData(45, 0, 1, 0);
 	// _static.skybox->PrepareData(30, 10, 1, 0);
 	std::sort(_static.rendered.begin(), _static.rendered.end(), RenderModelLess);
 }

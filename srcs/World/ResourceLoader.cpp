@@ -53,6 +53,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Normals"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/normals.frag");
 	_shaders["Shadows"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/shadows.frag");
 	_shaders["Bloom"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/bloom.frag");
+	_shaders["Flower"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/flower.frag");
 
 	//* Post-Processing
 	_shaders["Post Main: Bloom & HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBloom.frag");
@@ -132,10 +133,26 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f, 0.f);
 	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f, 0.f);
 	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f, 0.f);
-	_materials[Block::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f, 0.f);
 	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f, 0.f);
 	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
 	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
+	_materials[Block::RedFlower] = new Material("./resources/Textures/RedFlower/RedFlower", 1.f, 0.f);
+	_materials[Block::YellowFlower] = new Material("./resources/Textures/YellowFlower/YellowFlower", 1.f, 0.f);
+	_materials[Block::BlueFlower] = new Material("./resources/Textures/BlueFlower/BlueFlower", 1.f, 0.f);
+	_materials[Block::RedMushroom] = new Material("./resources/Textures/RedMushroom/RedMushroom", 1.f, 0.f);
+	_materials[Block::BrownMushroom] = new Material("./resources/Textures/BrownMushroom/BrownMushroom", 1.f, 0.f);
+	_materials[Block::PineLog] = new Material("./resources/Textures/PineLog/PineLog", 1.f, 0.f);
+	_materials[Block::BirchLog] = new Material("./resources/Textures/BirchLog/BirchLog", 1.f, 0.f);
+	_materials[Block::PineLeaves] = new Material("./resources/Textures/PineLeaves/PineLeaves", 1.f, 0.f);
+	_materials[Block::BirchLeaves] = new Material("./resources/Textures/BirchLeaves/BirchLeaves", 1.f, 0.f);
+	_materials[Block::IronBlock] = new Material("./resources/Textures/IronBlock/IronBlock", 1.f, 0.f);
+	_materials[Block::GoldBlock] = new Material("./resources/Textures/GoldBlock/GoldBlock", 1.f, 0.f);
+	_materials[Block::DiamondBlock] = new Material("./resources/Textures/DiamondBlock/DiamondBlock", 1.f, 0.f);
+	_materials[Block::RedstoneBlock] = new Material("./resources/Textures/RedstoneBlock/RedstoneBlock", 1.f, 0.f);
+	_materials[Block::EmeraldBlock] = new Material("./resources/Textures/EmeraldBlock/EmeraldBlock", 1.f, 0.f);
+	_materials[Block::Cactus] = new Material("./resources/Textures/Cactus/Cactus", 1.f, 0.f);
+	_materials[Block::Glass] = new Material("./resources/Textures/Glass/Glass", 1.f, 0.f);
+	_materials[Block::DeadShrub] = new Material("./resources/Textures/DeadShrub/DeadShrub", 1.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
 	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
 };

@@ -1,5 +1,6 @@
 #include "Engine/Physics.h"
 #include "Engine/Game.h"
+#include "World/Block.h"
 
 Physics::Physics(Game* game)
 {
@@ -24,6 +25,35 @@ Physics::RayCastHitInfo Physics::RayCast(const glm::vec3 position, glm::vec3 dir
 		ray.hitRayPos = position + tmpDirection;
 		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
 		if (ray.hitBlock != Block::Air)
+		{
+			ray.hit = true;
+			ray.distance = step;
+			return ray;
+		}
+	}
+	ray.hitRayPos = glm::vec3(INFINITY, INFINITY, INFINITY);
+	ray.lastRayStep = glm::vec3(INFINITY, INFINITY, INFINITY);
+	ray.hit = false;
+	return ray;
+}
+
+Physics::RayCastHitInfo Physics::RayCastWalkthrough(const glm::vec3 position, glm::vec3 direction, const float rayLength, float rayStep)
+{
+	RayCastHitInfo ray;
+	glm::vec3 tmpDirection;
+
+	if (rayStep >= rayLength)
+		rayStep = rayLength * 0.25f;
+
+	direction = glm::normalize(direction);
+	ray.hitRayPos = glm::vec3(0.f, 0.f, 0.f);
+	for (float step = 0.f; step <= rayLength; step += rayStep)
+	{
+		ray.lastRayStep = ray.hitRayPos;
+		tmpDirection = direction * step;
+		ray.hitRayPos = position + tmpDirection;
+		ray.hitBlock = _world->GetBlock(ray.hitRayPos);
+		if (!ray.hitBlock.IsWalkthrough())
 		{
 			ray.hit = true;
 			ray.distance = step;
@@ -62,26 +92,26 @@ Physics::CollisionInfo Physics::CheckCollision(const glm::vec3& direction, const
 
 	offset = glm::vec3(direction.x < 0 ? -0.5f : 0.5f, 0.f, 0.f);
 	Block blockX = _world->GetBlock(lowerBody + offset);
-	if (blockX != Block::Air)
+	if (!blockX.IsWalkthrough())
 		col.sideNormal.z = 0.f;
 	blockX = _world->GetBlock(middleBody + offset);
-	if (blockX != Block::Air)
+	if (!blockX.IsWalkthrough())
 		col.sideNormal.z = 0.f;
 	blockX = _world->GetBlock(upperBody + offset);
-	if (blockX != Block::Air)
+	if (!blockX.IsWalkthrough())
 		col.sideNormal.z = 0.f;
 	if (distX < avoidBlockDistance)
 		col.isCollision = true;
 
 	offset = glm::vec3(0.f, 0.f, direction.z < 0 ? -0.5f : 0.5f);
 	Block blockZ = _world->GetBlock(lowerBody + offset);
-	if (blockZ != Block::Air)
+	if (!blockZ.IsWalkthrough())
 		col.sideNormal.x = 0.f;
 	blockZ = _world->GetBlock(middleBody + offset);
-	if (blockZ != Block::Air)
+	if (!blockZ.IsWalkthrough())
 		col.sideNormal.x = 0.f;
 	blockZ = _world->GetBlock(upperBody + offset);
-	if (blockZ != Block::Air)
+	if (!blockZ.IsWalkthrough())
 		col.sideNormal.x = 0.f;
 	if (distZ < avoidBlockDistance)
 		col.isCollision = true;

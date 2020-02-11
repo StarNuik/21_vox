@@ -13,6 +13,7 @@
 #include "Render/Framebuffer.h"
 #include "Render/Texture.h"
 #include "Render/Geometry.h"
+#include "Render/Material.h"
 
 ShadowRenderer::ShadowRenderer() {
 	_shadowFbo = new Framebuffer();
@@ -44,13 +45,21 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 	glViewport(0, 0, SHADOWMAP_SIDE, SHADOWMAP_SIDE);
 
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	_shadowFbo->Use();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	_shader->Use();
+	_shader->SetInt("diffuse", 0);
+	glActiveTexture(GL_TEXTURE0);
+	Material* lastMaterial = nullptr;
 	for (RenderModel* model : rendered) {
 		model->GetGeometry()->Use();
+		Material* material = model->GetMaterial();
+		if (material != lastMaterial) {
+			glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
+			lastMaterial = material;
+		}
 		_shader->SetMatrix4("lightMVP", _lightSpace * model->GetModelMatrix());
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
