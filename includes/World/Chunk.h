@@ -12,8 +12,8 @@ public:
 	// void UpdateGeometry();
 	void SetActive(bool);
 	Block GetBlock(glm::ivec3);
-	void SetBlock(glm::ivec3, BlockType);
-	void PlayerSetBlock(glm::ivec3, BlockType);
+	void SetBlock(glm::ivec3, Block);
+	void PlayerSetBlock(glm::ivec3, Block);
 private:
 	bool _state;
 	Game* _game;
