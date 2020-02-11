@@ -49,7 +49,10 @@ public:
 	bool operator!=(_Type a) const {return _block != a;};
 	bool operator<(_Type a) const {return _block < a;};
 	bool operator<=(_Type a) const {return _block <= a;};
+	bool operator>(_Type a) const {return _block > a;};
+	bool operator>=(_Type a) const {return _block >= a;};
 	void operator++(int) {_block = _Type(_block + 1);};
+	void operator--(int) {_block = _Type(_block - 1);};
 	// Block operator+(int a) {return Block(_Type(_block + a));};
 	explicit operator int() const {return _block;};
 	explicit operator uint() const {return _block;};

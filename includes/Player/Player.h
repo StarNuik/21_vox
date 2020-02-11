@@ -50,6 +50,8 @@ private:
 	float _camAngleY;
 	float _delta;
 
+	Block _selectedBlock;
+
 	RenderModel* _monkey;
 
 
@@ -79,5 +81,6 @@ private:
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
 	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
+	void BlockSelection();
 };
 

@@ -28,6 +28,7 @@ Player::Player(Game* game) {
 	MovementProperty _movementPropety;
 	ResourceLoader* rs = _game->GetResources();
 	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(BlockType::Cobblestone), rs->GetGeometry("BoxC"));
+	_selectedBlock = Block::Dirt;
 }
 
 Player::~Player() {
@@ -202,6 +203,23 @@ void Player::GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm
 
 }
 
+void Player::BlockSelection() {
+	Input* input = _game->GetInput();
+	
+	if (input->KeyJustPressed(GLFW_KEY_KP_ADD)) {
+		_selectedBlock++;
+		if (_selectedBlock > Block::Last) {
+			_selectedBlock = Block::First;
+		}
+	}
+	if (input->KeyJustPressed(GLFW_KEY_KP_SUBTRACT)){
+		_selectedBlock--;
+		if (_selectedBlock < Block::First) {
+			_selectedBlock = Block::Last;
+		}
+	}
+}
+
 void Player::Update(float delta) {
 	Input* input = _game->GetInput();
 	glm::vec3 forward;
@@ -209,6 +227,7 @@ void Player::Update(float delta) {
 	glm::vec3 right;
 
 	_delta = delta;
+	BlockSelection();
 	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
 		_game->GetUI()->SetState(state);
@@ -241,15 +260,14 @@ void Player::Update(float delta) {
 	}
 
 	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-		PutBlock(_position, forward, BlockType::Dirt);
+		PutBlock(_position, forward, _selectedBlock);
 	}
 
 	if (!_movementPropety.godMode) {
 		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
 		PlayerHorizontalMovement(input, forward, right);
 		PlayerVerticalMovement(input);
-	}
-	else {
+	} else {
 		_movementPropety.velocity = glm::vec3(0);
 		GodMovement(input, forward, right, up);
 	}
