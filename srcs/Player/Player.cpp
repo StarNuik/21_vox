@@ -27,8 +27,8 @@ Player::Player(Game* game) {
 	_world = _game->GetWorld();
 	MovementProperty _movementPropety;
 	ResourceLoader* rs = _game->GetResources();
-	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(BlockType::Cobblestone), rs->GetGeometry("BoxC"));
 	_selectedBlock = Block::Dirt;
+	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(Block::Cobblestone), rs->GetGeometry("BoxC"));
 }
 
 Player::~Player() {
@@ -37,7 +37,7 @@ Player::~Player() {
 	delete _camera;
 }
 
-void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType)
+void Player::PutBlock(glm::vec3& _position, glm::vec3& forward, Block blockType)
 {
 	const float maxBlockDist = 4.f;
 	Block lastBlock;
@@ -58,10 +58,10 @@ void Player::DestroyBlock(glm::vec3& _position, glm::vec3& forward)
 
 	ray = _physics->RayCast(_position, forward, maxBlockDist, 0.5f);
 	if (ray.hitRayPos != glm::vec3(INFINITY, INFINITY, INFINITY) && (!_movementPropety.godMode && ray.hitBlock != Block::Bedrock)) {
-		_world->PlayerSetBlock(ray.hitRayPos, BlockType::Air);
+		_world->PlayerSetBlock(ray.hitRayPos, Block::Air);
 	}
 	else if (ray.hit && _movementPropety.godMode) {
-		_world->PlayerSetBlock(ray.hitRayPos, BlockType::Air);
+		_world->PlayerSetBlock(ray.hitRayPos, Block::Air);
 	}
 	return;
 }

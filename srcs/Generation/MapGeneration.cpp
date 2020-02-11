@@ -1,4 +1,5 @@
 #include "Generation/MapGeneration.h"
+#include "World/Block.h"
 #include <iostream>
 #define LERP MapGeneration::Lerp
 
@@ -651,19 +652,19 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.approximateElevation = 1.f;
       column.exactElevation = 1;
-      column.lastBlockLayer = BlockType::Water;
+      column.lastBlockLayer = Block::Water;
       if (FindTheBiomeIntTheNextColumn(pos, Snow, 4).biome == Snow)
-        column.lastBlockLayer = BlockType::Ice;
-      column.firstBlockLayer = BlockType::Water;
+        column.lastBlockLayer = Block::Ice;
+      column.firstBlockLayer = Block::Water;
     }
       break;
     case GenerationType::River:
     {
       column.aboveRiverBiome = BiomeGenerationWithoutRiver(pos);
-      column.lastBlockLayer = BlockType::Water;
+      column.lastBlockLayer = Block::Water;
       if (column.aboveRiverBiome == Snow)
-        column.lastBlockLayer = BlockType::Ice;
-      column.firstBlockLayer = BlockType::Water;
+        column.lastBlockLayer = Block::Ice;
+      column.firstBlockLayer = Block::Water;
       column.approximateElevation = 1.f;
       column.exactElevation = 1;
 
@@ -681,13 +682,13 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = LandGenerationColumn(pos);
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::Grass;
+      column.firstBlockLayer = Block::Dirt;
+      column.lastBlockLayer = Block::Grass;
       if (CheckingTheBiomeIntTheNextColumn(pos, column.biom, checkLength).biome == Ocean)
       {
         column.biom = Beach;
-        column.firstBlockLayer = BlockType::Sand;
-        column.lastBlockLayer = BlockType::Sand;
+        column.firstBlockLayer = Block::Sand;
+        column.lastBlockLayer = Block::Sand;
       }
       else if (TreeGeneration(pos) != tree.Nothing)
         column.treeType = tree.First + rand() % tree.OakTreeTypeTwo;
@@ -698,8 +699,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = DesertGenerationColumn(pos);
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      column.firstBlockLayer = BlockType::Sand;
-      column.lastBlockLayer = BlockType::Sand;
+      column.firstBlockLayer = Block::Sand;
+      column.lastBlockLayer = Block::Sand;
       // if (TreeGeneration(pos) != tree.Nothing)
       //     column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
     }
@@ -710,12 +711,12 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation += 5.216f;
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
-      column.firstBlockLayer = BlockType::Stone;
-      column.lastBlockLayer = BlockType::Stone;
+      column.firstBlockLayer = Block::Stone;
+      column.lastBlockLayer = Block::Stone;
       if (column.approximateElevation > 75 && column.approximateElevation < 86)
-        column.lastBlockLayer = BlockType::SnowGrass;
+        column.lastBlockLayer = Block::SnowGrass;
       else if (column.approximateElevation >= 86)
-        column.lastBlockLayer = BlockType::Ice;
+        column.lastBlockLayer = Block::Ice;
     }
       break;
     case GenerationType::Snow:
@@ -723,16 +724,16 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = SnowLangGenerationColumn(pos);
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::SnowGrass;
+      column.firstBlockLayer = Block::Dirt;
+      column.lastBlockLayer = Block::SnowGrass;
       if (TreeGeneration(pos) != tree.Nothing)
         column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
     }
       break;
     default:
     {
-      column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::Grass;
+      column.firstBlockLayer = Block::Dirt;
+      column.lastBlockLayer = Block::Grass;
       column.approximateElevation = LandGenerationColumn(pos);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     }
@@ -748,16 +749,16 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
 
   float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
-  column.firstBlockLayer = BlockType::Air;
-  column.lastBlockLayer = BlockType::Air;
+  column.firstBlockLayer = Block::Air;
+  column.lastBlockLayer = Block::Air;
 
   switch (genType)
   {
     case GenerationType::Basic:
     {
       column.approximateElevation = BasicGenerationColumn(pos);
-      column.firstBlockLayer = BlockType::Stone;
-      column.lastBlockLayer = BlockType::Stone;
+      column.firstBlockLayer = Block::Stone;
+      column.lastBlockLayer = Block::Stone;
     }
       break;
     case GenerationType::HighLand:
@@ -768,54 +769,54 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       SmoothingButtJoint(column.approximateElevation, pos, HighLand);
       column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
       // column.approximateElevation = (int)floorf(column.approximateElevation);
-      column.firstBlockLayer = BlockType::Stone;
-      column.lastBlockLayer = BlockType::Stone;
+      column.firstBlockLayer = Block::Stone;
+      column.lastBlockLayer = Block::Stone;
       if (column.approximateElevation > 75 && column.approximateElevation < 86)
-        column.lastBlockLayer = BlockType::SnowGrass;
+        column.lastBlockLayer = Block::SnowGrass;
       else if (column.approximateElevation >= 86)
-        column.lastBlockLayer = BlockType::Ice;
+        column.lastBlockLayer = Block::Ice;
     }
       break;
     case GenerationType::Crevices:
     {
       column.approximateElevation = CrevicesGeneration(pos);
-      column.firstBlockLayer = BlockType::Air;
-      column.lastBlockLayer = BlockType::Air;
+      column.firstBlockLayer = Block::Air;
+      column.lastBlockLayer = Block::Air;
     }
       break;
     case GenerationType::Tree:
     {
       column.approximateElevation = TreeGeneration(pos);
-      column.firstBlockLayer = BlockType::Leaves;
-      column.lastBlockLayer = BlockType::Log;
+      column.firstBlockLayer = Block::Leaves;
+      column.lastBlockLayer = Block::Log;
     }
       break;
     case GenerationType::ShapeCaves:
     {
       column.approximateElevation = ShapeCavesGeneration(pos);
-      column.firstBlockLayer = BlockType::Air;
-      column.lastBlockLayer = BlockType::Air;
+      column.firstBlockLayer = Block::Air;
+      column.lastBlockLayer = Block::Air;
     }
       break;
     case GenerationType::ElevationCaves:
     {
       column.approximateElevation = ElevationCavesGeneration(pos);
-      column.firstBlockLayer = BlockType::Air;
-      column.lastBlockLayer = BlockType::Air;
+      column.firstBlockLayer = Block::Air;
+      column.lastBlockLayer = Block::Air;
     }
       break;
     case GenerationType::SecondShapeCaves:
     {
       column.approximateElevation = SecondShapeCavesGeneration(pos);
-      column.firstBlockLayer = BlockType::Air;
-      column.lastBlockLayer = BlockType::Air;
+      column.firstBlockLayer = Block::Air;
+      column.lastBlockLayer = Block::Air;
     }
       break;
     case GenerationType::SecondElevationCaves:
     {
       column.approximateElevation = SecondElevationCavesGeneration(pos);
-      column.firstBlockLayer = BlockType::Bedrock;
-      column.lastBlockLayer = BlockType::Bedrock;
+      column.firstBlockLayer = Block::Bedrock;
+      column.lastBlockLayer = Block::Bedrock;
     }
       break;
     case GenerationType::River:
@@ -823,8 +824,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = RiverElevationGeneration(pos);
       if (column.approximateElevation != 0.f)
       {
-        column.firstBlockLayer = BlockType::Water;
-        column.lastBlockLayer = BlockType::Water;
+        column.firstBlockLayer = Block::Water;
+        column.lastBlockLayer = Block::Water;
       }
     }
       break;
@@ -832,15 +833,15 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.approximateElevation = LandGenerationColumn(pos);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-      column.firstBlockLayer = BlockType::Grass;
-      column.lastBlockLayer = BlockType::Grass;
+      column.firstBlockLayer = Block::Grass;
+      column.lastBlockLayer = Block::Grass;
     }
       break;
     default:
     {
       column.approximateElevation = BasicGenerationColumn(pos);
-      column.firstBlockLayer = BlockType::Stone;
-      column.lastBlockLayer = BlockType::Stone;
+      column.firstBlockLayer = Block::Stone;
+      column.lastBlockLayer = Block::Stone;
     }
       break;
   }
