@@ -16,6 +16,7 @@ class Game;
 class Physics;
 class Locator;
 class MapGeneration;
+class TreeTypes;
 class Input;
 class Player;
 class Camera;
