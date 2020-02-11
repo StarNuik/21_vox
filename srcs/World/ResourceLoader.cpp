@@ -141,6 +141,18 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::BlueFlower] = new Material("./resources/Textures/BlueFlower/BlueFlower", 1.f, 0.f);
 	_materials[Block::RedMushroom] = new Material("./resources/Textures/RedMushroom/RedMushroom", 1.f, 0.f);
 	_materials[Block::BrownMushroom] = new Material("./resources/Textures/BrownMushroom/BrownMushroom", 1.f, 0.f);
+	_materials[Block::PineLog] = new Material("./resources/Textures/PineLog/PineLog", 1.f, 0.f);
+	_materials[Block::BirchLog] = new Material("./resources/Textures/BirchLog/BirchLog", 1.f, 0.f);
+	_materials[Block::PineLeaves] = new Material("./resources/Textures/PineLeaves/PineLeaves", 1.f, 0.f);
+	_materials[Block::BirchLeaves] = new Material("./resources/Textures/BirchLeaves/BirchLeaves", 1.f, 0.f);
+	_materials[Block::IronBlock] = new Material("./resources/Textures/IronBlock/IronBlock", 1.f, 0.f);
+	_materials[Block::GoldBlock] = new Material("./resources/Textures/GoldBlock/GoldBlock", 1.f, 0.f);
+	_materials[Block::DiamondBlock] = new Material("./resources/Textures/DiamondBlock/DiamondBlock", 1.f, 0.f);
+	_materials[Block::RedstoneBlock] = new Material("./resources/Textures/RedstoneBlock/RedstoneBlock", 1.f, 0.f);
+	_materials[Block::EmeraldBlock] = new Material("./resources/Textures/EmeraldBlock/EmeraldBlock", 1.f, 0.f);
+	_materials[Block::Cactus] = new Material("./resources/Textures/Cactus/Cactus", 1.f, 0.f);
+	_materials[Block::Glass] = new Material("./resources/Textures/Glass/Glass", 1.f, 0.f);
+	_materials[Block::DeadShrub] = new Material("./resources/Textures/DeadShrub/DeadShrub", 1.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
 	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
 };

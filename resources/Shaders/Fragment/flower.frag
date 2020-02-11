@@ -63,15 +63,15 @@ float ShadowCalculation() {
 	return shadow;
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow) {
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diffuseBase, float shadow) {
 	vec3 lightDir = light.direction;
 
 	// ambient
-	vec3 ambient = light.ambient * vec3(texture(material.diffuse, vsOut.uv));
+	vec3 ambient = light.ambient * diffuseBase;
 
 	// diffuse
 	float diffPower = max(dot(normal, lightDir), 0.0);
-	vec3 diffuse = light.diffuse * diffPower * vec3(texture(material.diffuse, vsOut.uv));
+	vec3 diffuse = light.diffuse * diffPower * diffuseBase;
 
 	// specular
 	vec3 reflectDir = reflect(-lightDir, normal);
@@ -82,7 +82,8 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow) {
 }
 
 void main() {
-	if (texture(material.diffuse, vsOut.uv).a == 0.0) {
+	vec4 diffuse = texture(material.diffuse, vsOut.uv);
+	if (diffuse.a == 0.0) {
 		discard;
 	}
 	vec3 normal = normalize(vsOut.normal);
@@ -92,7 +93,7 @@ void main() {
 	vec3 result = vec3(0.0);
 	
 	for (int i = 0; i < 2; i++)
-		result += CalcDirLight(dirLight[i], normal, viewDir, shadow);
+		result += CalcDirLight(dirLight[i], normal, viewDir, diffuse.rgb, shadow);
 
 	vec3 bright = BloomColor(result);
 
