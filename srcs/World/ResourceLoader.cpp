@@ -89,11 +89,12 @@ void ResourceLoader::LoadShaders() {
 };
 
 void ResourceLoader::LoadGeometries() {
-	_geometries["Box"] = new Geometry("./resources/Models/Box.obj");
+	// _geometries["Box"] = new Geometry("./resources/Models/Box.obj");
 	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
-	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
+	// _geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
 	_geometries["Sun"] = new Geometry("./resources/Models/Sun.obj");
+	_geometries["Cactus"] = new Geometry("./resources/Models/Cactus.obj");
 };
 
 void ResourceLoader::LoadCubeMaps() {

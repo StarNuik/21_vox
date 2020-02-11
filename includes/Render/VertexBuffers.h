@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <array>
+#include <Render/Geometry.h>
+
 class VertexBuffers {
 public:
 	enum BufferType {
@@ -16,6 +20,7 @@ public:
 		MultiFront,
 		MultiBack,
 		Flower,
+		Cactus,
 		Skybox,
 		First = Top,
 		Last = Skybox,
@@ -26,4 +31,5 @@ public:
 	static float* GetBuffer(BufferType);
 private:
 	static float* _buffers[Size];
+	static std::array<std::vector<float>, Size> _buffs;
 };

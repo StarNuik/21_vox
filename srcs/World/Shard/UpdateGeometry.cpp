@@ -66,6 +66,9 @@ RenderModel* Shard::GenerateModelOfBlock(const Block b) {
 };
 
 std::vector<float> Shard::GenerateGeometryFor(const Block block, World* w, const glm::ivec3 p, const glm::ivec3 l) {
+	if (block == Block::Cactus) {
+		return GenerateCactus();
+	}
 	if (block.IsMultisided()) {
 		return GenerateMultisideBlock(w, p, l);
 	}

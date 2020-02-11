@@ -1,6 +1,7 @@
 #include "Render/VertexBuffers.h"
 
 float* VertexBuffers::_buffers[VertexBuffers::Size];
+std::array<std::vector<float>, VertexBuffers::Size> VertexBuffers::_buffs;
 
 void VertexBuffers::Init() {
 	//?    Position
@@ -176,6 +177,7 @@ void VertexBuffers::Init() {
 		-1.0f, -1.0f,  1.0f, 0.f, 0.f, 0.f, 0.f, 0.f,
 		1.0f, -1.0f,  1.0f,  0.f, 0.f, 0.f, 0.f, 0.f
 	};
+	_buffs[Cactus] = Geometry::ReadGeometry("./resources/Models/Cactus.obj");
 }
 
 void VertexBuffers::Destroy() {
@@ -184,5 +186,8 @@ void VertexBuffers::Destroy() {
 }
 
 float* VertexBuffers::GetBuffer(BufferType t) {
-	return _buffers[t];
+	if (_buffers[t])
+		return _buffers[t];
+	else
+		return _buffs[t].data();
 }

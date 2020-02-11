@@ -20,7 +20,6 @@ bool Block::IsMultisided() const {
 		case PineLog:
 		case BirchLog:
 		case SnowGrass:
-		case Cactus:
 			return true;
 		default:
 			return false;
@@ -36,6 +35,7 @@ bool Block::IsFlower() const {
 		case BrownMushroom:
 		case DeadShrub:
 		case HighGrass:
+		case Cactus:
 			return true;
 		default:
 			return false;
