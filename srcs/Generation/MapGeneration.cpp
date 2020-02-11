@@ -609,6 +609,77 @@ __BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int currBlockHeight, 
     return Block::Air;
 }
 
+ __BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
+{
+  switch (vegetation)
+  {
+    case VegetationType::RedFlower:
+     return Block::RedFlower;
+    break;
+    case VegetationType::YellowFlower:
+     return Block::YellowFlower;
+    break;
+    case VegetationType::BlueFlower:
+     return Block::BlueFlower;
+    break;
+    case VegetationType::HighGrass:
+      return Block::HighGrass;
+    break;
+    case VegetationType::RedMushroom:
+      return Block::RedMushroom;
+    break;
+    case VegetationType::BrownMushroom:
+      return Block::BrownMushroom;
+    break;
+    case VegetationType::DeadShrub:
+      return Block::DeadShrub;
+    break;
+    default:
+      return Block::Air;
+    break;
+  }
+  return Block::Air;
+}
+MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Tree];
+  int R = 5;
+  float max = 0;
+
+  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
+  {
+    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
+    {
+      float e = noise.GetNoise(xn, yn);
+      if (e > max)
+        max = e;
+    }
+  }
+  if (noise.GetNoise(pos.x, pos.y) == max)
+    return VegetationType::DeadShrub;
+  return VegetationType::NothingVegetation;
+}
+
+MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Tree];
+  int R = 2;
+  float max = 0;
+
+  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
+  {
+    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
+    {
+      float e = noise.GetNoise(xn, yn);
+      if (e > max)
+        max = e;
+    }
+  }
+  if (noise.GetNoise(pos.x, pos.y) == max)
+    return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BrownMushroom + 1);
+  return VegetationType::NothingVegetation;
+}
+
 MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight)
 {
   StoredOreData ore;
@@ -621,6 +692,28 @@ MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, 
   if (ore.type == Block::OreDiamond)
     ore.type = RegenerateDimond(pos);
   return ore;
+}
+
+__BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome)
+{
+  float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
+  glm::ivec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
+
+  VegetationType vegetation;
+
+  switch (biome)
+  {
+    case GenerationType::GrassLand:
+      vegetation = GrassLandVegetationGeneration(pos);
+    break;
+    case GenerationType::Desert:
+      vegetation = DesertVegetationGeneration(pos);
+    break;
+    default:
+      return Block::Air;
+    break;
+  }
+  return RedefinitionPlant(vegetation);
 }
 
 float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
