@@ -40,9 +40,9 @@ vec3 BloomColor(vec3 color) {
 	if (diff < 0.0) {
 		bright = vec3(0.0);
 	} else if (diff < size) {
-		bright = color * diff * antisize;
+		bright = color * diff * antisize * 0.5;
 	} else {
-		bright = color;
+		bright = color * 0.5;
 	}
 	return bright;
 }
