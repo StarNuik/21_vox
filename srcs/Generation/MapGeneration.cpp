@@ -701,8 +701,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = Block::Sand;
       column.lastBlockLayer = Block::Sand;
-      // if (TreeGeneration(pos) != tree.Nothing)
-      //     column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
+      if (TreeGeneration(pos) != tree.Nothing)
+          column.treeType = tree.Сactus;
     }
       break;
     case GenerationType::HighLand:
