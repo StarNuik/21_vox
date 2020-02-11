@@ -2,6 +2,7 @@
 
 bool Block::IsTransparent() const {
 	switch (_block) {
+		case NoChunk:
 		case Air:
 		case Water:
 		case Glass:
