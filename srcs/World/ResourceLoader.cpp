@@ -53,6 +53,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Normals"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/normals.frag");
 	_shaders["Shadows"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/shadows.frag");
 	_shaders["Bloom"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/bloom.frag");
+	_shaders["Flower"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/flower.frag");
 
 	//* Post-Processing
 	_shaders["Post Main: Bloom & HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBloom.frag");
