@@ -23,6 +23,8 @@ public:
 	Camera* GetActiveCamera();
 	glm::ivec2 GetWindowSize();
 	void SetPostShader(std::string);
+	float GetBloomCutoff();
+	void SetBloomCutoff(float);
 	
 	void AddModel(RenderModel*);
 	void RemoveModel(RenderModel*);
@@ -30,6 +32,7 @@ public:
 private:
 	void PrepareData();
 	void RenderBlocks();
+	void RenderBloom();
 	void RenderPostprocess();
 
 	class StaticData {
@@ -39,6 +42,7 @@ private:
 		bool ready;
 		glm::ivec2 windowSize;
 		bool cursorEnabled;
+		float bloomCutoff;
 
 		GLFWwindow* window;
 		Game* game;
@@ -50,6 +54,8 @@ private:
 		Skybox* skybox;
 		ShadowRenderer* shadows;
 		Framebuffer* screenFbo;
+		Framebuffer* bloomFbo;
+		Shader* bloomShader;
 		Shader* postShader;
 		Geometry* postQuad;
 	};

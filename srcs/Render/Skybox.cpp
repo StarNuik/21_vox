@@ -71,9 +71,8 @@ void Skybox::Init(Game* game) {
 	_shader = rs->GetShader("Skybox");
 	_dayCubemap = rs->GetCubeMap("Day");
 	_nightCubemap = rs->GetCubeMap("Night");
-	//! Repair these
-	_sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Sun), rs->GetGeometry("Sun"));
-	_moonModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun"), rs->GetMaterial(Block::Moon), rs->GetGeometry("Sun"));
+	_sunModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun Bloom"), rs->GetMaterial(Block::Sun), rs->GetGeometry("Sun"));
+	_moonModel = new RenderModel(nullptr, rs->GetShader("Skybox Sun Bloom"), rs->GetMaterial(Block::Moon), rs->GetGeometry("Sun"));
 
 	//* Pre-set static shader values
 	_shader->Use();
@@ -120,6 +119,8 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 
 void Skybox::Render() {
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 	_shader->Use();
 	_skyGeometry->Use();
 	_shader->SetMatrix4("mvp", _mvpSky);

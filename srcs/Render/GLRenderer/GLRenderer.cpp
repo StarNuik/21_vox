@@ -27,6 +27,7 @@ GLRenderer::GLRenderer() {
 	// _static.framebuffer = nullptr;
 	_static = {0};
 	_static.screenFbo = new Framebuffer();
+	_static.bloomFbo = new Framebuffer();
 	_static.skybox = new Skybox();
 	_static.shadows = new ShadowRenderer();
 	_static.rendered = std::vector<RenderModel*>();
@@ -93,11 +94,8 @@ void InitGL(GLRenderer::RenderEngineConfig& config) {
 		//! Nice exit
 		exit(3);
 	}
-	glDisable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
-	glEnable(GL_BLEND);
 };
 
 void InitImgui(GLFWwindow* window) {
@@ -124,15 +122,17 @@ void GLRenderer::Init(Game* game, RenderEngineConfig config) {
 	_static.ready = true;
 
 	Log::Success("[GLRenderer::GLRenderer]\nInitialized GLRenderer.");
-	//! Turn on imgui here
 };
 
 void GLRenderer::InitChildren() {
 	_static.screenFbo->NewColor(_static.windowSize);
+	_static.bloomFbo->NewBloom(_static.windowSize);
 	_static.skybox->Init(_static.game);
 	_static.shadows->Init(_static.game);
 	_static.rs = _static.game->GetResources();
 	_static.ui = _static.game->GetUI();
 	_static.postQuad = _static.rs->GetGeometry("Screen Quad");
-	SetPostShader("Post HDR Basic");
+	SetPostShader("Post Main: Bloom & HDR Aces approximate & Gamma");
+	_static.bloomShader = _static.rs->GetShader("Post Gaussian Blur 5x5");
+	_static.bloomCutoff = 0.7f;
 };

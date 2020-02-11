@@ -70,6 +70,10 @@ bool RenderModel::operator<(const RenderModel& t) const {
 	return ((_shaderId << 8) | _materialId) < ((t._shaderId << 8) | t._materialId);
 };
 
+bool RenderModelLess(RenderModel*& x, RenderModel*& y) {
+    return ((x->_shaderId << 8) | x->_materialId) < ((y->_shaderId << 8) | y->_materialId);
+}
+
 void RenderModel::SetPosition(glm::vec3 position) {_position = position; RecalculateModelMatrix();};
 void RenderModel::SetRotation(glm::quat rotation) {_rotation = rotation; RecalculateModelMatrix();};
 void RenderModel::SetScale(glm::vec3 scale) {_scale = scale; RecalculateModelMatrix();};

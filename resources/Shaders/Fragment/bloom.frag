@@ -1,6 +1,7 @@
 #version 400
 
-out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec4 brightColor;
 
 in VS_OUT {
 	vec3 worldPos;
@@ -28,8 +29,22 @@ uniform DirLight dirLight[2];
 uniform Material material;
 uniform sampler2D shadowMap;
 
-float sin01(float f) {
-	return ((sin(f) + 1.0) * 0.5);
+vec3 BloomColor(vec3 color) {
+	const float threshold = 0.5;
+	const float size = 0.4;
+	const float antisize = 1.0 / 0.2;
+
+	float lum = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float diff = lum - threshold;
+	vec3 bright;
+	if (diff < 0.0) {
+		bright = vec3(0.0);
+	} else if (diff < size) {
+		bright = color * diff * antisize;
+	} else {
+		bright = color;
+	}
+	return bright;
 }
 
 float ShadowCalculation() {
@@ -43,18 +58,12 @@ float ShadowCalculation() {
 	float currentDepth = projCoords.z;
 
 	float shadow = 0.0;
-	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-	for(int x = -1; x <= 1; x++) {
-		for(int y = -1; y <= 1; y++) {
-			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;     
-		}
-	}
-	shadow /= 9.0;
+	float depth = texture(shadowMap, projCoords.xy).r;
+	shadow = currentDepth - bias > depth ? 1.0 : 0.0;
 	return shadow;
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow) {
 	vec3 lightDir = light.direction;
 
 	// ambient
@@ -70,7 +79,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 	vec3 specular = light.diffuse * specPower * vec3(texture(material.specular, vsOut.uv));
 
 	// shadows
-	float shadow = 1.0 - ShadowCalculation();
+	
 
 	return ambient + shadow * (diffuse + specular);
 }
@@ -78,11 +87,15 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 void main() {
 	vec3 normal = normalize(vsOut.normal);
 	vec3 viewDir = normalize(cameraPos - vsOut.worldPos);
+	float shadow = 1.0 - ShadowCalculation();
 
 	vec3 result = vec3(0.0);
 	
 	for (int i = 0; i < 2; i++)
-		result += CalcDirLight(dirLight[i], normal, viewDir);
+		result += CalcDirLight(dirLight[i], normal, viewDir, shadow);
+
+	vec3 bright = BloomColor(result);
 
 	fragColor = vec4(result, 1.0);
+	brightColor = vec4(bright, 1.0);
 }

@@ -1,3 +1,4 @@
+#include <string>
 #include <GL/glew.h>
 #include "Render/GLRenderer.h"
 #include "Render/Skybox.h"
@@ -6,16 +7,10 @@
 #include "Render/Framebuffer.h"
 #include "World/ResourceLoader.h"
 
-GLFWwindow* GLRenderer::GetWindow() {
-	return _static.window;
-}
-
-glm::ivec2 GLRenderer::GetWindowSize() {return _static.windowSize;};
 void GLRenderer::SetActiveCamera(Camera* camera) {
 	_static.activeCamera = camera;
 	_static.skybox->SetActiveCamera(camera);
 };
-Camera* GLRenderer::GetActiveCamera() {return _static.activeCamera;};
 
 void GLRenderer::AddModel(RenderModel* model) {
 	_static.rendered.push_back(model);
@@ -37,4 +32,11 @@ void GLRenderer::SetPostShader(std::string newShaderName) {
 	_static.postShader = _static.rs->GetShader(newShaderName);
 	_static.postShader->Use();
 	_static.postShader->SetInt("screenTexture", 0);
+	_static.postShader->SetInt("bloomTexture", 1);
 }
+
+GLFWwindow* GLRenderer::GetWindow() {return _static.window;}
+glm::ivec2 GLRenderer::GetWindowSize() {return _static.windowSize;};
+Camera* GLRenderer::GetActiveCamera() {return _static.activeCamera;};
+float GLRenderer::GetBloomCutoff() {return _static.bloomCutoff;};
+void GLRenderer::SetBloomCutoff(float val) {_static.bloomCutoff = val;};
