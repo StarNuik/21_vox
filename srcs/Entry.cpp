@@ -67,7 +67,7 @@ int	main() {
 	t_aabb* aabb = parse_raw_aabbs("./resources/raw_aabbs_data", &num);
 	std::cout << "x: " << aabb[0].bounds.min.x << " | y:" << aabb[0].bounds.min.y << " | z: " << aabb[0].bounds.min.z << std::endl;
 	std::vector<float> vec;
-	for (int i = 3; i < num; i++) {
+	for (int i = 0; i < num; i++) {
 		t_aabb cur = aabb[i];
 		push_vertex(vec, cur.bounds.max);
 		push_vertex(vec, glm::vec4(cur.bounds.min.x, cur.bounds.max.y, cur.bounds.max.z, 0));
