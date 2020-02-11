@@ -12,6 +12,7 @@ private:
     const __BLOCK_TYPE air = Block::Air;
     const __BLOCK_TYPE lg = Block::Log;
     const __BLOCK_TYPE lvs = Block::Leaves;
+    const __BLOCK_TYPE cts = Block::Cactus;
 public:
    enum TreeType
    {
@@ -20,9 +21,10 @@ public:
         OakTreeTypeTwo,
         SpruceTreeTypeOne,
         SpruceTreeTypeTwo,
+        Сactus,
         Nothing,
         First = BasicTree,
-        Last = SpruceTreeTypeTwo,
+        Last = Сactus,
         Size = Last + 1
     };
 
@@ -385,6 +387,37 @@ public:
                 {air,  air,  air,  air,  air,  air,  air},
                 {air,  air,  air,  air,  air,  air,  air},
                 {air,  air,  air,  lvs,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air}
+            }
+        },
+        //--------------------------------------------------------------
+         // Cactus
+        {
+            { // 0
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  cts,   air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air}
+            },
+            { // 1
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  cts,   air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air}
+            },
+            { // 2
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  air,  air,  air,  air},
+                {air,  air,  air,  cts,   air,  air,  air},
                 {air,  air,  air,  air,  air,  air,  air},
                 {air,  air,  air,  air,  air,  air,  air},
                 {air,  air,  air,  air,  air,  air,  air}
