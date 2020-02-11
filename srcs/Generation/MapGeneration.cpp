@@ -1,4 +1,5 @@
 #include "Generation/MapGeneration.h"
+#include "World/Block.h"
 // #include "Generation/BiomeDefine.h"
 #include <iostream>
 #define LERP MapGeneration::Lerp
@@ -488,7 +489,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = BlockType::SnowGrass;
+      column.lastBlockLayer = Block::RedFlower;
     }
       break;
     default:

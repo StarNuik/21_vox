@@ -5,7 +5,6 @@ bool Block::IsTransparent() const {
 		case NoChunk:
 		case Air:
 		case Water:
-		case Glass:
 			return true;
 		default:
 			return false;
@@ -26,7 +25,17 @@ bool Block::IsMultisided() const {
 
 bool Block::IsFlower() const {
 	switch(_block) {
-		case Dandelion:
+		case RedFlower:
+			return true;
+		default:
+			return false;
+	}
+}
+
+bool Block::IsWalkthrough() const {
+	switch(_block) {
+		case Air:
+		case RedFlower:
 			return true;
 		default:
 			return false;

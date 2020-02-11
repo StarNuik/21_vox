@@ -3,6 +3,9 @@
 float* VertexBuffers::_buffers[VertexBuffers::Size];
 
 void VertexBuffers::Init() {
+	//?    Position
+	//?                     Normal
+	//?                                      UV
 	_buffers[Top] = new float[48] {
 		0.f, 1.f, 0.f,   0.f, 1.f, 0.f,   0.f, 1.f,
 		0.f, 1.f, 1.f,   0.f, 1.f, 0.f,   0.f, 0.f,
@@ -111,23 +114,24 @@ void VertexBuffers::Init() {
 		1.f, 1.f, 1.f,   0.f, 0.f, 1.f,   0.75f, 1.f,
 		0.f, 1.f, 1.f,   0.f, 0.f, 1.f,   0.5f, 1.f,
 	};
+	//? \ First, / Second
 	_buffers[Flower] = new float[96] { //! <----- doesn't work btw
-		-.5f,  .0f, -1.f,   -1.f, 0.f, 0.f, 1.f,  1.f,
-		-.5f,  1.f, -1.f,   -1.f, 0.f, 0.f, 1.f,  0.f,
-		-.5f,  1.f,  .0f,   -1.f, 0.f, 0.f, 0.f,  0.f,
+		0.f, 0.f, 0.f,   0.f, 1.f, 0.f,   1.f,  0.f,
+		1.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  0.f,
+		0.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  1.f,
 
-		-.5f,  1.f,  .0f,   -1.f, 0.f, 0.f, 0.f,  0.f,
-		-.5f,  .0f,  .0f,   -1.f, 0.f, 0.f, 0.f,  1.f,
-		-.5f,  .0f, -1.f,   -1.f, 0.f, 0.f, 1.f,  1.f,
+		1.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  1.f,
+		1.f, 1.f, 1.f,   0.f, 1.f, 0.f,   1.f,  1.f,
+		0.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  0.f,
 
 
-		.5f,   1.f,  .0f,   1.f, 0.f, 0.f, 0.f,  0.f,
-		.5f,   .0f, -1.f,   1.f, 0.f, 0.f, 1.f,  1.f,
-		.5f,   .0f,  .0f,   1.f, 0.f, 0.f, 0.f,  1.f,
+		0.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  0.f,
+		1.f, 0.f, 0.f,   0.f, 1.f, 0.f,   1.f,  0.f,
+		1.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  1.f,
 
-		.5f,   .0f, -1.f,   1.f, 0.f, 0.f, 1.f,  1.f,
-		.5f,   1.f,  .0f,   1.f, 0.f, 0.f, 0.f,  0.f,
-		.5f,   1.f, -1.f,   1.f, 0.f, 0.f, 1.f,  0.f,
+		0.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  0.f,
+		1.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  1.f,
+		0.f, 1.f, 1.f,   0.f, 1.f, 0.f,   0.f,  1.f,
 	};
 	_buffers[Skybox] = new float[8 * 6 * 6] {
 		-1.0f,  1.0f, -1.0f, 0.f, 0.f, 0.f, 0.f, 0.f,

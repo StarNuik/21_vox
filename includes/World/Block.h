@@ -27,12 +27,11 @@ public:
 		Grass,
 		Leaves,
 		Log,
-		Dandelion,
 		SnowGrass,
 		Water,
 		Ice,
-		Glass,
-		Last = Glass,
+		RedFlower,
+		Last = RedFlower,
 		First = Bedrock,
 		Size = Last + 1,
 		NoChunk = (__BLOCK_TYPE)(-1),
@@ -58,7 +57,7 @@ public:
 	bool IsTransparent() const;
 	bool IsMultisided() const;
 	bool IsFlower() const;
-
+	bool IsWalkthrough() const;
 private:
 	_Type _block;
 };

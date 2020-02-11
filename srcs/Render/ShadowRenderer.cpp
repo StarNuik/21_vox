@@ -44,7 +44,7 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 	glViewport(0, 0, SHADOWMAP_SIDE, SHADOWMAP_SIDE);
 
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	_shadowFbo->Use();
 	glClear(GL_DEPTH_BUFFER_BIT);

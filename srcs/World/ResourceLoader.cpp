@@ -132,10 +132,10 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f, 0.f);
 	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f, 0.f);
 	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f, 0.f);
-	_materials[Block::Dandelion] = new Material("./resources/Textures/Dandelion/Dandelion", 1.f, 0.f);
 	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f, 0.f);
 	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
 	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
+	_materials[Block::RedFlower] = new Material("./resources/Textures/RedFlower/RedFlower", 1.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
 	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
 };

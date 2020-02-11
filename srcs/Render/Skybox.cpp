@@ -119,7 +119,7 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 
 void Skybox::Render() {
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	// glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	_shader->Use();
 	_skyGeometry->Use();
