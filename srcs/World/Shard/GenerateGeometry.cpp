@@ -71,7 +71,7 @@ std::vector<float> Shard::GenerateMultisideBlock(World* w, const glm::ivec3 glob
 	return res;
 }
 
-std::vector<float> Shard::GenerateFlower(World* w, glm::ivec3 globalBlockPos, const glm::ivec3 localBlockPos) {
+std::vector<float> Shard::GenerateFlower() {
 	std::vector<float> res = std::vector<float>();
 	float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Flower);
 	res.reserve(96 * sizeof(float));
