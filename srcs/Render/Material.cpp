@@ -23,8 +23,8 @@ Material::Material(std::string dirPath, float shininess, float emission) {
 }
 
 Material::~Material() {};
-
 uint Material::GetId() {return _id;};
+uint Material::GetDiffuseId() {return _diffuseMap.GetId();};
 
 void Material::Use(Shader* shader) {
 	shader->SetInt("material.diffuse", 0);

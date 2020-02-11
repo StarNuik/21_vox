@@ -9,6 +9,7 @@ public:
 	~Material();
 	void Use(Shader*);
 	uint GetId();
+	uint GetDiffuseId();
 private:
 	Texture _diffuseMap;
 	Texture _normalMap;
