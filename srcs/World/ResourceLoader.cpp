@@ -153,6 +153,7 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::Cactus] = new Material("./resources/Textures/Cactus/Cactus", 1.f, 0.f);
 	_materials[Block::Glass] = new Material("./resources/Textures/Glass/Glass", 1.f, 0.f);
 	_materials[Block::DeadShrub] = new Material("./resources/Textures/DeadShrub/DeadShrub", 1.f, 0.f);
+	_materials[Block::HighGrass] = new Material("./resources/Textures/HighGrass/HighGrass", 1.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
 	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
 };

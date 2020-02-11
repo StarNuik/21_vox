@@ -35,6 +35,7 @@ bool Block::IsFlower() const {
 		case RedMushroom:
 		case BrownMushroom:
 		case DeadShrub:
+		case HighGrass:
 			return true;
 		default:
 			return false;
@@ -50,6 +51,7 @@ bool Block::IsWalkthrough() const {
 		case RedMushroom:
 		case BrownMushroom:
 		case DeadShrub:
+		case HighGrass:
 			return true;
 		default:
 			return false;
