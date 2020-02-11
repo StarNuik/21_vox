@@ -78,6 +78,6 @@ private:
 	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
 
 	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
-	void PutBlock(glm::vec3& _position, glm::vec3& forward, BlockType blockType);
+	void PutBlock(glm::vec3& _position, glm::vec3& forward, Block blockType);
 };
 

@@ -65,7 +65,7 @@ void Chunk::Generate() {
 					cavesDepth += height;
 					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = cavesDepth; y < cavesHeight; y++)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 				}
 
 				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
@@ -75,7 +75,7 @@ void Chunk::Generate() {
 					secondCavesDepth += height;
 					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = secondCavesDepth; y < cavesHeight; y++)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 				}
 
 				int crevicesHeight = 0;
@@ -83,7 +83,7 @@ void Chunk::Generate() {
 				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
 						float e = mp.CrevicesGenerations(_position, glm::ivec3(x, y, z)); // Crevices generation				elevation = 
 						if (e != -1.f) {
-							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), BlockType::Air);	
+							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 							crevicesHeight = y;
 						}
 				}
@@ -109,7 +109,7 @@ void Chunk::Generate() {
 				}
 			}
 
-			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), BlockType::Bedrock);
+			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), Block::Bedrock);
 		}
 	}
 }
@@ -132,17 +132,17 @@ Block Chunk::GetBlock(const glm::ivec3 pos) {
 	return _shards[y]->GetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z));
 }
 
-void Chunk::SetBlock(glm::ivec3 pos, BlockType type) {
+void Chunk::SetBlock(glm::ivec3 pos, Block type) {
 	if (pos.y < 0 || pos.y >= 256)
 		return;
 	int y = pos.y / 16;
-	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), Block(type)); //! Conversion plug
+	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type); //! Conversion plug
 }
 
-void Chunk::PlayerSetBlock(glm::ivec3 pos, BlockType type) {
+void Chunk::PlayerSetBlock(glm::ivec3 pos, Block type) {
 	if (pos.y < 0 || pos.y >= 256)
 		return;
 	int y = pos.y / 16;
-	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), Block(type)); //! Conversion plug
+	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type); //! Conversion plug
 	_shards[y]->UpdateGeometry();
 }

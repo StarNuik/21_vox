@@ -84,22 +84,22 @@ Block World::GetBlock(const glm::ivec3 globalPos) {
 	return chunk->GetBlock(Global2Local(globalPos));
 }
 
-void World::SetBlock(const glm::vec3 global, BlockType type) {
+void World::SetBlock(const glm::vec3 global, Block type) {
 	SetBlock(glm::ivec3(glm::floor(global)), type);
 }
 
-void World::SetBlock(glm::ivec3 globalPos, BlockType type) {
+void World::SetBlock(glm::ivec3 globalPos, Block type) {
 	Chunk* chunk = _chunks[Global2Chunk(globalPos)];
 	if (chunk) {
 		chunk->SetBlock(Global2Local(globalPos), type);
 	}
 }
 
-void World::PlayerSetBlock(const glm::vec3 global, BlockType type) {
+void World::PlayerSetBlock(const glm::vec3 global, Block type) {
 	PlayerSetBlock(glm::ivec3(glm::floor(global)), type);
 }
 
-void World::PlayerSetBlock(glm::ivec3 globalPos, BlockType type) {
+void World::PlayerSetBlock(glm::ivec3 globalPos, Block type) {
 	Chunk* chunk = _chunks[Global2Chunk(globalPos)];
 	if (chunk) {
 		chunk->PlayerSetBlock(Global2Local(globalPos), type);
