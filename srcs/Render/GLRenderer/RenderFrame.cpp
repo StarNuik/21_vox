@@ -27,6 +27,16 @@ void GLRenderer::RenderFrame() {
 	RenderPostprocess();
 	_static.ui->UpdateData();
 	_static.ui->Draw();
+
+	Shader* shader = _static.rs->GetShader("Special");
+	glm::mat4 modelMatrix(1.f);
+	shader->Use();
+	shader->SetFloat3("cameraPos", _frame.cameraPos);
+	shader->SetMatrix4("mvp", _frame.vp);
+	shader->SetMatrix4("model", modelMatrix);
+	glBindVertexArray(aabb_vao);
+	glDrawArrays(GL_LINES, 0, ammount);
+
 	glfwSwapBuffers(_static.window);
 }
 

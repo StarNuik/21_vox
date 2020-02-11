@@ -20,7 +20,7 @@ Player::Player(Game* game) {
 	_physics = _game->GetPhysics();
 	//! Looks like a fucking costil
 	_game->GetUI()->SetPlayer(this);
-	_position = glm::vec3(0.f, 120.f, 3.f);
+	_position = glm::vec3(0.f, 1.f, 3.f);
 	_rotation = glm::identity<glm::quat>();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);

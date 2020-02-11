@@ -29,6 +29,8 @@ public:
 	void AddModel(RenderModel*);
 	void RemoveModel(RenderModel*);
 	void RenderFrame();
+	uint aabb_vao;
+	uint ammount;
 private:
 	void PrepareData();
 	void RenderBlocks();

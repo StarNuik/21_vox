@@ -55,6 +55,8 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Bloom"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/bloom.frag");
 	_shaders["Flower"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/flower.frag");
 
+	_shaders["Special"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/special.frag");
+
 	//* Post-Processing
 	_shaders["Post Main: Bloom & HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBloom.frag");
 	_shaders["Post None"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/none.frag");
@@ -94,6 +96,7 @@ void ResourceLoader::LoadGeometries() {
 	_geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
 	_geometries["Sun"] = new Geometry("./resources/Models/Sun.obj");
+	_geometries["Pepe"] = new Geometry("./resources/Models/pyramid_cube.obj");
 };
 
 void ResourceLoader::LoadCubeMaps() {
