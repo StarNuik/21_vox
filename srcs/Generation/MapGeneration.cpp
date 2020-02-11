@@ -1,6 +1,8 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
 #include <iostream>
+#include "Utilities/Rand.h"
+// #include "Utill"
 #define LERP MapGeneration::Lerp
 
 glm::vec2 MapGeneration::random2(glm::vec2 p)
@@ -645,7 +647,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
 
   column.biom = BiomeGeneration(pos);
-  column.treeType = tree.Nothing;
+  column.treeType = Trees::Nothing;
   switch (column.biom)
   {
     case GenerationType::Ocean:
@@ -691,7 +693,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.lastBlockLayer = Block::Sand;
       }
       else if (TreeGeneration(pos) != tree.Nothing)
-        column.treeType = tree.First + rand() % tree.OakTreeTypeTwo;
+        column.treeType = intRand(Trees::First, Trees::OakTreeTypeTwo);
     }
       break;
     case GenerationType::Desert:
@@ -702,7 +704,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = Block::Sand;
       column.lastBlockLayer = Block::Sand;
       if (TreeGeneration(pos) != tree.Nothing)
-          column.treeType = tree.Сactus;
+          column.treeType = Trees::Сactus;
     }
       break;
     case GenerationType::HighLand:
@@ -727,7 +729,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = Block::Dirt;
       column.lastBlockLayer = Block::SnowGrass;
       if (TreeGeneration(pos) != tree.Nothing)
-        column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
+        column.treeType = intRand(Trees::OakTreeTypeTwo, Trees::SpruceTreeTypeTwo + 1);
     }
       break;
     default:
