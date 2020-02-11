@@ -489,7 +489,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       SmoothingButtJoint(column.approximateElevation, pos, column.biom);
       column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
       column.firstBlockLayer = BlockType::Dirt;
-      column.lastBlockLayer = Block::RedFlower;
+      column.lastBlockLayer = Block::RedFlower + rand() % 5;
     }
       break;
     default:
