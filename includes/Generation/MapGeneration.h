@@ -66,6 +66,7 @@ public:
         ElevationCaves,
         SecondElevationCaves,
         Crevices,
+        Vegetation,
         Ore,
         OreDimond,
         Tree,
@@ -117,6 +118,7 @@ private:
     __BLOCK_TYPE RedefinitionPlant(VegetationType vegetation);
     VegetationType GrassLandVegetationGeneration(glm::ivec2 pos);
     VegetationType DesertVegetationGeneration(glm::ivec2 pos);
+    bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);

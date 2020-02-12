@@ -97,7 +97,7 @@ void Chunk::Generate() {
 									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 3, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 3), mp.tree.TreeModels[block.treeType][y][xn][zn]);
 							}
 				}
-				else {
+				else if (crevicesHeight < lastLayerBorder) {
 					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), block.biom);
 					if (vegetation != Block::Air)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder + 1, _position.y * 16 + z), vegetation);

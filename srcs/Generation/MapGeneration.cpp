@@ -640,43 +640,60 @@ __BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int currBlockHeight, 
   }
   return Block::Air;
 }
+bool MapGeneration::IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType)
+{
+  FastNoise& noise = _noises[noiseType];
+  float max = 0;
+  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
+  {
+    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
+    {
+        float e = noise.GetNoise(xn, yn);
+        if (e > max)
+            max = e;
+    }
+  }
+  if (noise.GetNoise(pos.x, pos.y) == max)
+      return true;
+  return false;
+}
+
 MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Tree];
   int R = 5;
   float max = 0;
-
-  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
-  {
-    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
-    {
-      float e = noise.GetNoise(xn, yn);
-      if (e > max)
-        max = e;
-    }
-  }
-  if (noise.GetNoise(pos.x, pos.y) == max)
+  if (IsThereAPlant(pos, R, GenerationType::Tree))
     return VegetationType::DeadShrub;
   return VegetationType::NothingVegetation;
 }
 
 MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::ivec2 pos)
 {
-  FastNoise& noise = _noises[Tree];
-  int R = 2;
-  float max = 0;
+  int probabilityCalculation = intRand(0, 100);
+  int R;
 
-  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
+  if (probabilityCalculation <= 60)
   {
-    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
-    {
-      float e = noise.GetNoise(xn, yn);
-      if (e > max)
-        max = e;
-    }
+    R = 1;
+    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
+      return VegetationType::HighGrass;
+    return VegetationType::NothingVegetation;
   }
-  if (noise.GetNoise(pos.x, pos.y) == max)
-    return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BrownMushroom + 1);
+  else if (probabilityCalculation > 60 && probabilityCalculation <= 90)
+  {
+    R = 2;
+    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
+      return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
+    return VegetationType::NothingVegetation;
+  }
+  else
+  {
+    R = 3;
+    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
+      return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
+    return VegetationType::NothingVegetation;
+  }
   return VegetationType::NothingVegetation;
 }
 
@@ -980,6 +997,10 @@ MapGeneration::MapGeneration()
   _noises[Tree].SetSeed(200);
   _noises[Tree].SetFrequency(0.01);
 
+  _noises[Vegetation].SetNoiseType(FastNoise::WhiteNoise);
+  _noises[Vegetation].SetSeed(1300);
+  _noises[Vegetation].SetFrequency(100.0);
+
   _noises[ShapeCaves].SetNoiseType(FastNoise::SimplexFractal);
   _noises[ShapeCaves].SetFrequency(0.01);
   _noises[ElevationCaves].SetNoiseType(FastNoise::Perlin);
@@ -1028,6 +1049,7 @@ MapGeneration::MapGeneration()
   _noiseNames[BeachBordered] = "BeachBordered";
   _noiseNames[River] = "River";
   _noiseNames[Tree] = "Tree";
+  _noiseNames[Vegetation] = "Vegetation";
   _noiseNames[ShapeCaves] = "ShapeCaves";
   _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
   _noiseNames[ElevationCaves] = "ElevationleCaves";
