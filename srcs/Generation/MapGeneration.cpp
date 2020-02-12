@@ -671,29 +671,13 @@ MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ive
 MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::ivec2 pos)
 {
   int probabilityCalculation = intRand(0, 100);
-  int R;
 
-  if (probabilityCalculation <= 60)
-  {
-    R = 1;
-    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
-      return VegetationType::HighGrass;
-    return VegetationType::NothingVegetation;
-  }
-  else if (probabilityCalculation > 60 && probabilityCalculation <= 90)
-  {
-    R = 2;
-    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
-      return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
-    return VegetationType::NothingVegetation;
-  }
-  else
-  {
-    R = 3;
-    if (IsThereAPlant(pos, R, GenerationType::Vegetation))
+  if (probabilityCalculation < 65 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
+    return VegetationType::HighGrass;
+  else if (probabilityCalculation >= 65 && probabilityCalculation < 90 && IsThereAPlant(pos, 2, GenerationType::Vegetation))
+    return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
+  else if (IsThereAPlant(pos, 3, GenerationType::Vegetation))
       return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
-    return VegetationType::NothingVegetation;
-  }
   return VegetationType::NothingVegetation;
 }
 
