@@ -66,6 +66,9 @@ void Chunk::Generate() {
 					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = cavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
+					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves);
+					if (vegetation != Block::Air)
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, cavesDepth, _position.y * 16 + z), vegetation);
 				}
 
 				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
@@ -76,6 +79,9 @@ void Chunk::Generate() {
 					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = secondCavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
+					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves);
+					if (vegetation != Block::Air)
+						w->SetBlock(glm::ivec3(_position.x * 16 + x, secondCavesDepth, _position.y * 16 + z), vegetation);
 				}
 
 				int crevicesHeight = 0;
