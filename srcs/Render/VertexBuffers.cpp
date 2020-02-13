@@ -116,7 +116,7 @@ void VertexBuffers::Init() {
 		0.f, 1.f, 1.f,   0.f, 0.f, 1.f,   0.5f, 1.f,
 	};
 	//? \ First, / Second
-	_buffers[Flower] = new float[96] { //! <----- doesn't work btw
+	_buffers[Flower] = new float[96] {
 		0.f, 0.f, 0.f,   0.f, 1.f, 0.f,   1.f,  0.f,
 		1.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  0.f,
 		0.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  1.f,
@@ -178,11 +178,34 @@ void VertexBuffers::Init() {
 		1.0f, -1.0f,  1.0f,  0.f, 0.f, 0.f, 0.f, 0.f
 	};
 	_buffs[Cactus] = Geometry::ReadGeometry("./resources/Models/Cactus.obj");
+	_buffs[Flower] = Geometry::ReadGeometry("./resources/Models/Flower.obj");
+	_buffs[WaterBack] = Geometry::ReadGeometry("./resources/Models/WaterBack.obj");
+	_buffs[WaterRight] = Geometry::ReadGeometry("./resources/Models/WaterRight.obj");
+	_buffs[WaterFront] = Geometry::ReadGeometry("./resources/Models/WaterFront.obj");
+	_buffs[WaterLeft] = Geometry::ReadGeometry("./resources/Models/WaterLeft.obj");
+	_buffs[WaterTop] = Geometry::ReadGeometry("./resources/Models/WaterTop.obj");
+	_buffs[Top] = Geometry::ReadGeometry("./resources/Models/Top.obj");
+	_buffs[Bottom] = Geometry::ReadGeometry("./resources/Models/Bottom.obj");
+	_buffs[Right] = Geometry::ReadGeometry("./resources/Models/Right.obj");
+	_buffs[Left] = Geometry::ReadGeometry("./resources/Models/Left.obj");
+	_buffs[Front] = Geometry::ReadGeometry("./resources/Models/Front.obj");
+	_buffs[Back] = Geometry::ReadGeometry("./resources/Models/Back.obj");
+	_buffs[Cactus].shrink_to_fit();
+	_buffs[Flower].shrink_to_fit();
+	_buffs[WaterBack].shrink_to_fit();
+	_buffs[WaterRight].shrink_to_fit();
+	_buffs[WaterFront].shrink_to_fit();
+	_buffs[WaterLeft].shrink_to_fit();
+	_buffs[WaterTop].shrink_to_fit();
 }
 
 void VertexBuffers::Destroy() {
 	for (int i = First; i <= Last; i++)
 		delete _buffers[i];
+}
+
+std::vector<float> VertexBuffers::GetVectorBuffer(BufferType t) {
+	return _buffs[t];
 }
 
 float* VertexBuffers::GetBuffer(BufferType t) {

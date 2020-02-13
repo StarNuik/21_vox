@@ -69,11 +69,14 @@ std::vector<float> Shard::GenerateGeometryFor(const Block block, World* w, const
 	if (block == Block::Cactus) {
 		return GenerateCactus();
 	}
+	if (block == Block::Water) {
+		return GenerateWater(w, p, l);
+	}
 	if (block.IsMultisided()) {
 		return GenerateMultisideBlock(w, p, l);
 	}
 	if (block.IsFlower()) {
-		return GenerateFlower(w, p, l);
+		return GenerateFlower();
 	}
 	if (block.IsTransparent()) {
 		return GenerateTransparent(w, p, l, block);

@@ -1,10 +1,17 @@
 #pragma once
 
 #include <functional>
+#include <glm/glm.hpp>
 
 #include "Types.h"
 
 #define __BLOCK_TYPE uint16
+
+#define SHEET_WIDTH (384.0)
+#define SHEET_HEIGHT (1312.0)
+#define BLOCK_PIXELS (16)
+#define BLOCK_SIZE_U ((double)(BLOCK_PIXELS) / SHEET_WIDTH)
+#define BLOCK_SIZE_V ((double)(BLOCK_PIXELS) / SHEET_HEIGHT)
 
 class Block
 {
@@ -55,6 +62,14 @@ public:
 		Sun = (__BLOCK_TYPE)(-2),
 		Moon = (__BLOCK_TYPE)(-3),
 	};
+	enum Side : uint8 {
+		Top = 0,
+		Bottom,
+		Right,
+		Left,
+		Front,
+		Back
+	};
 
 	Block() = default;
 	Block(_Type block) {_block = block;};
@@ -78,6 +93,9 @@ public:
 	bool IsMultisided() const;
 	bool IsFlower() const;
 	bool IsWalkthrough() const;
+	glm::vec2 GetUV(Side) const;
+	float GetU(Side) const;
+	float GetV(Side) const;
 private:
 	_Type _block;
 };
