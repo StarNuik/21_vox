@@ -1,5 +1,9 @@
 #include "World/Block.h"
 
+bool Block::IsBlending() const {
+	return false;
+}
+
 bool Block::IsTransparent() const {
 	switch (_block) {
 		// case NoChunk:
@@ -200,7 +204,7 @@ float Block::GetV(Side side) const {
 			case Sand:
 				return IntToV(2);
 			case Stone:
-				return IntToV(1);
+				return IntToV(0);
 			case OreCoal:
 				return IntToV(2);
 			case OreDiamond:

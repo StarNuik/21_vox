@@ -90,6 +90,7 @@ public:
 	operator _Type() const {return _block;};
 	explicit operator bool() = delete;
 	bool IsTransparent() const;
+	bool IsBlending() const;
 	bool IsMultisided() const;
 	bool IsFlower() const;
 	bool IsWalkthrough() const;

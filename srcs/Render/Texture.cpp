@@ -50,7 +50,7 @@ void Texture::New(TexFormat format, TexType type, uint width, uint height, void*
 void Texture::Load(std::string path) {
 	uint channels, width, height;
 
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(0);
 	uint8* data = stbi_load(path.c_str(), (int*)&width, (int*)&height, (int*)&channels, 4);
 	if (!data) {
 		stbi_image_free(data);

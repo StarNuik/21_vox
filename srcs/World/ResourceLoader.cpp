@@ -119,6 +119,7 @@ void ResourceLoader::LoadCubeMaps() {
 };
 
 void ResourceLoader::LoadMaterials() {
+	_materials[Block::Air] = new Material("./resources/Textures/SpriteSheet/", 255.f, 0.f);
 	_materials[Block::Bedrock] = new Material("./resources/Textures/Bedrock/Bedrock", 1.f, 0.f);
 	_materials[Block::Cobblestone] = new Material("./resources/Textures/Cobblestone/Cobblestone", 1.f, 0.f);
 	_materials[Block::Dirt] = new Material("./resources/Textures/Dirt/Dirt", 1.f, 0.f);
