@@ -27,7 +27,9 @@ private:
 	std::vector<float> GenerateMultisideBlock(World*, glm::ivec3 global, glm::ivec3 local);
 	std::vector<float> GenerateFlower();
 	std::vector<float> GenerateCactus();
+	std::vector<float> GenerateWater(World*, glm::ivec3 global, glm::ivec3 local);
 	void AddSide(std::vector<float>&, glm::ivec3 l, glm::ivec3 g, glm::ivec3 o, VertexBuffers::BufferType, World*);
+	void AddSideWater(std::vector<float>&, glm::ivec3 l, glm::ivec3 g, glm::ivec3 o, VertexBuffers::BufferType, VertexBuffers::BufferType, World*);
 	void AddSideTransparent(std::vector<float>&, glm::ivec3 l, glm::ivec3 g, glm::ivec3 o, VertexBuffers::BufferType, World*, Block);
 
 	bool _state;
