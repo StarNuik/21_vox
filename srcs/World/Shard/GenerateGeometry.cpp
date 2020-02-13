@@ -72,17 +72,17 @@ std::vector<float> Shard::GenerateMultisideBlock(World* w, const glm::ivec3 glob
 }
 
 std::vector<float> Shard::GenerateFlower() {
-	std::vector<float> res = std::vector<float>();
-	float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Flower);
-	res.reserve(96 * sizeof(float));
-	res.insert(res.end(), buffer, buffer + 96);
-	return res;
+	// std::vector<float> res = std::vector<float>();
+	// float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Flower);
+	// res.reserve(96 * sizeof(float));
+	// res.insert(res.end(), buffer, buffer + 96);
+	return VertexBuffers::GetVectorBuffer(VertexBuffers::Flower);
 }
 
 std::vector<float> Shard::GenerateCactus() {
-	std::vector<float> res = std::vector<float>();
-	float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Cactus);
-	res.reserve(288 * sizeof(float));
-	res.insert(res.end(), buffer, buffer + 288);
-	return res;
+	// std::vector<float> res = std::vector<float>();
+	// float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Cactus);
+	// res.reserve(288 * sizeof(float));
+	// res.insert(res.end(), buffer, buffer + 288);
+	return VertexBuffers::GetVectorBuffer(VertexBuffers::Cactus);
 }

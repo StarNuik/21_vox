@@ -116,7 +116,7 @@ void VertexBuffers::Init() {
 		0.f, 1.f, 1.f,   0.f, 0.f, 1.f,   0.5f, 1.f,
 	};
 	//? \ First, / Second
-	_buffers[Flower] = new float[96] { //! <----- doesn't work btw
+	_buffers[Flower] = new float[96] {
 		0.f, 0.f, 0.f,   0.f, 1.f, 0.f,   1.f,  0.f,
 		1.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f,  0.f,
 		0.f, 1.f, 0.f,   0.f, 1.f, 0.f,   1.f,  1.f,
@@ -178,11 +178,16 @@ void VertexBuffers::Init() {
 		1.0f, -1.0f,  1.0f,  0.f, 0.f, 0.f, 0.f, 0.f
 	};
 	_buffs[Cactus] = Geometry::ReadGeometry("./resources/Models/Cactus.obj");
+	_buffs[Flower] = Geometry::ReadGeometry("./resources/Models/Flower.obj");
 }
 
 void VertexBuffers::Destroy() {
 	for (int i = First; i <= Last; i++)
 		delete _buffers[i];
+}
+
+std::vector<float> VertexBuffers::GetVectorBuffer(BufferType t) {
+	return _buffs[t];
 }
 
 float* VertexBuffers::GetBuffer(BufferType t) {

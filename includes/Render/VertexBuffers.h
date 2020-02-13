@@ -29,6 +29,7 @@ public:
 	static void Init();
 	static void Destroy();
 	static float* GetBuffer(BufferType);
+	static std::vector<float> GetVectorBuffer(BufferType);
 private:
 	static float* _buffers[Size];
 	static std::array<std::vector<float>, Size> _buffs;
