@@ -1,6 +1,8 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
 #include <iostream>
+#include "Utilities/Rand.h"
+// #include "Utill"
 #define LERP MapGeneration::Lerp
 
 glm::vec2 MapGeneration::random2(glm::vec2 p)
@@ -607,6 +609,84 @@ __BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int currBlockHeight, 
     return Block::Air;
 }
 
+ __BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
+{
+  switch (vegetation)
+  {
+    case VegetationType::RedFlower:
+     return Block::RedFlower;
+    break;
+    case VegetationType::YellowFlower:
+     return Block::YellowFlower;
+    break;
+    case VegetationType::BlueFlower:
+     return Block::BlueFlower;
+    break;
+    case VegetationType::HighGrass:
+      return Block::HighGrass;
+    break;
+    case VegetationType::RedMushroom:
+      return Block::RedMushroom;
+    break;
+    case VegetationType::BrownMushroom:
+      return Block::BrownMushroom;
+    break;
+    case VegetationType::DeadShrub:
+      return Block::DeadShrub;
+    break;
+    default:
+      return Block::Air;
+    break;
+  }
+  return Block::Air;
+}
+bool MapGeneration::IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType)
+{
+  FastNoise& noise = _noises[noiseType];
+  float max = 0;
+  for (int yn = pos.y - R; yn <= pos.y + R; yn++)
+  {
+    for (int xn = pos.x - R; xn <= pos.x + R; xn++)
+    {
+        float e = noise.GetNoise(xn, yn);
+        if (e > max)
+            max = e;
+    }
+  }
+  if (noise.GetNoise(pos.x, pos.y) == max)
+      return true;
+  return false;
+}
+
+MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Tree];
+  if (IsThereAPlant(pos, 5, GenerationType::Tree))
+    return VegetationType::DeadShrub;
+  return VegetationType::NothingVegetation;
+}
+
+MapGeneration::VegetationType MapGeneration::CavesVegetationGeneration(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Tree];
+  if (IsThereAPlant(pos, 8, GenerationType::Tree))
+    return VegetationType::BrownMushroom;
+  return VegetationType::NothingVegetation;
+}
+
+MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::ivec2 pos)
+{
+  int probabilityCalculation = intRand(0, 100);
+
+  if (probabilityCalculation < 65 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
+    return VegetationType::HighGrass;
+  else if (probabilityCalculation >= 65 && probabilityCalculation < 90 && IsThereAPlant(pos, 2, GenerationType::Vegetation))
+    return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
+  else if (IsThereAPlant(pos, 3, GenerationType::Vegetation))
+      return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
+  return VegetationType::NothingVegetation;
+}
+
 MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight)
 {
   StoredOreData ore;
@@ -619,6 +699,34 @@ MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, 
   if (ore.type == Block::OreDiamond)
     ore.type = RegenerateDimond(pos);
   return ore;
+}
+
+__BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome)
+{
+  float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
+  glm::ivec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
+
+  VegetationType vegetation;
+
+  switch (biome)
+  {
+    case GenerationType::GrassLand:
+      vegetation = GrassLandVegetationGeneration(pos);
+    break;
+    case GenerationType::Desert:
+      vegetation = DesertVegetationGeneration(pos);
+    break;
+    case GenerationType::ElevationCaves:
+      vegetation = CavesVegetationGeneration(pos);
+    break;
+    case GenerationType::SecondElevationCaves:
+      vegetation = CavesVegetationGeneration(pos);
+    break;
+    default:
+      return Block::Air;
+    break;
+  }
+  return RedefinitionPlant(vegetation);
 }
 
 float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
@@ -645,7 +753,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
 
   column.biom = BiomeGeneration(pos);
-  column.treeType = tree.Nothing;
+  column.treeType = Trees::Nothing;
   switch (column.biom)
   {
     case GenerationType::Ocean:
@@ -691,7 +799,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.lastBlockLayer = Block::Sand;
       }
       else if (TreeGeneration(pos) != tree.Nothing)
-        column.treeType = tree.First + rand() % tree.OakTreeTypeTwo;
+        column.treeType = intRand(Trees::First, Trees::OakTreeTypeTwo);
     }
       break;
     case GenerationType::Desert:
@@ -702,7 +810,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = Block::Sand;
       column.lastBlockLayer = Block::Sand;
       if (TreeGeneration(pos) != tree.Nothing)
-          column.treeType = tree.Сactus;
+          column.treeType = Trees::Сactus;
     }
       break;
     case GenerationType::HighLand:
@@ -727,7 +835,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = Block::Dirt;
       column.lastBlockLayer = Block::SnowGrass;
       if (TreeGeneration(pos) != tree.Nothing)
-        column.treeType = tree.OakTreeTypeTwo + rand() % tree.SpruceTreeTypeTwo;
+        column.treeType = intRand(Trees::OakTreeTypeTwo, Trees::SpruceTreeTypeTwo + 1);
     }
       break;
     default:
@@ -885,6 +993,10 @@ MapGeneration::MapGeneration()
   _noises[Tree].SetSeed(200);
   _noises[Tree].SetFrequency(0.01);
 
+  _noises[Vegetation].SetNoiseType(FastNoise::WhiteNoise);
+  _noises[Vegetation].SetSeed(1300);
+  _noises[Vegetation].SetFrequency(100.0);
+
   _noises[ShapeCaves].SetNoiseType(FastNoise::SimplexFractal);
   _noises[ShapeCaves].SetFrequency(0.01);
   _noises[ElevationCaves].SetNoiseType(FastNoise::Perlin);
@@ -933,6 +1045,7 @@ MapGeneration::MapGeneration()
   _noiseNames[BeachBordered] = "BeachBordered";
   _noiseNames[River] = "River";
   _noiseNames[Tree] = "Tree";
+  _noiseNames[Vegetation] = "Vegetation";
   _noiseNames[ShapeCaves] = "ShapeCaves";
   _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
   _noiseNames[ElevationCaves] = "ElevationleCaves";

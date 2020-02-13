@@ -66,6 +66,7 @@ public:
         ElevationCaves,
         SecondElevationCaves,
         Crevices,
+        Vegetation,
         Ore,
         OreDimond,
         Tree,
@@ -81,6 +82,7 @@ public:
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
     StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
+    __BLOCK_TYPE VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome);
     float CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
@@ -99,6 +101,25 @@ private:
         int biome;
         int distanceToTheNextBiome;
     };
+
+    enum VegetationType {
+       RedFlower = 0,
+       YellowFlower,
+       BlueFlower,
+       HighGrass,
+       RedMushroom,
+       BrownMushroom,
+       DeadShrub,
+       NothingVegetation,
+       FirstVegetation = RedFlower,
+       LastVegetation = DeadShrub,
+       SizeVegetation = Last + 1
+    };
+    __BLOCK_TYPE RedefinitionPlant(VegetationType vegetation);
+    VegetationType GrassLandVegetationGeneration(glm::ivec2 pos);
+    VegetationType DesertVegetationGeneration(glm::ivec2 pos);
+    VegetationType CavesVegetationGeneration(glm::ivec2 pos);
+    bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);
