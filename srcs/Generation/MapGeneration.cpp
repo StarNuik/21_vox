@@ -700,6 +700,17 @@ bool MapGeneration::IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseTyp
   return false;
 }
 
+MapGeneration::VegetationType MapGeneration::SwampVegetationGeneration(glm::ivec2 pos)
+{
+  int probabilityCalculation = intRand(0, 100);
+
+  if (probabilityCalculation < 65 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
+    return VegetationType::HighGrass;
+  else if (probabilityCalculation >= 65 && probabilityCalculation < 90 && IsThereAPlant(pos, 3, GenerationType::Vegetation))
+    return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
+  return VegetationType::NothingVegetation;
+}
+
 MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Tree];
@@ -763,6 +774,9 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec
     break;
     case GenerationType::SecondElevationCaves:
       vegetation = CavesVegetationGeneration(pos);
+    break;
+    case GenerationType::Swamp:
+      vegetation = SwampVegetationGeneration(pos);
     break;
     default:
       return Block::Air;

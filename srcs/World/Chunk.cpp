@@ -40,6 +40,7 @@ void Chunk::Generate() {
 			int cavesDepth = firstLayerBorder - MIN_WATER_LEVEL;
 			int secondCavesDepth = firstLayerBorder - MIN_WATER_LEVEL;
 			int crevicesDepth = firstLayerBorder - 30;
+			int crevicesHeight = 0;
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = MAX_WATER_LEVEL + block.exactElevation - 1;
@@ -68,7 +69,8 @@ void Chunk::Generate() {
 			if (block.biom != MapGeneration::Ocean && block.biom != MapGeneration::River)
 			{
 				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;// caves generation
-				if (elevation != 0)
+				__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z));
+				if (elevation != 0 && blockType != Block::Air)
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
 					cavesDepth += height;
@@ -81,7 +83,7 @@ void Chunk::Generate() {
 				}
 
 				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
-				if (elevation != 0)
+				if (elevation != 0 && blockType != Block::Air)
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
 					secondCavesDepth += height;
@@ -89,11 +91,9 @@ void Chunk::Generate() {
 					for (int y = secondCavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves);
-					if (vegetation != Block::Air)
+					if (vegetation != Block::Air )
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, secondCavesDepth, _position.y * 16 + z), vegetation);
 				}
-
-				int crevicesHeight = 0;
 
 				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
 						float e = mp.CrevicesGenerations(_position, glm::ivec3(x, y, z)); // Crevices generation
@@ -112,9 +112,10 @@ void Chunk::Generate() {
 									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 3, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 3), mp.tree.TreeModels[block.treeType][y][xn][zn]);
 							}
 				}
-				else if (crevicesHeight < lastLayerBorder) {
+				else if (crevicesHeight < lastLayerBorder) { // Vegetation generation
 					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), block.biom);
-					if (vegetation != Block::Air)
+					__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder + 1, _position.y * 16 + z));
+					if (vegetation != Block::Air && blockType != Block::Water)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder + 1, _position.y * 16 + z), vegetation);
 				}
 

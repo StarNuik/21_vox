@@ -122,6 +122,7 @@ private:
     VegetationType GrassLandVegetationGeneration(glm::ivec2 pos);
     VegetationType DesertVegetationGeneration(glm::ivec2 pos);
     VegetationType CavesVegetationGeneration(glm::ivec2 pos);
+    VegetationType SwampVegetationGeneration(glm::ivec2 pos);
     bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
    
     float BasicGenerationColumn(glm::ivec2 pos);
