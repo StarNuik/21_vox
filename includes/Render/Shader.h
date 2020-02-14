@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <glm/glm.hpp>
 
 #include "Types.h"
@@ -21,5 +22,15 @@ public:
 	void SetMatrix4(std::string varName, glm::mat4 matrix);
 	uint GetId();
 private:
+	int GetUniformLocation(std::string name, std::string mod);
+	class Location;
+	std::unordered_map<std::string, Location> _locationMap;
 	uint _id, _vs, _fs;
+};
+
+class Shader::Location {
+public:
+	Location() {initialized = false; location = -1;};
+	bool initialized;
+	int location;
 };
