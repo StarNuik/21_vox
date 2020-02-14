@@ -16,7 +16,6 @@ RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Material* materia
 	_geometry = geometry;
 	_geometryId = _geometry->GetId();
 	_position = glm::vec3(0.f);
-	_scale = glm::vec3(1.f);
 	_rotation = glm::identity<glm::quat>();
 	_model = glm::mat4(1.f);
 	if (_renderer)
@@ -63,7 +62,6 @@ void RenderModel::RecalculateModelMatrix() {
 
 	_model = glm::translate(_model, _position);
 	_model = _model * glm::mat4_cast(_rotation);
-	_model = glm::scale(_model, _scale);
 };
 
 bool RenderModel::operator<(const RenderModel& t) const {
@@ -76,10 +74,8 @@ bool RenderModelLess(RenderModel*& x, RenderModel*& y) {
 
 void RenderModel::SetPosition(glm::vec3 position) {_position = position; RecalculateModelMatrix();};
 void RenderModel::SetRotation(glm::quat rotation) {_rotation = rotation; RecalculateModelMatrix();};
-void RenderModel::SetScale(glm::vec3 scale) {_scale = scale; RecalculateModelMatrix();};
 glm::vec3 RenderModel::GetPosition() {return _position;};
 glm::quat RenderModel::GetRotation() {return _rotation;};
-glm::vec3 RenderModel::GetScale() {return _scale;};
 uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};
 Material* RenderModel::GetMaterial() {return _material;};

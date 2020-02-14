@@ -45,6 +45,9 @@ std::vector<float> Geometry::ReadGeometry(std::string path) {
 			res.push_back(attrib.normals  [3 * idx.normal_index   + 2]);
 			res.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
 			res.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
+			res.push_back(0.f);
+			res.push_back(0.f);
+			res.push_back(0.f);
 		}
 		index_offset += fv;
 	}
@@ -61,9 +64,9 @@ Geometry::Geometry(std::vector<float> buffer) {
 }
 
 void Geometry::Init(std::vector<float> buffer) {
-	const int numOfFloats = 8;
+	// const int numOfFloats = 8;
 
-	_polygonCount = buffer.size() / 24;
+	_polygonCount = buffer.size() / (VERTEX_SIZE * 3);
 	glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);
 
@@ -72,9 +75,9 @@ void Geometry::Init(std::vector<float> buffer) {
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffer.size(), &buffer[0], GL_STATIC_DRAW);
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, numOfFloats * sizeof(float), nullptr);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, numOfFloats * sizeof(float), (void*)(3 * sizeof(float)));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, numOfFloats * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), nullptr);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(6 * sizeof(float)));
 	
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);

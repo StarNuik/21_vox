@@ -15,6 +15,6 @@ uniform mat4 mvp;
 void main() {
 	vsOut.uv = vertexUV;
 	vsOut.worldPos = vec3(model * vec4(vertexPosition, 1.0));
-	vsOut.normal = normalize(mat3(transpose(inverse(model))) * vertexNormal);
+	vsOut.normal = normalize(mat3(model) * vertexNormal);
 	gl_Position = mvp * vec4(vertexPosition, 1.0);
 }

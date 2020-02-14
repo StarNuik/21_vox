@@ -11,13 +11,13 @@ namespace {
 		return b.IsTransparent() or b.IsFlower() or b.IsBlending();
 	}
 	inline void ResolveUVs(std::vector<float>& vec, const Block b, const Block::Side side) {
-		for (int i = 0; i < vec.size(); i += 8) {
+		for (int i = 0; i < vec.size(); i += VERTEX_SIZE) {
 			vec[i + 6] = b.GetU(side) + BLOCK_SIZE_U * vec[i + 6];
 			vec[i + 7] = b.GetV(side) + BLOCK_SIZE_V * vec[i + 7];
 		}
 	}
 	inline void ResolveLocalPos(std::vector<float>& vec, const glm::ivec3 local) {
-		for (int i = 0; i < vec.size(); i += 8) {
+		for (int i = 0; i < vec.size(); i += VERTEX_SIZE) {
 			vec[i + 0] += (float)local.x;
 			vec[i + 1] += (float)local.y;
 			vec[i + 2] += (float)local.z;

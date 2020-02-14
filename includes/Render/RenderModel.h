@@ -16,10 +16,8 @@ public:
 	void ApplySelf(Shader*);
 	void SetPosition(glm::vec3);
 	void SetRotation(glm::quat);
-	void SetScale(glm::vec3);
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
-	glm::vec3 GetScale();
 	// glm::mat4 GetAphineMatrix();
 	void RecalculateModelMatrix();
 	uint GetPolygonCount();
@@ -35,7 +33,7 @@ private:
 	Shader* _shader;
 	Material* _material;
 	Geometry* _geometry;
-	glm::vec3 _position, _scale;
+	glm::vec3 _position;
 	glm::quat _rotation;
 	GLRenderer* _renderer;
 	uint _geometryId;
