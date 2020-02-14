@@ -194,53 +194,53 @@ float Block::GetV(Side side) const {
 	} else {
 		switch(_block) {
 			case Bedrock:
-				return IntToV(1);
-			case Cobblestone:
-				return IntToV(0);
-			case Dirt:
-				return IntToV(2);
-			case Planks:
-				return IntToV(4);
-			case Sand:
-				return IntToV(2);
-			case Stone:
-				return IntToV(0);
-			case OreCoal:
-				return IntToV(2);
-			case OreDiamond:
-				return IntToV(2);
-			case OreGold:
-				return IntToV(0);
-			case OreIron:
-				return IntToV(1);
-			case OreRedstone:
-				return IntToV(3);
-			case Leaves:
-				return IntToV(4);
-			case Water:
-				return IntToV(0);
-			case Ice:
-				return IntToV(3);
-			case RedFlower:
-				return IntToV(12);
-			case YellowFlower:
-				return IntToV(13);
-			case BlueFlower:
-				return IntToV(1);
-			case RedMushroom:
-				return IntToV(12);
-			case BrownMushroom:
-				return IntToV(13);
-			case PineLeaves:
-				return IntToV(5);
-			case BirchLeaves:
-				return IntToV(20);
-			case IronBlock:
-				return IntToV(6);
-			case GoldBlock:
-				return IntToV(7);
-			case DiamondBlock:
 				return IntToV(8);
+			case Cobblestone:
+				return IntToV(3);
+			case Dirt:
+				return IntToV(4);
+			case Planks:
+				return IntToV(7);
+			case Sand:
+				return IntToV(12);
+			case Stone:
+				return IntToV(13);
+			case OreCoal:
+				return IntToV(14);
+			case OreDiamond:
+				return IntToV(13);
+			case OreGold:
+				return IntToV(15);
+			case OreIron:
+				return IntToV(21);
+			case OreRedstone:
+				return IntToV(5);
+			case Leaves:
+				return IntToV(8);
+			case Water:
+				return IntToV(7);
+			case Ice:
+				return IntToV(6);
+			case RedFlower:
+				return IntToV(3);
+			case YellowFlower:
+				return IntToV(1);
+			case BlueFlower:
+				return IntToV(18);
+			case RedMushroom:
+				return IntToV(1);
+			case BrownMushroom:
+				return IntToV(25);
+			case PineLeaves:
+				return IntToV(6);
+			case BirchLeaves:
+				return IntToV(7);
+			case IronBlock:
+				return IntToV(8);
+			case GoldBlock:
+				return IntToV(25);
+			case DiamondBlock:
+				return IntToV(3);
 			case RedstoneBlock:
 				return IntToV(10);
 			case EmeraldBlock:
@@ -250,7 +250,7 @@ float Block::GetV(Side side) const {
 			case DeadShrub:
 				return IntToV(7);
 			case HighGrass:
-				return IntToV(8);
+				return IntToV(12);
 			default:
 				return BLOCK_SIZE_V * 0.5;
 		};

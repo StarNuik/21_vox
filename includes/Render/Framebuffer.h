@@ -11,7 +11,7 @@ public:
 	void NewBloom(glm::ivec2 bufferSize);
 	void NewColor(glm::ivec2 bufferSize);
 	void NewShadow(glm::ivec2 bufferSize);
-	void NewG(glm::ivec2 bufferSize);
+	void NewGbuffer(glm::ivec2 bufferSize);
 	void Bind();
 	void Use();
 	void Unbind();

@@ -7,10 +7,52 @@
 
 Framebuffer::Framebuffer() {
 	_color0 = nullptr;
+	_color1 = nullptr;
+	_color2 = nullptr;
+	_depth = nullptr;
+	_ready = false;
 };
+
 Framebuffer::~Framebuffer() {};
 
+void Framebuffer::NewGbuffer(glm::ivec2 winSize) {
+	if (_ready)
+		return;
+	glGenFramebuffers(1, &_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+
+	glGenRenderbuffers(1, &_depthRbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, _depthRbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, winSize.x, winSize.y);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRbo);
+
+	_color0 = new Texture();
+	_color0->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
+	_color1 = new Texture();
+	_color1->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
+	_color2 = new Texture();
+	_color2->New(Texture::F_RGBA, Texture::T_UBYTE, winSize.x, winSize.y);
+
+	_color0->Use();
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _color0->GetId(), 0);
+	_color1->Use();
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _color1->GetId(), 0);
+	_color2->Use();
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, _color2->GetId(), 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		Log::Error("[Framebuffer::NewGbuffer]\nCouldn't generate.");
+		exit(36);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	_ready = true;
+}
+
 void Framebuffer::NewBloom(glm::ivec2 winSize) {
+	if (_ready)
+		return;
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -37,9 +79,12 @@ void Framebuffer::NewBloom(glm::ivec2 winSize) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	_ready = true;
 };
 
 void Framebuffer::NewColor(glm::ivec2 winSize) {
+	if (_ready)
+		return;
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -47,9 +92,11 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	_color0->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
 	_color1 = new Texture();
 	_color1->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
+	
 	glGenRenderbuffers(1, &_depthRbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, _depthRbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, winSize.x, winSize.y);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRbo);
 	// _depth = new Texture();
 	// _depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
 
@@ -57,7 +104,6 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _color0->GetId(), 0);
 	_color1->Use();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _color1->GetId(), 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRbo);
 	// _depth->Use();
 	// glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depth->GetId(), 0);
 
@@ -68,9 +114,12 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	_ready = true;
 };
 
 void Framebuffer::NewShadow(glm::ivec2 winSize) {
+	if (_ready)
+		return;
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	
@@ -94,6 +143,7 @@ void Framebuffer::NewShadow(glm::ivec2 winSize) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	_ready = true;
 };
 
 void Framebuffer::Resize(glm::ivec2 newSize) {
@@ -111,10 +161,13 @@ Texture* Framebuffer::GetColorTexture(int n) {
 	switch(n) {
 		case 1:
 			return _color1;
+			break;
 		case 2:
 			return _color2;
+			break;
 		default:
 			return _color0;
+			break;
 	}
 };
 

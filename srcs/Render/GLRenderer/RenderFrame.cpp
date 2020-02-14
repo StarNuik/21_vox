@@ -22,12 +22,35 @@ void GLRenderer::RenderFrame() {
 	_static.screenFbo->Use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_static.skybox->Render();
-	RenderBlocks();
-	RenderBloom();
+	_static.gbufferFbo->Use();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	RenderGeometry();
+	_static.screenFbo->Use();
+	// RenderBlocks();
+	// RenderBloom();
 	RenderPostprocess();
 	_static.ui->UpdateData();
 	_static.ui->Draw();
 	glfwSwapBuffers(_static.window);
+}
+
+void GLRenderer::RenderGeometry() {
+	Shader* shader = _static.geometryPassShader;
+	Material* lastMaterial = nullptr;
+
+	glEnable(GL_DEPTH_TEST);
+	shader->Use();
+	for (RenderModel* model : _static.rendered) {
+		Material* material = model->GetMaterial();
+		if (material != lastMaterial) {
+			material->Use(shader);
+			lastMaterial = material;
+		}
+		model->GetGeometry()->Use();
+		shader->SetMatrix4("mvp", _frame.vp * model->GetModelMatrix());
+		shader->SetMatrix4("model", model->GetModelMatrix());
+		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
+	}
 }
 
 void GLRenderer::RenderBlocks() {
@@ -98,12 +121,15 @@ void GLRenderer::RenderPostprocess() {
 	_static.postShader->Use();
 	_static.postShader->SetFloat("runtime", _static.game->GetRuntime());
 	_static.postQuad->Use();
-	color = _static.screenFbo->GetColorTexture();
+	//! Debug
+	color = _static.gbufferFbo->GetColorTexture(2);
+	// color = _static.screenFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE0);
 	color->Use();
 	color = _static.bloomFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE1);
-	color->Use();
+	//! Debug
+	// color->Use();
 	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
 }
 

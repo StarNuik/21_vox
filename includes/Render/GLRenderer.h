@@ -34,6 +34,7 @@ private:
 	void RenderBlocks();
 	void RenderBloom();
 	void RenderPostprocess();
+	void RenderGeometry();
 
 	class StaticData {
 	public:
@@ -53,10 +54,12 @@ private:
 		Camera* activeCamera;
 		Skybox* skybox;
 		ShadowRenderer* shadows;
+		Framebuffer* gbufferFbo;
 		Framebuffer* screenFbo;
 		Framebuffer* bloomFbo;
 		Shader* bloomShader;
 		Shader* postShader;
+		Shader* geometryPassShader;
 		Geometry* postQuad;
 	};
 	class FrameData {
