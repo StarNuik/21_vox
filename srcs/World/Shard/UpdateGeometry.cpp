@@ -63,6 +63,8 @@ RenderModel* Shard::GenerateBlocks() {
 				vertexBuffer.insert(vertexBuffer.end(), blockBuffer.begin(), blockBuffer.end());
 			}
 	vertexBuffer.shrink_to_fit();
+	if (vertexBuffer.size() == 0)
+		return nullptr;
 	Geometry* g = new Geometry(vertexBuffer);
 	RenderModel* model = new RenderModel(r, rs->GetShader(BLOCKS_SHADER), rs->GetMaterial(BLOCKS_MATERIAL), g);
 	model->SetPosition(_position * 16);
@@ -90,6 +92,8 @@ RenderModel* Shard::GenerateWater() {
 				count--;
 			}
 	vertexBuffer.shrink_to_fit();
+	if (vertexBuffer.size() == 0)
+		return nullptr;
 	Geometry* g = new Geometry(vertexBuffer);
 	RenderModel* model = new RenderModel(r, rs->GetShader(WATER_SHADER), rs->GetMaterial(WATER_MATERIAL), g);
 	model->SetPosition(_position * 16);
