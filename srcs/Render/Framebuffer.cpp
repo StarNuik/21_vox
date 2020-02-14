@@ -5,7 +5,9 @@
 #include "Render/Texture.h"
 #include "Render/Framebuffer.h"
 
-Framebuffer::Framebuffer() {};
+Framebuffer::Framebuffer() {
+	_color0 = nullptr;
+};
 Framebuffer::~Framebuffer() {};
 
 void Framebuffer::NewBloom(glm::ivec2 winSize) {
@@ -45,15 +47,19 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	_color0->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
 	_color1 = new Texture();
 	_color1->New(Texture::F_RGB16, Texture::T_FLOAT, winSize.x, winSize.y);
-	_depth = new Texture();
-	_depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
+	glGenRenderbuffers(1, &_depthRbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, _depthRbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, winSize.x, winSize.y);
+	// _depth = new Texture();
+	// _depth->New(Texture::F_DEPTH, Texture::T_FLOAT, winSize.x, winSize.y);
 
 	_color0->Use();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _color0->GetId(), 0);
 	_color1->Use();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _color1->GetId(), 0);
-	_depth->Use();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depth->GetId(), 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRbo);
+	// _depth->Use();
+	// glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depth->GetId(), 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		Log::Error("[Framebuffer::NewColor]\nCouldn't generate.");
@@ -95,20 +101,29 @@ void Framebuffer::Resize(glm::ivec2 newSize) {
 		_color0->Resize(newSize.x, newSize.y);
 	if (_color1)
 		_color1->Resize(newSize.x, newSize.y);
+	if (_color2)
+		_color2->Resize(newSize.x, newSize.y);
 	if (_depth)
 		_depth->Resize(newSize.x, newSize.y);
 };
 
 Texture* Framebuffer::GetColorTexture(int n) {
-	if (n == 1)
-		return _color1;
-	else
-		return _color0;
+	switch(n) {
+		case 1:
+			return _color1;
+		case 2:
+			return _color2;
+		default:
+			return _color0;
+	}
 };
 
 void Framebuffer::Use() {
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	if (_color1) {
+	if (_color2) {
+		const uint attachments[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+		glDrawBuffers(3, attachments);
+	} else if (_color1) {
 		const uint attachments[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
 		glDrawBuffers(2, attachments);
 	}
