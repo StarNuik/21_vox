@@ -44,7 +44,6 @@ void Chunk::Generate() {
 
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = MAX_WATER_LEVEL + block.exactElevation - 1;
-			// std::cout << block.exa
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 
@@ -74,6 +73,7 @@ void Chunk::Generate() {
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
 					cavesDepth += height;
+					cavesDepth = glm::clamp(cavesDepth, 1, lastLayerBorder - 1);
 					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = cavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
@@ -87,11 +87,12 @@ void Chunk::Generate() {
 				{
 					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
 					secondCavesDepth += height;
+					secondCavesDepth = glm::clamp(secondCavesDepth, 1, lastLayerBorder - 1);
 					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
 					for (int y = secondCavesDepth; y < cavesHeight; y++)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves);
-					if (vegetation != Block::Air )
+					if (vegetation != Block::Air)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, secondCavesDepth, _position.y * 16 + z), vegetation);
 				}
 
