@@ -118,9 +118,6 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 }
 
 void Skybox::Render() {
-	glDisable(GL_DEPTH_TEST);
-	// glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
 	_shader->Use();
 	_skyGeometry->Use();
 	_shader->SetMatrix4("mvp", _mvpSky);
@@ -138,8 +135,6 @@ void Skybox::Render() {
 	_moonModel->GetMaterial()->Use(shader);
 	shader->SetMatrix4("mvp", _mvpMoon);
 	glDrawArrays(GL_TRIANGLES, 0, _sunModel->GetPolygonCount() * 3);
-
-	glEnable(GL_DEPTH_TEST);
 }
 
 // Shader* Skybox::Use(Camera* camera, float lerpVal, float runtime) {

@@ -6,6 +6,64 @@
 #include "tiny_obj_loader.h"
 // #include "Types.h"
 // #include <string>
+#include <glm/glm.hpp>
+
+#include <iostream>
+namespace {
+void ResolveTangents(std::vector<float>& vertices) {
+	for (int i = 0; i < vertices.size(); i += VERTEX_SIZE * 3) {
+		glm::vec3 pos1(vertices[i + VERTEX_SIZE * 0 + 0], vertices[i + VERTEX_SIZE * 0 + 1], vertices[i + VERTEX_SIZE * 0 + 2]);
+		glm::vec3 pos2(vertices[i + VERTEX_SIZE * 1 + 0], vertices[i + VERTEX_SIZE * 1 + 1], vertices[i + VERTEX_SIZE * 1 + 2]);
+		glm::vec3 pos3(vertices[i + VERTEX_SIZE * 2 + 0], vertices[i + VERTEX_SIZE * 2 + 1], vertices[i + VERTEX_SIZE * 2 + 2]);
+		glm::vec2 uv1(vertices[i + VERTEX_SIZE * 0 + 6], vertices[i + VERTEX_SIZE * 0 + 7]);
+		glm::vec2 uv2(vertices[i + VERTEX_SIZE * 1 + 6], vertices[i + VERTEX_SIZE * 1 + 7]);
+		glm::vec2 uv3(vertices[i + VERTEX_SIZE * 2 + 6], vertices[i + VERTEX_SIZE * 2 + 7]);
+		glm::vec3 edge1 = pos2 - pos1;
+		glm::vec3 edge2 = pos3 - pos1;
+		glm::vec2 deltaUV1 = uv2 - uv1;
+		glm::vec2 deltaUV2 = uv3 - uv1;
+		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+		glm::vec3 tangent;
+		// tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		// tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		// tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = (deltaUV1.y * edge2 - deltaUV2.y * edge1) * f;
+		tangent = glm::normalize(tangent);
+		vertices[i + VERTEX_SIZE * 0 + 8] = tangent.x;
+		vertices[i + VERTEX_SIZE * 0 + 9] = tangent.y;
+		vertices[i + VERTEX_SIZE * 0 + 10] = tangent.z;
+		vertices[i + VERTEX_SIZE * 1 + 8] = tangent.x;
+		vertices[i + VERTEX_SIZE * 1 + 9] = tangent.y;
+		vertices[i + VERTEX_SIZE * 1 + 10] = tangent.z;
+		vertices[i + VERTEX_SIZE * 2 + 8] = tangent.x;
+		vertices[i + VERTEX_SIZE * 2 + 9] = tangent.y;
+		vertices[i + VERTEX_SIZE * 2 + 10] = tangent.z;
+
+		// std::cout << "Normal: " << vertices[i + 3] << " " << vertices[i + 4] << " " << vertices[i + 5] << std::endl;
+		// std::cout << "Tangent: " << tangent.x << " " << tangent.y << " " << tangent.z << std::endl;
+	}
+}
+}
+
+// uva = tv[1].x-tv[0].x;
+// uvb = tv[2].x-tv[0].x;
+
+// uvc = tv[1].y-tv[0].y;
+// uvd = tv[2].y-tv[0].y;
+
+// uvk = uvb*uvc - uva*uvd;
+// uvk = deltaUV2.x * deltaUV1.y - deltaUV1.x * deltaUV2.y
+
+// v1 = v[1]-v[0];
+// v2 = v[2]-v[0];
+
+// if (uvk!=0) 
+// {
+// 	tvec[0] = (uvc*v2-uvd*v1)/uvk;
+// 	tvec[1] = (uva*v2-uvb*v1)/uvk;
+// 	tvec[0] = (deltaUV1.y * edge2 - deltaUV2.y * edge1) / delta;
+// 	tvec[1] = (deltaUV1.x * edge2 - deltaUV2.x * edge1) / delta;
+// }
 
 std::vector<float> Geometry::ReadGeometry(std::string path) {
 	//? Code copied from https://github.com/syoyo/tinyobjloader
@@ -51,6 +109,8 @@ std::vector<float> Geometry::ReadGeometry(std::string path) {
 		}
 		index_offset += fv;
 	}
+	res.shrink_to_fit();
+	ResolveTangents(res);
 	return res;
 }
 
@@ -64,8 +124,6 @@ Geometry::Geometry(std::vector<float> buffer) {
 }
 
 void Geometry::Init(std::vector<float> buffer) {
-	// const int numOfFloats = 8;
-
 	_polygonCount = buffer.size() / (VERTEX_SIZE * 3);
 	glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);

@@ -45,8 +45,6 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 	glViewport(0, 0, SHADOWMAP_SIDE, SHADOWMAP_SIDE);
 
 	glEnable(GL_DEPTH_TEST);
-	// glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
 	_shadowFbo->Use();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	_shader->Use();
@@ -67,6 +65,7 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 	glm::ivec2 winSize = _game->GetRenderer()->GetWindowSize();
 	glViewport(0, 0, winSize.x, winSize.y);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
 };
 
 void ShadowRenderer::ApplyMap(Shader* shader) {

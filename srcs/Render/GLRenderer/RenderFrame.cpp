@@ -18,19 +18,27 @@
 
 void GLRenderer::RenderFrame() {
 	PrepareData();
+
 	_static.shadows->Render(_static.rendered);
+
 	_static.screenFbo->Use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_static.skybox->Render();
+
 	_static.gbufferFbo->Use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderGeometry();
+
 	_static.screenFbo->Use();
+	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	RenderLighting();
 	// RenderBlocks();
-	// RenderBloom();
+	RenderBloom();
 	RenderPostprocess();
+
 	_static.ui->UpdateData();
 	_static.ui->Draw();
+
 	glfwSwapBuffers(_static.window);
 }
 
@@ -51,6 +59,7 @@ void GLRenderer::RenderGeometry() {
 		shader->SetMatrix4("model", model->GetModelMatrix());
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	glDisable(GL_DEPTH_TEST);
 }
 
 void GLRenderer::RenderBlocks() {
@@ -80,13 +89,12 @@ void GLRenderer::RenderBlocks() {
 		shader->SetMatrix4("model", model->GetModelMatrix());
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }
 
 void GLRenderer::RenderBloom() {
 	Texture* color;
-	glDisable(GL_DEPTH_TEST);
-	// glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
 	
 	//* Copy bright texture to bloom
 	glViewport(0, 0, _static.windowSize.x / 4, _static.windowSize.y / 4);
@@ -112,24 +120,56 @@ void GLRenderer::RenderBloom() {
 	//* Resulting texture is ATTACHMENT0
 }
 
+void GLRenderer::RenderLighting() {
+	Shader* shader = _static.lightingPassShader;
+	Texture* color;
+	
+	shader->Use();
+	_static.postQuad->Use();
+
+	glActiveTexture(GL_TEXTURE0);
+	shader->SetInt("positionMap", 0);
+	_static.gbufferFbo->GetColorTexture(0)->Use();
+
+	glActiveTexture(GL_TEXTURE1);
+	shader->SetInt("normalMap", 1);
+	_static.gbufferFbo->GetColorTexture(1)->Use();
+
+	glActiveTexture(GL_TEXTURE2);
+	shader->SetInt("albedoSpecMap", 2);
+	_static.gbufferFbo->GetColorTexture(2)->Use();
+
+	shader->SetFloat3("cameraPos", _frame.cameraPos);
+	_static.skybox->ApplyDirLights(shader);
+	_static.shadows->ApplySelf(shader);
+
+	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
+	
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void GLRenderer::RenderPostprocess() {
 	Texture* color;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDisable(GL_DEPTH_TEST);
 	// glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
 	_static.postShader->Use();
 	_static.postShader->SetFloat("runtime", _static.game->GetRuntime());
 	_static.postQuad->Use();
 	//! Debug
-	color = _static.gbufferFbo->GetColorTexture(2);
-	// color = _static.screenFbo->GetColorTexture();
+	// color = _static.gbufferFbo->GetColorTexture(2);
+	color = _static.screenFbo->GetColorTexture();
+	// color = _static.shadows->_shadowFbo->GetDepthTexture();
 	glActiveTexture(GL_TEXTURE0);
 	color->Use();
 	color = _static.bloomFbo->GetColorTexture();
 	glActiveTexture(GL_TEXTURE1);
 	//! Debug
-	// color->Use();
+	color->Use();
 	glDrawArrays(GL_TRIANGLES, 0, _static.postQuad->GetPolygonCount() * 3);
 }
 

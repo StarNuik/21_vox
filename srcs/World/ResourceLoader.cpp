@@ -85,6 +85,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Skybox Sun Bloom"] = new Shader("./resources/Shaders/Vertex/sun.vert", "./resources/Shaders/Fragment/sunBloom.frag");
 	_shaders["Shadow Renderer"] = new Shader("./resources/Shaders/Vertex/shadowRenderer.vert", "./resources/Shaders/Fragment/shadowRenderer.frag");
 	_shaders["Deferred Geometry"] = new Shader("./resources/Shaders/Vertex/base.vert", "./resources/Shaders/Fragment/deferred.frag");
+	_shaders["Deferred Lighting"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Fragment/deferredLighting.frag");
 	// _shaders["Test"] = new Shader("./resources/Shaders/base.vert", "./resources/Shaders/test.frag");
 	// _shaders["ShadowRenderer"] = new Shader("./resources/Shaders/shadows.vert", "./resources/Shaders/shadows.frag");
 };

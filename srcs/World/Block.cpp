@@ -177,7 +177,7 @@ float Block::GetV(Side side) const {
 			case CraftingTable:
 				return SideCase(side, IntToV(11), IntToV(4), IntToV(11), IntToV(11), IntToV(12), IntToV(12));
 			case Grass:
-				return SideCase(side, IntToV(0), IntToV(2), IntToV(3), IntToV(3), IntToV(3), IntToV(3));
+				return SideCase(side, IntToV(0), IntToV(0), IntToV(0), IntToV(0), IntToV(0), IntToV(0));
 			case Log:
 				return SideCase(side, IntToV(5), IntToV(5), IntToV(4), IntToV(4), IntToV(4), IntToV(4));
 			case SnowGrass:
@@ -200,7 +200,7 @@ float Block::GetV(Side side) const {
 			case Dirt:
 				return IntToV(4);
 			case Planks:
-				return IntToV(7);
+				return IntToV(0);
 			case Sand:
 				return IntToV(12);
 			case Stone:

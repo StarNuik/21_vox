@@ -35,6 +35,7 @@ private:
 	void RenderBloom();
 	void RenderPostprocess();
 	void RenderGeometry();
+	void RenderLighting();
 
 	class StaticData {
 	public:
@@ -60,6 +61,7 @@ private:
 		Shader* bloomShader;
 		Shader* postShader;
 		Shader* geometryPassShader;
+		Shader* lightingPassShader;
 		Geometry* postQuad;
 	};
 	class FrameData {

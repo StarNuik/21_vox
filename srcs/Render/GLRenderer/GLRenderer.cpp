@@ -136,6 +136,7 @@ void GLRenderer::InitChildren() {
 	_static.postQuad = _static.rs->GetGeometry("Screen Quad");
 	SetPostShader("Post Main: Bloom & HDR Aces approximate & Gamma");
 	_static.geometryPassShader = _static.rs->GetShader("Deferred Geometry");
+	_static.lightingPassShader = _static.rs->GetShader("Deferred Lighting");
 	_static.bloomShader = _static.rs->GetShader("Post Gaussian Blur 5x5");
 	_static.bloomCutoff = 0.7f;
 };

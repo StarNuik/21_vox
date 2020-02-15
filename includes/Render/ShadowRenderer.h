@@ -22,11 +22,11 @@ public:
 	void PrepareData(float sunAngle);
 private:
 	// uint _shadowFBO, _sunMap, _moonMap;
+	Framebuffer* _shadowFbo;
 	Game* _game;
 	Camera* _camera;
 	Shader* _shader;
 	glm::mat4 _lightSpace;
-	Framebuffer* _shadowFbo;
 	Player* _player;
 	glm::mat4 _view;
 	glm::mat4 _projection;
