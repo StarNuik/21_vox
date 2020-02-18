@@ -57,100 +57,6 @@ float MapGeneration::RiverElevationGeneration(glm::ivec2 pos)
   return e;
 }
 
-float MapGeneration::CrevicesGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[Crevices];
-
-  float terraceValue = _terraceValue;
-
-  float e = 1.f * (noise.GetNoise(pos.x * 0.55f, pos.y * 3.5f));
-  e = (e * 0.5f + 0.5f) * 10;
-
-  if (e < 8)
-    return -1.f;
-  else
-    e = 9;
-
-  float terrace = round(e * terraceValue) / terraceValue;
-  return terrace;
-}
-
-float MapGeneration::SecondElevationCavesGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[SecondElevationCaves];
-
-  float terraceValue = _terraceValue;
-  float exp = _exp;
-
-  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
-  float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
-
-  e += e1;
-  e = (e * 0.5f + 0.5f) * 10;
-
-  float heightDifference = pow(e, exp);
-  float elevation = round(heightDifference * terraceValue) / terraceValue;
-
-  return elevation;
-}
-
-float MapGeneration::SecondShapeCavesGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[SecondShapeCaves];
-
-  float terraceValue = _terraceValue;
-
-  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
-  e = (e * 0.5f + 0.5f) * 10;
-  e = glm::clamp((int)e, 0, 255);
-  if (e == 3 || e == 4)
-    e = 4.f;
-  else
-    return -1.f;
-
-  float terrace = round(e * terraceValue) / terraceValue;
-  return terrace;
-}
-
-float MapGeneration::ElevationCavesGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[ElevationCaves];
-
-  float terraceValue = _terraceValue;
-  float exp = _exp;
-
-
-  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
-  float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
-  float e2 = 0.25f * (noise.GetNoise(4.f * pos.x, 4.f * pos.y));
-  float e3 = 0.13f * (noise.GetNoise(8.f * pos.x, 8.f * pos.y));
-  e += e1 + e2 + e3;
-  e = (e * 0.5f + 0.5f) * 10;
-
-
-  float heightDifference = pow(e, exp);
-  float elevation = round(heightDifference * terraceValue) / terraceValue;
-  return elevation;
-}
-
-float MapGeneration::ShapeCavesGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[ShapeCaves];
-
-  float terraceValue = _terraceValue;
-
-  float e = 1.f * (noise.GetNoise(pos.x, pos.y));
-  e = (e * 0.5f + 0.5f) * 10;
-  e = glm::clamp((int)e, 0, 255);
-  if (e == 3 || e == 4)
-    e = 4.f;
-  else
-    return -1.f;
-
-  float terrace = round(e * terraceValue) / terraceValue;
-  return terrace;
-}
-
 float MapGeneration::TreeGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Tree];
@@ -178,17 +84,12 @@ float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
   float e = 1.f * (noise.GetNoise(pos.x, pos.y));
   float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
   float e2 = 0.25f * (noise.GetNoise(4.f * pos.x, 4.f * pos.y));
-  // float e3 = 0.13f * (noise.GetNoise(8.f * pos.x, 8.f * pos.y));
-  // float e4 = 0.06f * (noise.GetNoise(16.f * pos.x, 16.f * pos.y));
-  // float e5 = 0.03f * (noise.GetNoise(32.f * pos.x, 32.f * pos.y));
-  // e += e1 + e2 + e3 + e4 + e5;
   e += e1 + e2;
   e = (e * 0.5f + 0.5f) * 10; // range 0..~10.3
 
   float mountainPeaks = pow(e, exp);
   float terrace = round(mountainPeaks * terraceValue) / terraceValue;
 
-  // float elevation = (int)floorf(terrace);
   float elevation = terrace;
   return elevation;
 }
@@ -501,7 +402,6 @@ void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int bio
     rightButtomBlockElevation = CheckingTheElevationOfBiomeInTheNextColumn(pos, biome, (int)diagonalDistance, (int) -diagonalDistance);
     leftButtomBlockElevation = CheckingTheElevationOfBiomeInTheNextColumn(pos, biome, (int) -diagonalDistance, (int) -diagonalDistance);
    
-    // float approx = GetApprox(rightBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation);
     float approx = GetApprox(rightBlockElevation, rightTopBlockElevation, leftBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation, rightButtomBlockElevation, leftButtomBlockElevation);
     if (approx != -1.f)
     {
@@ -515,69 +415,7 @@ void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int bio
   }
 }
 
-void MapGeneration::SmoothingButtJointWithoutRiver(float& elevation, glm::ivec2 pos, int biome)
-{
-  float distance = 1.f;
-  float diagonalDistance = 1.f;
-  float rightBlockElevation;
-  float rightTopBlockElevation;
-  float leftBlockElevation;
-  float leftTopBlockElevation;
-  float topBlockElevation;
-  float buttomBlockElevation;
-  float rightButtomBlockElevation;
-  float leftButtomBlockElevation;
-
-  while (1337)
-  {
-    rightBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int)distance, 0);
-    rightTopBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int)diagonalDistance, (int)diagonalDistance);
-    leftBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int)-distance, 0);
-    leftTopBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int)-diagonalDistance, (int)diagonalDistance);
-    topBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, 0, (int)distance);
-    buttomBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, 0, (int) -distance);
-    rightButtomBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int)diagonalDistance, (int) -diagonalDistance);
-    leftButtomBlockElevation = CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(pos, biome, (int) -diagonalDistance, (int) -diagonalDistance);
-   
-    // float approx = GetApprox(rightBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation);
-    float approx = GetApprox(rightBlockElevation, rightTopBlockElevation, leftBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation, rightButtomBlockElevation, leftButtomBlockElevation);
-    if (approx != -1.f)
-    {
-      elevation = LERP(approx, elevation, distance * STEP);
-      return;
-    }
-    if (distance >= MAX_DIST_TO_SMOOTHING)
-      return;
-    distance++;
-    diagonalDistance = (diagonalDistance++ > MAX_DIAGONAL_DIST_TO_SMOITHING ? diagonalDistance: diagonalDistance++);
-  }
-}
-
-int MapGeneration::BiomeDefinition(int elevation, glm::ivec2 pos)
-{
-  if (elevation == 1)
-    return Ocean;
-  else if (elevation == 2)
-    return Beach;
-  else if (elevation >= 3 && elevation < 8)
-    return GrassLand;
-  // // else if (elevation == 4)
-  //   return TEMPERATE_DECIDUOUS_FOREST;
-  // else if (elevation == 5)
-  //   return TEMPERATE_RAIN_FOREST;
-  // else if (elevation == 6)
-  //   return TUNDRA;
-  // else if (elevation == 7)
-  //   return SNOW;
-  else if (elevation == 8)
-    return Snow;
-  else if (elevation == 9)
-    return HighLand;
-  else
-    return GrassLand;
-}
-
-int MapGeneration::TestBiomeDefinition(float e,  glm::ivec2 pos)
+int MapGeneration::BiomeDefinition(float e,  glm::ivec2 pos)
 {
   if (e < 0.15)
     return Ocean;
@@ -604,7 +442,7 @@ int MapGeneration::BiomeGenerationWithoutRiver(glm::ivec2 pos)
   float pY = perlinY.GetNoise(pos.x, pos.y) * 10.421f;
 
   float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
-  return TestBiomeDefinition(e, pos);
+  return BiomeDefinition(e, pos);
 }
 
 int MapGeneration::BiomeGeneration(glm::ivec2 pos)
@@ -620,7 +458,7 @@ int MapGeneration::BiomeGeneration(glm::ivec2 pos)
   int finalBiome = 0;
   float riverBiome = 0.f;
 
-  finalBiome = TestBiomeDefinition(e, pos);
+  finalBiome = BiomeDefinition(e, pos);
   riverBiome = RiverElevationGeneration(pos);
 
   if (finalBiome != Ocean && riverBiome != 0.f)
@@ -769,10 +607,7 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec
     case GenerationType::Desert:
       vegetation = DesertVegetationGeneration(pos);
     break;
-    case GenerationType::ElevationCaves:
-      vegetation = CavesVegetationGeneration(pos);
-    break;
-    case GenerationType::SecondElevationCaves:
+    case GenerationType::Caves:
       vegetation = CavesVegetationGeneration(pos);
     break;
     case GenerationType::Swamp:
@@ -785,7 +620,7 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec
   return RedefinitionPlant(vegetation);
 }
 
-float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
+float MapGeneration::CrevicesGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition)
 {
   FastNoise& noise = _noises[Crevices];
 
@@ -804,7 +639,7 @@ float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockP
 
 float MapGeneration::CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
 {
-  FastNoise& noise = _noises[Caves3D];
+  FastNoise& noise = _noises[Caves];
 
   float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
   glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
@@ -969,10 +804,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     {
       column.approximateElevation = HighLandGenerationColumn(pos);
       column.approximateElevation += 5.216f;
-      // SmoothingButtJointWithoutRiver(column.approximateElevation, pos, HighLand);
       SmoothingButtJoint(column.approximateElevation, pos, HighLand);
       column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
-      // column.approximateElevation = (int)floorf(column.approximateElevation);
       column.firstBlockLayer = Block::Stone;
       column.lastBlockLayer = Block::Stone;
       if (column.approximateElevation > 75 && column.approximateElevation < 86)
@@ -981,46 +814,11 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
         column.lastBlockLayer = Block::Ice;
     }
       break;
-    case GenerationType::Crevices:
-    {
-      column.approximateElevation = CrevicesGeneration(pos);
-      column.firstBlockLayer = Block::Air;
-      column.lastBlockLayer = Block::Air;
-    }
-      break;
     case GenerationType::Tree:
     {
       column.approximateElevation = TreeGeneration(pos);
       column.firstBlockLayer = Block::Leaves;
       column.lastBlockLayer = Block::Log;
-    }
-      break;
-    case GenerationType::ShapeCaves:
-    {
-      column.approximateElevation = ShapeCavesGeneration(pos);
-      column.firstBlockLayer = Block::Air;
-      column.lastBlockLayer = Block::Air;
-    }
-      break;
-    case GenerationType::ElevationCaves:
-    {
-      column.approximateElevation = ElevationCavesGeneration(pos);
-      column.firstBlockLayer = Block::Air;
-      column.lastBlockLayer = Block::Air;
-    }
-      break;
-    case GenerationType::SecondShapeCaves:
-    {
-      column.approximateElevation = SecondShapeCavesGeneration(pos);
-      column.firstBlockLayer = Block::Air;
-      column.lastBlockLayer = Block::Air;
-    }
-      break;
-    case GenerationType::SecondElevationCaves:
-    {
-      column.approximateElevation = SecondElevationCavesGeneration(pos);
-      column.firstBlockLayer = Block::Bedrock;
-      column.lastBlockLayer = Block::Bedrock;
     }
       break;
     case GenerationType::River:
@@ -1093,20 +891,9 @@ MapGeneration::MapGeneration()
   _noises[Vegetation].SetSeed(1300);
   _noises[Vegetation].SetFrequency(100.0);
 
-  _noises[ShapeCaves].SetNoiseType(FastNoise::SimplexFractal);
-  _noises[ShapeCaves].SetFrequency(0.01);
-  _noises[ElevationCaves].SetNoiseType(FastNoise::Perlin);
-  _noises[ElevationCaves].SetFrequency(0.01);
-
-  _noises[Caves3D].SetNoiseType(FastNoise::Perlin);
-  _noises[Caves3D].SetFrequency(0.1);
-  _noises[Caves3D].SetSeed(167998);
-  
-  _noises[SecondShapeCaves].SetNoiseType(FastNoise::Simplex);
-  _noises[SecondShapeCaves].SetFrequency(0.018);
-  _noises[SecondElevationCaves].SetNoiseType(FastNoise::Perlin);
-  _noises[SecondElevationCaves].SetSeed(1339);
-  _noises[SecondElevationCaves].SetFrequency(0.01);
+  _noises[Caves].SetNoiseType(FastNoise::Perlin);
+  _noises[Caves].SetFrequency(0.1);
+  _noises[Caves].SetSeed(167998);
 
   _noises[Crevices].SetNoiseType(FastNoise::Perlin);
   _noises[Crevices].SetSeed(1333);
@@ -1150,11 +937,7 @@ MapGeneration::MapGeneration()
   _noiseNames[River] = "River";
   _noiseNames[Tree] = "Tree";
   _noiseNames[Vegetation] = "Vegetation";
-  _noiseNames[Caves3D] = "Caves3D";
-  _noiseNames[ShapeCaves] = "ShapeCaves";
-  _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
-  _noiseNames[ElevationCaves] = "ElevationleCaves";
-  _noiseNames[SecondElevationCaves] = "SecondElevationCaves";
+  _noiseNames[Caves] = "Caves";
   _noiseNames[Crevices] = "Crevices";
   _noiseNames[PerlinX] = "PerlinX";
   _noiseNames[PerlinY] = "PerlinY";

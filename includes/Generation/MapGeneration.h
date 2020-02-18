@@ -64,11 +64,7 @@ public:
         Snow,
         Desert,
         HighLand,
-        ShapeCaves,
-        SecondShapeCaves,
-        Caves3D,
-        ElevationCaves,
-        SecondElevationCaves,
+        Caves,
         Crevices,
         Vegetation,
         Ore,
@@ -87,7 +83,7 @@ public:
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
     StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
     __BLOCK_TYPE VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome);
-    float CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
+    float CrevicesGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition);
     float CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
@@ -143,14 +139,11 @@ private:
     float SecondElevationCavesGeneration(glm::ivec2 pos);
 
     float RiverElevationGeneration(glm::ivec2 pos);
-
-    float CrevicesGeneration(glm::ivec2 pos);
   
     int BiomeGeneration(glm::ivec2 pos);
     int BiomeGenerationWithoutRiver(glm::ivec2 pos);
 
-    int BiomeDefinition(int elevation, glm::ivec2 pos);
-    int TestBiomeDefinition(float e, glm::ivec2 pos);
+    int BiomeDefinition(float e, glm::ivec2 pos);
 
     __BLOCK_TYPE OreDefinition(float elevation, int currBlockHeight, int maxBlockHeight);
     __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
