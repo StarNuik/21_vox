@@ -802,6 +802,21 @@ float MapGeneration::CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockP
   return terrace;
 }
 
+float MapGeneration::CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
+{
+  FastNoise& noise = _noises[Caves3D];
+
+  float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
+  glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
+
+  float e = noise.GetNoise(pos.x, pos.y, pos.z);
+  e = (e * 0.5f) + 0.5f;
+
+  if (e < 0.69751f)
+    return -1.f;
+  return e;
+}
+
 MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition)
 {
   StoredMapData column;
@@ -1082,6 +1097,10 @@ MapGeneration::MapGeneration()
   _noises[ShapeCaves].SetFrequency(0.01);
   _noises[ElevationCaves].SetNoiseType(FastNoise::Perlin);
   _noises[ElevationCaves].SetFrequency(0.01);
+
+  _noises[Caves3D].SetNoiseType(FastNoise::Perlin);
+  _noises[Caves3D].SetFrequency(0.1);
+  _noises[Caves3D].SetSeed(167998);
   
   _noises[SecondShapeCaves].SetNoiseType(FastNoise::Simplex);
   _noises[SecondShapeCaves].SetFrequency(0.018);
@@ -1131,6 +1150,7 @@ MapGeneration::MapGeneration()
   _noiseNames[River] = "River";
   _noiseNames[Tree] = "Tree";
   _noiseNames[Vegetation] = "Vegetation";
+  _noiseNames[Caves3D] = "Caves3D";
   _noiseNames[ShapeCaves] = "ShapeCaves";
   _noiseNames[SecondShapeCaves] = "SecondShapeCaves";
   _noiseNames[ElevationCaves] = "ElevationleCaves";

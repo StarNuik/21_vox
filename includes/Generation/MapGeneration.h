@@ -66,6 +66,7 @@ public:
         HighLand,
         ShapeCaves,
         SecondShapeCaves,
+        Caves3D,
         ElevationCaves,
         SecondElevationCaves,
         Crevices,
@@ -87,6 +88,7 @@ public:
     StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
     __BLOCK_TYPE VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome);
     float CrevicesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
+    float CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);

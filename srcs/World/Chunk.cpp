@@ -42,6 +42,7 @@ void Chunk::Generate() {
 			int crevicesDepth = firstLayerBorder - 30;
 			int crevicesHeight = 0;
 
+
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = MAX_WATER_LEVEL + block.exactElevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++)
@@ -67,33 +68,39 @@ void Chunk::Generate() {
 
 			if (block.biom != MapGeneration::Ocean && block.biom != MapGeneration::River)
 			{
-				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;// caves generation
-				__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z));
-				if (elevation != 0 && blockType != Block::Air)
-				{
-					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
-					cavesDepth += height;
-					cavesDepth = glm::clamp(cavesDepth, 1, lastLayerBorder - 1);
-					int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
-					for (int y = cavesDepth; y < cavesHeight; y++)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
-					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves);
-					if (vegetation != Block::Air)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, cavesDepth, _position.y * 16 + z), vegetation);
-				}
+				// elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ShapeCaves).exactElevation;// caves generation
+				// __BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z));
+				// if (elevation != 0 && blockType != Block::Air)
+				// {
+				// 	int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves).exactElevation;
+				// 	cavesDepth += height;
+				// 	cavesDepth = glm::clamp(cavesDepth, 1, lastLayerBorder - 1);
+				// 	int cavesHeight = glm::clamp(cavesDepth + elevation + 1, 1, lastLayerBorder);
+				// 	for (int y = cavesDepth; y < cavesHeight; y++)
+				// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
+				// 	__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::ElevationCaves);
+				// 	if (vegetation != Block::Air)
+				// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, cavesDepth, _position.y * 16 + z), vegetation);
+				// }
 
-				elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
-				if (elevation != 0 && blockType != Block::Air)
+				// elevation = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondShapeCaves).exactElevation;// caves generation
+				// if (elevation != 0 && blockType != Block::Air)
+				// {
+				// 	int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
+				// 	secondCavesDepth += height;
+				// 	secondCavesDepth = glm::clamp(secondCavesDepth, 1, lastLayerBorder - 1);
+				// 	int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
+				// 	for (int y = secondCavesDepth; y < cavesHeight; y++)
+				// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
+				// 	__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves);
+				// 	if (vegetation != Block::Air)
+				// 		w->SetBlock(glm::ivec3(_position.x * 16 + x, secondCavesDepth, _position.y * 16 + z), vegetation);
+				// }
+
+				for (int y = 1; y < lastLayerBorder + (lastLayerBorder % 2); y++)
 				{
-					int height = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves).exactElevation;
-					secondCavesDepth += height;
-					secondCavesDepth = glm::clamp(secondCavesDepth, 1, lastLayerBorder - 1);
-					int cavesHeight = glm::clamp(secondCavesDepth + elevation + 1, 1, lastLayerBorder);
-					for (int y = secondCavesDepth; y < cavesHeight; y++)
+					if (mp.CavesGenerations(_position, glm::ivec3(x, y, z)) != -1.f)
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
-					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), MapGeneration::SecondElevationCaves);
-					if (vegetation != Block::Air)
-						w->SetBlock(glm::ivec3(_position.x * 16 + x, secondCavesDepth, _position.y * 16 + z), vegetation);
 				}
 
 				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
