@@ -3,14 +3,12 @@
 
 School 21's (Ecole 42) project about voxel-rendering and procedural generation.
 
----
 ## Authors
 
 [StarNuik](https://github.com/StarNuik) : Engine, rendering engine
 
 [GodFlight](https://github.com/GodFlight) : Procedural world generation, player
 
----
 ## Screenshots
 ![](https://github.com/StarNuik/vox/raw/master/screenshot/9.png)
 ![](https://github.com/StarNuik/vox/raw/master/screenshot/8.png)
