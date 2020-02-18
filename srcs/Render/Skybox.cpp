@@ -64,8 +64,8 @@ void Skybox::Init(Game* game) {
 
 	float *buffer = VertexBuffers::GetBuffer(VertexBuffers::Skybox);
 	std::vector<float> vertices = std::vector<float>();
-	vertices.reserve(sizeof(float) * 48 * 6);
-	vertices.insert(vertices.end(), buffer, buffer + 48 * 6);
+	vertices.reserve(sizeof(float) * 66 * 6);
+	vertices.insert(vertices.end(), buffer, buffer + 66 * 6);
 	_skyGeometry = new Geometry(vertices);
 
 	_shader = rs->GetShader("Skybox");

@@ -36,6 +36,7 @@ private:
 	void RenderPostprocess();
 	void RenderGeometry();
 	void RenderLighting();
+	bool ModelInView(RenderModel*);
 
 	class StaticData {
 	public:

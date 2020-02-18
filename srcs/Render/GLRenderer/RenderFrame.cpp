@@ -42,13 +42,37 @@ void GLRenderer::RenderFrame() {
 	glfwSwapBuffers(_static.window);
 }
 
+bool GLRenderer::ModelInView(RenderModel* model) {
+	glm::vec3 bounding[8];
+	bounding[0] = model->GetPosition();
+	bounding[1] = bounding[0] + glm::vec3(16.f, 0.f, 0.f);
+	bounding[2] = bounding[0] + glm::vec3(0.f, 16.f, 0.f);
+	bounding[3] = bounding[0] + glm::vec3(0.f, 0.f, 16.f);
+	bounding[4] = bounding[0] + glm::vec3(16.f, 16.f, 0.f);
+	bounding[5] = bounding[0] + glm::vec3(16.f, 0.f, 16.f);
+	bounding[6] = bounding[0] + glm::vec3(16.f, 16.f, 0.f);
+	bounding[7] = bounding[0] + glm::vec3(16.f, 16.f, 16.f);
+	for (int i = 0; i < 8; i++) {
+		if (_static.activeCamera->IsInView(_frame.vp, bounding[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void GLRenderer::RenderGeometry() {
 	Shader* shader = _static.geometryPassShader;
 	Material* lastMaterial = nullptr;
 
 	glEnable(GL_DEPTH_TEST);
 	shader->Use();
+	uint gg = 0;
 	for (RenderModel* model : _static.rendered) {
+		//! ACHTUNG IT ONLY WORKS FOR BLOCK MODELS
+		if (!ModelInView(model)) {
+			gg++;
+			continue;
+		}
 		Material* material = model->GetMaterial();
 		if (material != lastMaterial) {
 			material->Use(shader);
@@ -59,6 +83,7 @@ void GLRenderer::RenderGeometry() {
 		shader->SetMatrix4("model", model->GetModelMatrix());
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
+	// Log::Basic("Geometries skipped: " + std::to_string(gg));
 	glDisable(GL_DEPTH_TEST);
 }
 
@@ -161,7 +186,7 @@ void GLRenderer::RenderPostprocess() {
 	_static.postShader->SetFloat("runtime", _static.game->GetRuntime());
 	_static.postQuad->Use();
 	//! Debug
-	// color = _static.gbufferFbo->GetColorTexture(2);
+	// color = _static.gbufferFbo->GetColorTexture(1);
 	color = _static.screenFbo->GetColorTexture();
 	// color = _static.shadows->_shadowFbo->GetDepthTexture();
 	glActiveTexture(GL_TEXTURE0);

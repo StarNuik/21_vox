@@ -17,7 +17,11 @@ public:
 	void SetRotation(glm::quat);
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
+	float GetFOV();
+	float GetRatio();
+	bool IsInView(const glm::mat4& vp, const glm::vec3&);
 private:
+	float _fov, _ratio, _nearPlane, _farPlane;
 	glm::vec3 _position;
 	glm::quat _rotation;
 	glm::mat4 _projectionMatrix;

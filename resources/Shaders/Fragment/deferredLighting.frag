@@ -74,15 +74,18 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 fragDiffuse, f
 
 void main() {
 	vec3 normal = texture(normalMap, fragPos).rgb;
+	if (normal == vec3(0.0))
+		discard;
 	vec3 worldPos = texture(positionMap, fragPos).rgb;
 	vec4 aspec = texture(albedoSpecMap, fragPos);
 	vec3 diffuse = aspec.rgb;
 	float specular = aspec.a;
-
+  
 	vec3 viewDir = normalize(cameraPos - worldPos);
 	vec4 fragLSPos = lightSpace * vec4(worldPos, 1.0);
-	float shadow = 1.0 - ShadowCalculation(fragLSPos);
-	// float shadow = 1.0;
+	float shadow;
+	// shadow = 1.0 - ShadowCalculation(fragLSPos);
+	shadow = 1.0;
 
 	vec3 result = vec3(0.0);
 	
