@@ -22,8 +22,6 @@ float MapGeneration::_Hash(const float n)
   return x - floor(x);
 }
 
-
-
 float MapGeneration::Noise(const glm::vec3 &x)
 {
   glm::vec3 p(floor(x.x), floor(x.y), floor(x.z));
@@ -52,7 +50,6 @@ float MapGeneration::RiverElevationGeneration(glm::ivec2 pos)
 
   float pX = perlinX.GetNoise(pos.x, pos.y) * 43.52124f;
   float pY = perlinY.GetNoise(pos.x, pos.y) * 43.52124f;
-
 
   float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
   if (e > 0.525f)
@@ -252,6 +249,45 @@ float MapGeneration::BasicGenerationColumn(glm::ivec2 pos)
   return elevation;
 }
 
+/* - look pretty good
+float MapGeneration::SwampGenerationColumn(glm::ivec2 pos)
+{
+  FastNoise& noise = _noises[Swamp];
+  float terraceValue = _terraceValue;
+
+  float e = 1.f * (noise.GetNoise(1.f * pos.x, 1.f * pos.y));
+  float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
+
+  e += e1;
+  e = (e * 0.5f + 0.5f) * 10.f;
+
+  float terrace = round(e * terraceValue) / terraceValue;
+  int elevation = (int)floorf(terrace);
+  return elevation;
+}
+*/
+
+float MapGeneration::SwampGenerationColumn(glm::ivec2 pos)
+{
+	FastNoise& noise = _noises[Swamp]; //0.021
+  FastNoise& perlinX = _noises[PerlinX];
+  FastNoise& perlinY = _noises[PerlinY];
+  float exp = _exp;
+  float terraceValue = _terraceValue;
+
+  float pX = perlinX.GetNoise(pos.x, pos.y) * 21.6543;
+  float pY = perlinY.GetNoise(pos.x, pos.y) * 21.6543;
+
+  float e = 0.25f * (noise.GetNoise(4.f * (pos.x + pX), 4.f * (pos.y + pY)));
+  float e2 = 0.13f * (noise.GetNoise(8.f * (pos.x + pX), 8.f * (pos.y + pY)));
+  e += e2;
+  e = (e * 0.5f + 0.5f);
+  e = e - SWAMP_HEGHT;
+
+  float elevation = round(e * terraceValue) / terraceValue;
+  return elevation;
+}
+
 int MapGeneration::BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance)
 {
   FastNoise& noise = _noises[Biomes];
@@ -360,6 +396,9 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
         ret = HighLandGenerationColumn(nextBlock) + 5.216f;
         SmoothingButtJoint(ret, nextBlock, biome);
         break;
+      case GenerationType::Swamp:
+        ret = 0.2f;
+        break;
       case GenerationType::Ocean:
         ret = 0.2f;
         break;
@@ -384,7 +423,7 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(glm:
 
 
   int biome = BiomeGenerationWithoutRiver(nextBlock);
-  if (biome < originBiome)
+  if (originBiome > biome)
   {
     switch (biome)
     {
@@ -540,8 +579,10 @@ int MapGeneration::BiomeDefinition(int elevation, glm::ivec2 pos)
 
 int MapGeneration::TestBiomeDefinition(float e,  glm::ivec2 pos)
 {
-  if (e < 0.2)
+  if (e < 0.15)
     return Ocean;
+  else if (e < 0.25f)
+    return Swamp;
   else if (e < 0.31f)
     return Desert;
   else if (e < 0.8)
@@ -578,6 +619,7 @@ int MapGeneration::BiomeGeneration(glm::ivec2 pos)
   float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
   int finalBiome = 0;
   float riverBiome = 0.f;
+
   finalBiome = TestBiomeDefinition(e, pos);
   riverBiome = RiverElevationGeneration(pos);
 
@@ -753,6 +795,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
   glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
 
   column.biom = BiomeGeneration(pos);
+  // column.biom = Swamp;
   column.treeType = Trees::Nothing;
   switch (column.biom)
   {
@@ -793,6 +836,29 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
       column.firstBlockLayer = Block::Dirt;
       column.lastBlockLayer = Block::Grass;
       if (CheckingTheBiomeIntTheNextColumn(pos, column.biom, checkLength).biome == Ocean)
+      {
+        column.biom = Beach;
+        column.firstBlockLayer = Block::Sand;
+        column.lastBlockLayer = Block::Sand;
+      }
+      else if (TreeGeneration(pos) != tree.Nothing)
+        column.treeType = intRand(Trees::First, Trees::OakTreeTypeTwo);
+    }
+      break;
+    case GenerationType::Swamp:
+    {
+      FastNoise& noise = _noises[BeachBordered];
+      float beachLength = (noise.GetNoise(pos.x, pos.y) * 0.5f + 0.5f);
+      int checkLength;
+      if (beachLength > 0.5f)
+        checkLength = (int)beachLength + beachLength * 10;
+      else
+        checkLength = 0;
+      column.approximateElevation = SwampGenerationColumn(pos);
+      column.approximateElevation = column.approximateElevation > 0.f ? (int)floorf(column.approximateElevation * 10.f) : (int)floorf((column.approximateElevation + SWAMP_HEGHT) * 10.f) - 4.f;
+      column.firstBlockLayer = Block::Dirt;
+      column.lastBlockLayer = Block::Grass;
+      if (column.approximateElevation > 0.f && CheckingTheBiomeIntTheNextColumn(pos, column.biom, checkLength).biome == Ocean)
       {
         column.biom = Beach;
         column.firstBlockLayer = Block::Sand;
@@ -847,7 +913,8 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm
     }
       break;
   }
-  column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
+  column.exactElevation = glm::clamp((int)column.approximateElevation, -10, 255);
+  // column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
   return column;
 }
 
@@ -1018,6 +1085,9 @@ MapGeneration::MapGeneration()
   _noises[GrassLand].SetNoiseType(FastNoise::Simplex);
   _noises[GrassLand].SetFrequency(0.020214);
 
+  _noises[Swamp].SetNoiseType(FastNoise::Simplex);
+  _noises[Swamp].SetFrequency(0.021);
+
   _noises[Desert].SetNoiseType(FastNoise::Simplex);
   _noises[Desert].SetFrequency(0.01);
 
@@ -1038,6 +1108,7 @@ MapGeneration::MapGeneration()
 
   _noiseNames[Basic] = "Basic";
   _noiseNames[GrassLand] = "GrassLand";
+  _noiseNames[Swamp] = "Swamp";
   _noiseNames[Desert] = "Desert";
   _noiseNames[Snow] = "Snow";
   _noiseNames[HighLand] = "HighLand";

@@ -58,18 +58,23 @@ void Game::InitSystems() {
 
 void Game::InitWorld() {
 	Profiler::Prepare("Generation");
+	Profiler::Prepare("Geometry");
 	const int border = WORLD_RADIUS;
 	Profiler::Start("Generation");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
 			_world->GenerateChunk(glm::ivec2(x, z));
+			Profiler::Add("Generation");
 		}
+	Profiler::Start("Geometry");
 	for (int x = -border; x <= border; x++)
 		for (int z = -border; z <= border; z++) {
 			_world->ActivateChunk(glm::ivec2(x, z));
+			Profiler::Add("Geometry");
 		}
-	Profiler::Add("Generation");
-	Log::Basic("Generation total: " + std::to_string(Profiler::GetTotalS("Generation")) + "s");
+	Log::Important("[Chunk count : ", (WORLD_RADIUS * 2 + 1) * (WORLD_RADIUS * 2 + 1), "]");
+	Log::Important("[Generation T: ", Profiler::GetS("Generation"), "s, A: ", Profiler::GetAverageMs("Generation"), "ms ]");
+	Log::Important("[Geometry   T: ", Profiler::GetS("Geometry"), "s, A: ", Profiler::GetAverageMs("Geometry"), "ms ]");
 };
 
 void Game::DestroyWorld() {

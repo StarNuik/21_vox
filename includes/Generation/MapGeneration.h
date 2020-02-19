@@ -23,6 +23,8 @@
 #define MAX_DIAGONAL_DIST_TO_SMOITHING 5
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
 #define MIN_WATER_LEVEL 40
+#define MAX_WATER_LEVEL 60
+#define SWAMP_HEGHT 0.382f
 
 class MapGeneration
 {
@@ -54,6 +56,7 @@ public:
     enum GenerationType {
         Basic = 0,
         Ocean,
+        Swamp,
         River,
         Beach,
         BeachBordered,
@@ -123,6 +126,7 @@ private:
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);
+    float SwampGenerationColumn(glm::ivec2 pos);
     float DesertGenerationColumn(glm::ivec2 pos);
     float HighLandGenerationColumn(glm::ivec2 pos);
     float SnowLangGenerationColumn(glm::ivec2);

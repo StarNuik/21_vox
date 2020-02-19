@@ -17,12 +17,12 @@ class Profiler {
 public:
 	static void Prepare(std::string);
 	static void Start(std::string);
-	static void End(std::string);
+	// static void End(std::string);
 	static void Add(std::string);
 	static float GetMs(std::string);
 	static float GetS(std::string);
-	static float GetTotalMs(std::string);
-	static float GetTotalS(std::string);
+	static float GetLastMs(std::string);
+	static float GetLastS(std::string);
 	static float GetAverageMs(std::string);
 	static float GetAverageS(std::string);
 public:
