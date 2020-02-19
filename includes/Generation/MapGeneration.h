@@ -33,26 +33,6 @@ public:
     ~MapGeneration() {};
     Trees tree;
 
-    struct StoredMapData
-    {
-        float approximateElevation;
-        int exactElevation;
-        int biom;
-        __BLOCK_TYPE firstBlockLayer;
-        __BLOCK_TYPE lastBlockLayer;
-        __BLOCK_TYPE treeType;
-        int aboveRiverElevation;
-        int aboveRiverBiome;
-        StoredMapData() {};
-    };
-
-    struct StoredOreData
-    {
-        glm::ivec3 pos;
-        __BLOCK_TYPE type;
-        StoredOreData() {};
-    };
-
     enum GenerationType {
         Basic = 0,
         Ocean,
@@ -79,6 +59,27 @@ public:
         Size = Last + 1
     };
 
+    struct StoredMapData
+    {
+        float approximateElevation;
+        int exactElevation;
+        GenerationType biom;
+        __BLOCK_TYPE firstBlockLayer;
+        __BLOCK_TYPE lastBlockLayer;
+        __BLOCK_TYPE treeType;
+        int aboveRiverElevation;
+        int aboveRiverBiome;
+        StoredMapData() {};
+    };
+
+    struct StoredOreData
+    {
+        glm::ivec3 pos;
+        __BLOCK_TYPE type;
+        StoredOreData() {};
+    };
+
+
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
     StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
     StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
@@ -99,7 +100,7 @@ private:
 	std::string _noiseNames[Size];
     struct BiomeInfo
     {
-        int biome;
+        GenerationType biome;
         int distanceToTheNextBiome;
     };
 
@@ -122,6 +123,15 @@ private:
     VegetationType CavesVegetationGeneration(glm::ivec2 pos);
     VegetationType SwampVegetationGeneration(glm::ivec2 pos);
     bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
+
+    void GetBasicData(StoredMapData& column, glm::ivec2 pos);
+    void GetOceanData(StoredMapData& column, glm::ivec2 pos);
+    void GetRiverData(StoredMapData& column, glm::ivec2 pos);
+    void GetGrassLandData(StoredMapData& column, glm::ivec2 pos);
+    void GetSwampData(StoredMapData& column, glm::ivec2 pos);
+    void GetDesertData(StoredMapData& column, glm::ivec2 pos);
+    void GetHighLandData(StoredMapData& column, glm::ivec2 pos);
+    void GetSnowLandData(StoredMapData& column, glm::ivec2 pos);
    
     float BasicGenerationColumn(glm::ivec2 pos);
     float LandGenerationColumn(glm::ivec2 pos);
@@ -130,38 +140,31 @@ private:
     float HighLandGenerationColumn(glm::ivec2 pos);
     float SnowLangGenerationColumn(glm::ivec2);
 
+
     float TreeGeneration(glm::ivec2 pos);
-
-    float ShapeCavesGeneration(glm::ivec2 pos);
-    float ElevationCavesGeneration(glm::ivec2 pos);
-
-    float SecondShapeCavesGeneration(glm::ivec2 pos);
-    float SecondElevationCavesGeneration(glm::ivec2 pos);
 
     float RiverElevationGeneration(glm::ivec2 pos);
   
-    int BiomeGeneration(glm::ivec2 pos);
-    int BiomeGenerationWithoutRiver(glm::ivec2 pos);
+    GenerationType BiomeGeneration(glm::ivec2 pos);
+    GenerationType BiomeGenerationWithoutRiver(glm::ivec2 pos);
 
-    int BiomeDefinition(float e, glm::ivec2 pos);
+    GenerationType BiomeDefinition(float e, glm::ivec2 pos);
 
     __BLOCK_TYPE OreDefinition(float elevation, int currBlockHeight, int maxBlockHeight);
     __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
 
     void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
     void SmoothingButtJointWithoutRiver(float& elevation, glm::ivec2 pos, int biome);
-    // void SmoothingButtJointAround(const float& elevation, const glm::ivec2 pos, const int biome, const int maxDistance);
 
-    BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
-    // BiomeInfo CheckingTheBiomeIntTheNextColumnWithoutRiver(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
     
-    BiomeInfo FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const int biome, const int maxDistToCheckBiome); // Find biome of interesest
-    int BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
+    BiomeInfo FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biome, const int maxDistToCheckBiome); // Find biome of interesest
+    GenerationType BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
     float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
     float CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
     
-    // float GetApprox(float e1, float e2, float e3, float e4); // returns average height among nearby blocks
-    float GetApprox(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7); // returns average height among nearby blocks
+    // float GetApprox(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7); // returns average height among nearby blocks
+    float GetApprox(float e0, float e1, float e2, float e3); // returns average height among nearby blocks
 
 
     float _Hash(const float n);
