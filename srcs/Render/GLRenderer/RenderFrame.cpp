@@ -14,9 +14,11 @@
 #include "Render/Geometry.h"
 #include "Render/Texture.h"
 #include "Render/Framebuffer.h"
+#include "Utilities/Profiler.h"
 #include <algorithm>
 
 void GLRenderer::RenderFrame() {
+	Profiler::Start("RenerFull");
 	PrepareData();
 	_static.shadows->Render(_static.rendered);
 	_static.screenFbo->Use();
@@ -25,6 +27,7 @@ void GLRenderer::RenderFrame() {
 	RenderBlocks();
 	RenderBloom();
 	RenderPostprocess();
+	Profiler::Add("RenderFull");
 	_static.ui->UpdateData();
 	_static.ui->Draw();
 	glfwSwapBuffers(_static.window);

@@ -40,11 +40,11 @@ void Game::GameLoop() {
 
 		Profiler::Add("Update");
 		// PhysicsUpdate();
-		Profiler::Start("RenderFull");
+		// Profiler::Start("RenderFull");
 
 		_renderer->RenderFrame();
 
-		Profiler::Add("RenderFull");
+		// Profiler::Add("RenderFull");
 		Profiler::Add("FrameFull");
 	}
 };
