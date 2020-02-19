@@ -7,6 +7,10 @@
 
 #define SECONDS_IN_A_DAY (360.f)
 #define SECONDS_IN_A_MOON_DAY (SECONDS_IN_A_DAY * 10.f)
+
+#define TARGET_FPS (60)
+#define TARGET_S (1.0f / (float)(TARGET_FPS))
+#define TARGET_MS (1000.f / (float)(TARGET_FPS))
 // #define SECONDS_IN_A_MOON_DAY (10.f)
 
 class Game {
