@@ -18,13 +18,13 @@ void UIController::UpdateProfiler() {
 	UIData::DataProfiler& data = _dataProfiler;
 
 	data.frameFull.pop_front();
-	data.frameFull.push_back(Profiler::GetMs("FrameFull"));
+	data.frameFull.push_back(Profiler::GetLastMs("FrameFull"));
 	data.input.pop_front();
-	data.input.push_back(Profiler::GetMs("Input"));
+	data.input.push_back(Profiler::GetLastMs("Input"));
 	data.update.pop_front();
-	data.update.push_back(Profiler::GetMs("Update"));
+	data.update.push_back(Profiler::GetLastMs("Update"));
 	data.renderFull.pop_front();
-	data.renderFull.push_back(Profiler::GetMs("RenderFull"));
+	data.renderFull.push_back(Profiler::GetLastMs("RenderFull"));
 };
 
 void UIController::ProfilerUI() {

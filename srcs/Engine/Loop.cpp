@@ -26,25 +26,25 @@ void Game::GameLoop() {
 	Log::Success("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
 	{
-		float delta = Profiler::GetS("FrameFull");
+		float delta = Profiler::GetLastS("FrameFull");
 		_runtime += delta;
 		Profiler::Start("FrameFull");
 		Profiler::Start("Input");
 
 		_input->Update(_renderer->GetWindow());
 
-		Profiler::End("Input");
+		Profiler::Add("Input");
 		Profiler::Start("Update");
 
 		Update(delta);
 
-		Profiler::End("Update");
+		Profiler::Add("Update");
 		// PhysicsUpdate();
 		Profiler::Start("RenderFull");
 
 		_renderer->RenderFrame();
 
-		Profiler::End("RenderFull");
-		Profiler::End("FrameFull");
+		Profiler::Add("RenderFull");
+		Profiler::Add("FrameFull");
 	}
 };

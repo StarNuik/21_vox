@@ -25,10 +25,10 @@ void Profiler::Start(std::string key) {
 	_map[key].start = std::chrono::high_resolution_clock::now();
 }
 
-void Profiler::End(std::string key) {
-	_map[key].end = std::chrono::high_resolution_clock::now();
-	_map[key].PushBack();
-}
+// void Profiler::End(std::string key) {
+// 	_map[key].end = std::chrono::high_resolution_clock::now();
+// 	_map[key].PushBack();
+// }
 
 void Profiler::Add(std::string key) {
 	__timepoint t = std::chrono::high_resolution_clock::now();
@@ -37,24 +37,25 @@ void Profiler::Add(std::string key) {
 	get.total += get.end - get.start;
 	get.count++;
 	get.PushBack();
+	get.start = t;
 }
 
-float Profiler::GetMs(std::string key) {
+float Profiler::GetLastMs(std::string key) {
 	Profiler::Pair& get = _map[key];
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(get.lastEnd - get.lastStart).count() / __MS_DIV;
 }
 
-float Profiler::GetS(std::string key) {
+float Profiler::GetLastS(std::string key) {
 	Profiler::Pair& get = _map[key];
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(get.lastEnd - get.lastStart).count() / __S_DIV;
 }
 
-float Profiler::GetTotalMs(std::string key) {
+float Profiler::GetMs(std::string key) {
 	Profiler::Pair& get = _map[key];
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(get.total).count() / __MS_DIV;
 };
 
-float Profiler::GetTotalS(std::string key) {
+float Profiler::GetS(std::string key) {
 	Profiler::Pair& get = _map[key];
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(get.total).count() / __S_DIV;
 };
