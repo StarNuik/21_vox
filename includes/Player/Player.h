@@ -10,7 +10,7 @@
 
 #define SPEED 10.f
 #define CROUCHING_SPEED 2.f
-#define MOUSE_SENSITIVITY 0.75f
+#define MOUSE_SENSITIVITY 7.5f
 
 class Player : public Entity {
 public:
