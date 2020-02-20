@@ -12,6 +12,7 @@ MapGeneration::GenerationType MapGeneration::BiomeInPositionOfInterest(const glm
   return biome;
 }
 
+//! UNNECESSARY
 MapGeneration::BiomeInfo MapGeneration::CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biome, const int maxDistToCheckBiome)
 {
   int distance = 1;
@@ -45,7 +46,9 @@ MapGeneration::BiomeInfo MapGeneration::CheckingTheBiomeIntTheNextColumn(const g
   }
   return BiomeInfo{biome, 0};
 }
+//! Stop doing twice the work
 
+//! rename to FindBiome
 MapGeneration::BiomeInfo MapGeneration::FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biomeOfInterest, const int maxDistToCheckBiome)
 {
   int distance = 1;

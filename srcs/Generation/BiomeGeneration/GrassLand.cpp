@@ -23,7 +23,7 @@ void MapGeneration::GetGrassLandData(StoredMapData& column, glm::ivec2 pos)
         checkLength = (int)beachLength + beachLength * 10;
     else
         checkLength = 0; 
-    column.approximateElevation = LandGenerationColumn(pos);
+    column.approximateElevation = LandGenerationColumn(pos); //! GetLandHeight
     SmoothingButtJoint(column.approximateElevation, pos, column.biom);
     column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     column.firstBlockLayer = Block::Dirt;
@@ -35,5 +35,5 @@ void MapGeneration::GetGrassLandData(StoredMapData& column, glm::ivec2 pos)
         column.lastBlockLayer = Block::Sand;
     }
     else if (TreeGeneration(pos) != tree.Nothing)
-        column.treeType = intRand(Trees::First, Trees::OakTreeTypeTwo);
+        column.treeType = intRand(Trees::First, Trees::OakTreeTypeTwo); //! OMG BAD METHOD NAME
 }

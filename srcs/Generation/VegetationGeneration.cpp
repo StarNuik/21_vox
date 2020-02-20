@@ -20,6 +20,7 @@ bool MapGeneration::IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseTyp
   return false;
 }
 
+// // ! UNNECESSARY
 float MapGeneration::TreeGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Tree];
@@ -37,8 +38,10 @@ float MapGeneration::TreeGeneration(glm::ivec2 pos)
     return 1.f;
   return tree.Nothing;
 }
+// // ! Use IsThereAPlant instead with R == 3
 
- __BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
+//! Rename to ConvertToBlock / ConvertPlantToBlock / PlantToBlock
+__BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
 {
   switch (vegetation)
   {
@@ -108,6 +111,8 @@ MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::
   return VegetationType::NothingVegetation;
 }
 
+//! biome is MapGeneration::GenerationType
+//! globalPos = chunkPos
 __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome)
 {
   float globalX = globalPos.x * 16, globalY = globalPos.y * 16;

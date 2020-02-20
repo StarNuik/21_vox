@@ -4,15 +4,17 @@
 #include "Utilities/Rand.h"
 // #include "Utill"
 
-__BLOCK_TYPE MapGeneration::RegenerateDimond(glm::vec3 pos)
+__BLOCK_TYPE MapGeneration::RegenerateDimond(glm::vec3 pos) //! correct spellinfg: Diamond
 {
   FastNoise& noise = _noises[OreDimond];
   float elevation = noise.GetNoise(pos.x, pos.y, pos.z) * 0.5f + 0.5f;
   if (elevation < 0.5f)
     return Block::OreDiamond;
-  return Block::Air;
+  return Block::Air; //! change to Block::Stone
 }
 
+//! rename to GetOreType
+//! elevation is noiseVal
 __BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int currBlockHeight, int maxBlockHeight)
 {
   if (elevation > 0.545f && elevation < 0.558f)
@@ -24,18 +26,18 @@ __BLOCK_TYPE MapGeneration::OreDefinition(float elevation, int currBlockHeight, 
   else if (elevation > 0.9674f && elevation < 0.9680f && currBlockHeight <= floorf(maxBlockHeight * 0.3f))
     return Block::OreDiamond;
   else
-    return Block::Air;
+    return Block::Air; //? Block::Stone
 }
 
 MapGeneration::StoredOreData MapGeneration::OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight)
 {
   StoredOreData ore;
   FastNoise& noise = _noises[Ore];
-  float globalX = globalPos.x * 16, globalZ = globalPos.y * 16;
+  float globalX = globalPos.x * 16, globalZ = globalPos.y * 16; //! Vector math
   glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
-  ore.type = Block::Cobblestone;
+  ore.type = Block::Cobblestone; //! not needed
   float elevation = noise.GetNoise(pos.x, pos.y, pos.z) * 0.5f + 0.5f;
-  ore.type = OreDefinition(elevation, pos.y, maxHeight);
+  ore.type = OreDefinition(elevation, pos.y, maxHeight); //! GetOreType
   if (ore.type == Block::OreDiamond)
     ore.type = RegenerateDimond(pos);
   return ore;

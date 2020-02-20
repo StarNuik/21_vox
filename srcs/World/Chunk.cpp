@@ -23,32 +23,32 @@ Chunk::~Chunk() {
 
 void Chunk::Generate() {
 	World* w = _game->GetWorld();
-	MapGeneration mp = *_game->GetGeneration();
+	MapGeneration& mp = *_game->GetGeneration();
 	MapGeneration::StoredMapData block;
 	MapGeneration::StoredMapData sub;
 	MapGeneration::StoredOreData ore;
-
+	
+	//! Move to methods
 	for (int x = 0; x < 16; x++)
 	{
 		for (int z = 0; z < 16; z++)
 		{
-			int elevation;
+			//? First layer (Stone)
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
-			int firstLayerBorder = MIN_WATER_LEVEL + block.exactElevation;
+			const int firstLayerBorder = MIN_WATER_LEVEL + block.exactElevation;
 			for (int y = 1; y < firstLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
-			int crevicesDepth = firstLayerBorder - 30;
-			int crevicesHeight = 0;
-			int cavesHeight = 0;
-
-
+			
+			//? Second layer (Biome dependent)
 			block = mp.Generation(_position, glm::ivec2(x, z)); //second layer generation
 			int lastLayerBorder = MAX_WATER_LEVEL + block.exactElevation - 1;
 			for (int y = firstLayerBorder; y < lastLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
-
+			
+			//? Surface
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), block.lastBlockLayer);
 
+			//? Set swamp water
 			if (block.biom == MapGeneration::Swamp && lastLayerBorder < MAX_WATER_LEVEL)
 			{
 				for (int y = lastLayerBorder + 1; y <= MAX_WATER_LEVEL; y++)
@@ -56,6 +56,7 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder, _position.y * 16 + z), Block::Dirt);
 			}
 
+			//? Rivers
 			if (block.biom == MapGeneration::River && block.aboveRiverBiome == MapGeneration::HighLand) { // river generation
 				sub = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::HighLand);
 				int lastSubLayerBorder = MAX_WATER_LEVEL + sub.exactElevation - 1;
@@ -65,8 +66,11 @@ void Chunk::Generate() {
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, lastSubLayerBorder, _position.y * 16 + z), sub.lastBlockLayer);
 			}
 
+			//? Big IF
+			int cavesHeight = 0;
 			if (block.biom != MapGeneration::Ocean && block.biom != MapGeneration::River)
 			{
+				//? Caves
 				bool cavesStart = false;
 				int cavesDepth = 0;
 				for (int y = 1; y < lastLayerBorder + (lastLayerBorder % 2); y++) { // caves generation
@@ -84,6 +88,9 @@ void Chunk::Generate() {
 					
 				}
 
+				//? Ravines
+				int crevicesHeight = 0;
+				int crevicesDepth = firstLayerBorder - 30;
 				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
 						float e = mp.CrevicesGeneration(_position, glm::ivec3(x, y, z)); // Crevices generation
 						if (e != -1.f) {
@@ -92,6 +99,7 @@ void Chunk::Generate() {
 						}
 				}
 
+				//? Trees
 				if (cavesHeight < lastLayerBorder && crevicesHeight < lastLayerBorder && (x > 3 && x < 13 && z > 3 && z < 13) && block.treeType != mp.tree.Nothing) { // (x > 3 && x < 13 && z > 3 && z < 13) - a crutch for which trees are not created on the edge of the biome
 					for (int y = 0; y < TREE_HEIGHT; y++)
 						for (int xn = 0; xn < TREE_SIZE; xn++)
@@ -101,6 +109,7 @@ void Chunk::Generate() {
 									w->SetBlock(glm::ivec3(_position.x * 16 + x + xn - 3, y + lastLayerBorder + 1, _position.y * 16 + z + zn - 3), mp.tree.TreeModels[block.treeType][y][xn][zn]);
 							}
 				}
+				//? Vegetation
 				else if (cavesHeight < lastLayerBorder && crevicesHeight < lastLayerBorder) { // Vegetation generation
 					__BLOCK_TYPE vegetation = mp.VegetationGeneration(_position, glm::ivec2(x, z), block.biom);
 					__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder + 1, _position.y * 16 + z));
@@ -108,6 +117,7 @@ void Chunk::Generate() {
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, lastLayerBorder + 1, _position.y * 16 + z), vegetation);
 				}
 
+				//? Ore
 				for (int y = 0; y < lastLayerBorder; y++) { // Ore Generation
 					__BLOCK_TYPE blockType = w->GetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z));
 					if(blockType == Block::Stone)
@@ -117,6 +127,7 @@ void Chunk::Generate() {
 							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), ore.type);
 					}
 				}
+
 			}
 
 			w->SetBlock(glm::ivec3(_position.x * 16 + x, 0, _position.y * 16 + z), Block::Bedrock);

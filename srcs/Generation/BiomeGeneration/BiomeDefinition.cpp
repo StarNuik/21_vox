@@ -3,26 +3,28 @@
 #include <iostream>
 #include "Utilities/Rand.h"
 
-MapGeneration::GenerationType MapGeneration::BiomeDefinition(float e,  glm::ivec2 pos)
+//! Rename to GetBiome / GetBiomeType
+MapGeneration::GenerationType BiomeDefinition(float e,  glm::ivec2 pos) //! remove pos
 {
   if (e < 0.15)
-    return Ocean;
+    return MapGeneration::Ocean;
   else if (e < 0.25f)
-    return Swamp;
+    return MapGeneration::Swamp;
   else if (e < 0.31f)
-    return Desert;
-  else if (e < 0.8)
-    return GrassLand;
-  else if (e < 0.9)
-    return Snow;
+    return MapGeneration::Desert;
+  else if (e < 0.8f)
+    return MapGeneration::GrassLand;
+  else if (e < 0.9f)
+    return MapGeneration::Snow;
   else if (e > 0.9f)
-    return HighLand;
-  return GrassLand;
+    return MapGeneration::HighLand;
+  return MapGeneration::GrassLand;
 }
 
+//! GetBiomeWithoutRiver
 MapGeneration::GenerationType MapGeneration::BiomeGenerationWithoutRiver(glm::ivec2 pos)
 {
-  FastNoise& noise = _noises[Biomes];
+  FastNoise& noise = _noises[Biomes]; //! Maybe call this biomes / biomeNoise / smth else
   FastNoise& perlinX = _noises[PerlinX];
   FastNoise& perlinY = _noises[PerlinY];
 
@@ -33,9 +35,10 @@ MapGeneration::GenerationType MapGeneration::BiomeGenerationWithoutRiver(glm::iv
   return BiomeDefinition(e, pos);
 }
 
+//! rename to GenerateBiome / GetBiome
 MapGeneration::GenerationType MapGeneration::BiomeGeneration(glm::ivec2 pos)
-{
-  FastNoise& noise = _noises[Biomes];
+{ //! We're gonna get a Linter then motherf*****
+  FastNoise& noise = _noises[Biomes]; //!
   FastNoise& perlinX = _noises[PerlinX];
   FastNoise& perlinY = _noises[PerlinY];
 

@@ -32,7 +32,10 @@ public:
     MapGeneration();
     ~MapGeneration() {};
     Trees tree;
-
+	enum class Biome {
+		Basic,
+		Ocean
+	}
     enum GenerationType {
         Basic = 0,
         Ocean,
@@ -53,7 +56,7 @@ public:
         PerlinX,
         PerlinY,
         Biomes,
-        Nothing,
+        Nothing, //! NoBiome mb
         First = Basic,
         Last = Biomes,
         Size = Last + 1
@@ -61,15 +64,15 @@ public:
 
     struct StoredMapData
     {
-        float approximateElevation;
-        int exactElevation;
-        GenerationType biom;
-        __BLOCK_TYPE firstBlockLayer;
-        __BLOCK_TYPE lastBlockLayer;
-        __BLOCK_TYPE treeType;
-        int aboveRiverElevation;
-        int aboveRiverBiome;
-        StoredMapData() {};
+		float approximateElevation;
+		int exactElevation;
+		GenerationType biom;
+		__BLOCK_TYPE firstBlockLayer;
+		__BLOCK_TYPE lastBlockLayer;
+		__BLOCK_TYPE treeType;
+		int aboveRiverElevation;
+		int aboveRiverBiome;
+		StoredMapData() {};
     };
 
     struct StoredOreData

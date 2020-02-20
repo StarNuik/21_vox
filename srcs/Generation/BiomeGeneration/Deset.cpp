@@ -1,6 +1,7 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
 
+//! rename to GetDesertElevation
 float MapGeneration::DesertGenerationColumn(glm::ivec2 pos)
 {
     FastNoise& noise = _noises[Desert];
@@ -13,13 +14,17 @@ float MapGeneration::DesertGenerationColumn(glm::ivec2 pos)
     return elevation;
 }
 
+//! WHY
+//! change to return type MapGeneration::GenerationType
 void MapGeneration::GetDesertData(StoredMapData& column, glm::ivec2 pos)
 {
     column.approximateElevation = DesertGenerationColumn(pos);
     SmoothingButtJoint(column.approximateElevation, pos, column.biom);
+    //! column.approximateElevation = SmoothingButtJoint(column.approximateElevation, pos, column.biom);
     column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     column.firstBlockLayer = Block::Sand;
     column.lastBlockLayer = Block::Sand;
     if (TreeGeneration(pos) != tree.Nothing)
         column.treeType = Trees::Сactus;
 }
+

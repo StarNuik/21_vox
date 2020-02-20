@@ -10,7 +10,7 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
   float ret = -1;
 
   FastNoise& noise = _noises[Biomes];
-  glm::ivec2 nextBlock = glm::ivec2(originPos.x + distance_x, originPos.y + distance_y);
+  glm::ivec2 nextBlock = glm::ivec2(originPos.x + distance_x, originPos.y + distance_y); //! Vector maths
 
   int biome = BiomeGeneration(nextBlock);
   if (originBiome == HighLand && biome == River)
@@ -76,9 +76,12 @@ float MapGeneration::GetApprox(float e0, float e1, float e2, float e3)
   return -1.f;
 }
 
+//! change return type to float
+//! rename to SmoothSeams
+//! or SmoothBiomeSeams
 void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome)
 {
-  float distance = 1.f;
+  float distance = 1.f; //! Change to int
   float diagonalDistance = 1.f;
   float rightBlockElevation;
   float rightTopBlockElevation;
@@ -104,12 +107,12 @@ void MapGeneration::SmoothingButtJoint(float& elevation, glm::ivec2 pos, int bio
     float approx = GetApprox(rightBlockElevation, leftBlockElevation, topBlockElevation, buttomBlockElevation);
     if (approx != -1.f)
     {
-      elevation = LERP(approx, elevation, distance * STEP);
+      elevation = LERP(approx, elevation, distance * STEP); //! 1 cast to float vs 4 casts to int
       return;
     }
     if (distance >= MAX_DIST_TO_SMOOTHING)
       return;
     distance++;
-    diagonalDistance = (diagonalDistance++ > MAX_DIAGONAL_DIST_TO_SMOITHING ? diagonalDistance: diagonalDistance++);
+    // diagonalDistance = (diagonalDistance++ > MAX_DIAGONAL_DIST_TO_SMOITHING ? diagonalDistance: diagonalDistance++);
   }
 }
