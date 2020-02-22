@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <thread>
 
 #include "Types.h"
 
@@ -30,6 +31,7 @@ public:
 	World* GetWorld();
 	MapGeneration* GetGeneration();
 	Physics* GetPhysics();
+	WorldCreator* GetWorldCreator();
 	float GetRuntime();
 	float GetSunVal();
 	float GetSunAngle();
@@ -47,6 +49,8 @@ private:
 	std::vector<Entity*> _entities;
 	ResourceLoader* _resources;
 	World* _world;
+	WorldCreator* _worldCreator;
+	std::thread _wcThread;
 	UIController* _ui;
 	float _lastFrame;
 	float _runtime;

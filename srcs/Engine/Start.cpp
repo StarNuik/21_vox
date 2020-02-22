@@ -4,6 +4,8 @@
 // #include "Generation/Map.h"
 // #include "World/World.h"
 
+#include <thread>
+
 #include "Render/GLRenderer.h"
 #include "Engine/Game.h"
 #include "Engine/Physics.h"
@@ -15,6 +17,7 @@
 #include "Player/Player.h"
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
+#include "World/WorldCreator.h"
 
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
@@ -45,6 +48,7 @@ void Game::InitSystems() {
 	_input = new Input();
 	_resources = new ResourceLoader(this);
 	_ui = new UIController(this);
+	_worldCreator = new WorldCreator(this);
 	_world = new World(this);
 	_mpGen = new MapGeneration();
 	_physics = new Physics(this);
@@ -57,8 +61,14 @@ void Game::InitSystems() {
 #define WORLD_RADIUS 10
 
 void Game::InitWorld() {
+	// _worldCreator->Start();
+	_wcThread = std::thread(&WorldCreator::Start, _worldCreator);
+	// _wcThread.detach();
+	// std::thread a(&WorldCreator::Start, _worldCreator);
+
 	Profiler::Prepare("Generation");
 	Profiler::Prepare("Geometry");
+	Profiler::Prepare("GL Geometry");
 	const int border = WORLD_RADIUS;
 	Profiler::Start("Generation");
 	for (int x = -border; x <= border; x++)
@@ -73,8 +83,10 @@ void Game::InitWorld() {
 			Profiler::Add("Geometry");
 		}
 	Log::Important("[Chunk count : ", (WORLD_RADIUS * 2 + 1) * (WORLD_RADIUS * 2 + 1), "]");
-	Log::Important("[Generation T: ", Profiler::GetS("Generation"), "s, A: ", Profiler::GetAverageMs("Generation"), "ms ]");
-	Log::Important("[Geometry   T: ", Profiler::GetS("Geometry"), "s, A: ", Profiler::GetAverageMs("Geometry"), "ms ]");
+	Log::Important("[Generation T: ", Profiler::GetS("Generation"), " s, A: ", Profiler::GetAverageMs("Generation"), " ms ]");
+	Log::Important("[Geometry   T: ", Profiler::GetS("Geometry"), " s,  A: ", Profiler::GetAverageMs("Geometry"), " ms ]");
+	Log::Important("[GL Context T: ", Profiler::GetS("GL Geometry"), "s, A: ", Profiler::GetAverageMs("GL Geometry"), " ms ]");
+	Log::Important("[Total       : ", Profiler::GetS("Generation") + Profiler::GetS("Geometry"), " s ]");
 };
 
 void Game::DestroyWorld() {
