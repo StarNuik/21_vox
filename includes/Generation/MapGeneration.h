@@ -1,29 +1,22 @@
 #pragma once
 
-// #include <vector>
-// #include <unordered_map>
-// #include <iostream>
-// #include <math.h>
 #include <string>
 
-// #include <GL/glew.h>
-// #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
 
-
-// #include "BiomeDefine.h"
-// #include "Engine/Engine.h"
-// #include <cstdint>
 #include "Trees.h"
 #include "FastNoise.h"
 #include "Types.h"
+
 #define MAX_DIST_TO_CHECK_BIOME 5
 #define MAX_DIST_TO_SMOOTHING 25
 #define MAX_DIAGONAL_DIST_TO_SMOITHING 5
 #define STEP 1 / MAX_DIST_TO_SMOOTHING
+
 #define MIN_WATER_LEVEL 40
 #define MAX_WATER_LEVEL 60
+
 #define SWAMP_HEGHT 0.382f
 
 class MapGeneration
@@ -32,10 +25,7 @@ public:
     MapGeneration();
     ~MapGeneration() {};
     Trees tree;
-	enum class Biome {
-		Basic,
-		Ocean
-	}
+
     enum GenerationType {
         Basic = 0,
         Ocean,
@@ -83,12 +73,12 @@ public:
     };
 
 
-    StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition);
-    StoredMapData Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition, GenerationType genType);
-    StoredOreData OreGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition, int maxHeight);
-    __BLOCK_TYPE VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome);
-    float CrevicesGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition);
-    float CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition);
+    StoredMapData Generation(glm::ivec2 chunkPos, glm::ivec2 columnPos);
+    StoredMapData Generation(glm::ivec2 chunkPos, glm::ivec2 columnPos, GenerationType genType);
+    StoredOreData OreGeneration(glm::ivec2 chunkPos, glm::ivec3 columnPos, int maxHeight);
+    __BLOCK_TYPE VegetationGeneration(glm::ivec2 chunkPos, glm::ivec2 columnPos, GenerationType biome);
+    bool CrevicesGeneration(glm::ivec2 chunkPos, glm::ivec3 columnPos);
+    bool CavesGeneration(glm::ivec2 chunkPos, glm::ivec3 columnPos);
     FastNoise& GetNoise(GenerationType);
     float GetExpValue();
     void SetExpValue(float value);
@@ -120,12 +110,14 @@ private:
        LastVegetation = DeadShrub,
        SizeVegetation = Last + 1
     };
-    __BLOCK_TYPE RedefinitionPlant(VegetationType vegetation);
+    __BLOCK_TYPE ConvertPlantToBlock(VegetationType vegetation);
     VegetationType GrassLandVegetationGeneration(glm::ivec2 pos);
     VegetationType DesertVegetationGeneration(glm::ivec2 pos);
     VegetationType CavesVegetationGeneration(glm::ivec2 pos);
     VegetationType SwampVegetationGeneration(glm::ivec2 pos);
     bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
+
+    int     BeachLength(glm::ivec2 pos);
 
     void GetBasicData(StoredMapData& column, glm::ivec2 pos);
     void GetOceanData(StoredMapData& column, glm::ivec2 pos);
@@ -136,55 +128,37 @@ private:
     void GetHighLandData(StoredMapData& column, glm::ivec2 pos);
     void GetSnowLandData(StoredMapData& column, glm::ivec2 pos);
    
-    float BasicGenerationColumn(glm::ivec2 pos);
-    float LandGenerationColumn(glm::ivec2 pos);
-    float SwampGenerationColumn(glm::ivec2 pos);
-    float DesertGenerationColumn(glm::ivec2 pos);
-    float HighLandGenerationColumn(glm::ivec2 pos);
-    float SnowLangGenerationColumn(glm::ivec2);
+    float GetBasicElevation(glm::ivec2 pos);
+    float GetLandElevation(glm::ivec2 pos);
+    float GetSwampElevation(glm::ivec2 pos);
+    float GetDesertElevation(glm::ivec2 pos);
+    float GetHighLandElevation(glm::ivec2 pos);
+    float GetSnowLandElevation(glm::ivec2 pos);
 
 
     float TreeGeneration(glm::ivec2 pos);
 
-    float RiverElevationGeneration(glm::ivec2 pos);
+    float GetRiverElevation(glm::ivec2 pos);
   
-    GenerationType BiomeGeneration(glm::ivec2 pos);
-    GenerationType BiomeGenerationWithoutRiver(glm::ivec2 pos);
+    GenerationType GenerationBiome(glm::ivec2 pos);
+    GenerationType GenerationBiomeWithoutRiver(glm::ivec2 pos);
 
-    GenerationType BiomeDefinition(float e, glm::ivec2 pos);
-
-    __BLOCK_TYPE OreDefinition(float elevation, int currBlockHeight, int maxBlockHeight);
+    __BLOCK_TYPE GetOreType(float noiseValue, int currBlockHeight, int maxBlockHeight);
     __BLOCK_TYPE RegenerateDimond(glm::vec3 pos);
 
-    void SmoothingButtJoint(float& elevation, glm::ivec2 pos, int biome);
-    void SmoothingButtJointWithoutRiver(float& elevation, glm::ivec2 pos, int biome);
-
-    BiomeInfo CheckingTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biome, const int maxDistToCheckBiome); // return distance to closest biome and their biome number
+    float SmoothBiomeSeams(float elevation, glm::ivec2 pos, GenerationType biome); // Smoothes the seams between biomes
     
-    BiomeInfo FindTheBiomeIntTheNextColumn(const glm::ivec2 pos, const GenerationType biome, const int maxDistToCheckBiome); // Find biome of interesest
-    GenerationType BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance); // return biome
-    float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
-    float CheckingTheElevationOfBiomeInTheNextColumnWithoutRiver(glm::ivec2 originPos, int originBiome, int distance_x, int distance_y); // return elevation
+    BiomeInfo FindBiome(const glm::ivec2 pos, const int maxDistToCheckBiome, const GenerationType biome);
+    GenerationType BiomeInPositionOfInterest(const glm::ivec2 origPos, const glm::vec2 distance);
+    float CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 originPos, glm::ivec2 distance, GenerationType originBiome);
     
     // float GetApprox(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7); // returns average height among nearby blocks
     float GetApprox(float e0, float e1, float e2, float e3); // returns average height among nearby blocks
 
-
-    float _Hash(const float n);
-    float Noise(const glm::vec3 &x);
-    float Smoothstep(float edge0, float edge1, float x);
-    glm::vec2 random2(glm::vec2 p);
-
-    float Lerp(float v0, float v1, float t);
-
-    float random (glm::vec2 st)
+    template <typename T> inline T Lerp(const T &v0, const T &v1, float t)
     {
-        return glm::fract(sin(glm::dot(st, glm::vec2(12.9898, 78.233))) * 43758.5453123);
-    }
-
-    template <typename T> inline T _Lerp(const T &v0, const T &v1, float t)
-    {
-        return v0 + (v1 - v0) * std::max(0.f, std::min(1.f, t));
+        t = glm::clamp(t, 0.f, 1.f);
+        return (1.f - t) * v0 + t * v1;
     };
 };
 

@@ -1,10 +1,8 @@
 #include "Generation/MapGeneration.h"
-#include "World/Block.h"
-#include <iostream>
-#include "Utilities/Rand.h"
 
-//! Rename to GetBiome / GetBiomeType
-MapGeneration::GenerationType BiomeDefinition(float e,  glm::ivec2 pos) //! remove pos
+#define STRETCHING_BIOMES 10.421f
+
+MapGeneration::GenerationType GetBiomeType(float e)
 {
   if (e < 0.15)
     return MapGeneration::Ocean;
@@ -21,36 +19,35 @@ MapGeneration::GenerationType BiomeDefinition(float e,  glm::ivec2 pos) //! remo
   return MapGeneration::GrassLand;
 }
 
-//! GetBiomeWithoutRiver
-MapGeneration::GenerationType MapGeneration::BiomeGenerationWithoutRiver(glm::ivec2 pos)
+
+MapGeneration::GenerationType MapGeneration::GenerationBiomeWithoutRiver(glm::ivec2 pos)
 {
-  FastNoise& noise = _noises[Biomes]; //! Maybe call this biomes / biomeNoise / smth else
+  FastNoise& biomesNoise = _noises[Biomes];
   FastNoise& perlinX = _noises[PerlinX];
   FastNoise& perlinY = _noises[PerlinY];
 
-  float pX = perlinX.GetNoise(pos.x, pos.y) * 10.421f;
-  float pY = perlinY.GetNoise(pos.x, pos.y) * 10.421f;
+  float pX = perlinX.GetNoise(pos.x, pos.y) * STRETCHING_BIOMES;
+  float pY = perlinY.GetNoise(pos.x, pos.y) * STRETCHING_BIOMES;
 
-  float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
-  return BiomeDefinition(e, pos);
+  float e = biomesNoise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
+  return GetBiomeType(e);
 }
 
-//! rename to GenerateBiome / GetBiome
-MapGeneration::GenerationType MapGeneration::BiomeGeneration(glm::ivec2 pos)
-{ //! We're gonna get a Linter then motherf*****
-  FastNoise& noise = _noises[Biomes]; //!
+MapGeneration::GenerationType MapGeneration::GenerationBiome(glm::ivec2 pos)
+{
+  FastNoise& biomesNoise = _noises[Biomes];
   FastNoise& perlinX = _noises[PerlinX];
   FastNoise& perlinY = _noises[PerlinY];
 
-  float pX = perlinX.GetNoise(pos.x, pos.y) * 10.421f;
-  float pY = perlinY.GetNoise(pos.x, pos.y) * 10.421f;
+  float pX = perlinX.GetNoise(pos.x, pos.y) * STRETCHING_BIOMES;
+  float pY = perlinY.GetNoise(pos.x, pos.y) * STRETCHING_BIOMES;
 
-  float e = noise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
+  float e = biomesNoise.GetNoise(pos.x + pX, pos.y + pY) * 0.5f + 0.5f;
   GenerationType finalBiome = Nothing;
   float riverBiome = 0.f;
 
-  finalBiome = BiomeDefinition(e, pos);
-  riverBiome = RiverElevationGeneration(pos);
+  finalBiome = GetBiomeType(e);
+  riverBiome = GetRiverElevation(pos);
 
   if (finalBiome != Ocean && riverBiome != 0.f)
     finalBiome = River;

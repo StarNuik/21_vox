@@ -1,15 +1,15 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
 
-float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
+float  MapGeneration::GetHighLandElevation(glm::ivec2 pos)
 {
-    FastNoise& noise = _noises[HighLand];
+    FastNoise& highlandNoise = _noises[HighLand];
     float exp = _exp;
     float terraceValue = _terraceValue;
 
-    float e = 1.f * (noise.GetNoise(pos.x, pos.y));
-    float e1 = 0.50f * (noise.GetNoise(2.f * pos.x, 2.f * pos.y));
-    float e2 = 0.25f * (noise.GetNoise(4.f * pos.x, 4.f * pos.y));
+    float e = 1.f * (highlandNoise.GetNoise(pos.x, pos.y));
+    float e1 = 0.50f * (highlandNoise.GetNoise(2.f * pos.x, 2.f * pos.y));
+    float e2 = 0.25f * (highlandNoise.GetNoise(4.f * pos.x, 4.f * pos.y));
     e += e1 + e2;
     e = (e * 0.5f + 0.5f) * 10; // range 0..~10.3
 
@@ -22,9 +22,9 @@ float  MapGeneration::HighLandGenerationColumn(glm::ivec2 pos)
 
 void MapGeneration::GetHighLandData(StoredMapData& column, glm::ivec2 pos)
 {
-    column.approximateElevation = HighLandGenerationColumn(pos);
+    column.approximateElevation = GetHighLandElevation(pos);
     column.approximateElevation += 5.216f;
-    SmoothingButtJoint(column.approximateElevation, pos, HighLand);
+    column.approximateElevation = SmoothBiomeSeams(column.approximateElevation, pos, HighLand);
     column.approximateElevation = (int)floorf(column.approximateElevation + 5.216f);
     column.firstBlockLayer = Block::Stone;
     column.lastBlockLayer = Block::Stone;

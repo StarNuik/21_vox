@@ -1,14 +1,6 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
-#include <iostream>
-#include "Utilities/Rand.h"
-#define LERP MapGeneration::Lerp
 
-float MapGeneration::Lerp(float v0, float v1, float t)
-{
-	t = glm::clamp(t, 0.f, 1.f);
-	return (1.f - t) * v0 + t * v1;
-}
 
 /* - look pretty good
 float MapGeneration::SwampGenerationColumn(glm::ivec2 pos)
@@ -28,84 +20,44 @@ float MapGeneration::SwampGenerationColumn(glm::ivec2 pos)
 }
 */
 
-//! Should be bool
-float MapGeneration::CrevicesGeneration(glm::ivec2 globalPos, glm::ivec3 blockPosition)
+bool MapGeneration::CrevicesGeneration(glm::ivec2 chunkPos, glm::ivec3 columnPos)
 {
 	FastNoise& noise = _noises[Crevices];
 
-	float globalX = globalPos.x * 16, globalZ = globalPos.y * 16; //! Vector math
-	glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
+	glm::ivec2 globalChunkPos = chunkPos * 16;
+	glm::ivec3 pos = glm::ivec3(globalChunkPos.x + columnPos.x, columnPos.y, globalChunkPos.y + columnPos.z);
 
 	//! May be thread dangerous
 	float terraceValue = _terraceValue;
 	float e = noise.GetNoise(pos.x * 0.55f, pos.y, pos.z * 3.5f);
 	e = (e * 0.5f + 0.5f);
 	if (e < 0.815f)
-		return -1.f;
-
-	float terrace = round(e * terraceValue) / terraceValue;
-	return terrace;
+		return false;
+	return true;
 }
 
-//! Should be bool
-float MapGeneration::CavesGenerations(glm::ivec2 globalPos, glm::ivec3 blockPosition)
+bool MapGeneration::CavesGeneration(glm::ivec2 chunkPos, glm::ivec3 columnPos)
 {
 	FastNoise& noise = _noises[Caves];
 
-	float globalX = globalPos.x * 16, globalZ = globalPos.y * 16; //!
-	glm::ivec3 pos = glm::ivec3(blockPosition.x + globalX, blockPosition.y, blockPosition.z + globalZ);
+	glm::ivec2 globalChunkPos = chunkPos * 16;
+	glm::ivec3 pos = glm::ivec3(globalChunkPos.x + columnPos.x, columnPos.y, globalChunkPos.y + columnPos.z);
 
 	float e = noise.GetNoise(pos.x, pos.y, pos.z);
 	e = (e * 0.5f) + 0.5f;
 
 	if (e < 0.69751f)
-		return -1.f;
-	return e;
+		return false;
+	return true;
 }
 
-//! Move code out of here
-//! Call other overload with generated biome
-MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 globalPos, glm::ivec2 blockPosition)
+MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm::ivec2 columnPos)
 {
-	StoredMapData column;
-	float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
-	glm::vec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
+	glm::ivec2 globalChunkPos = chunkPos * 16;
+	glm::ivec2 pos = globalChunkPos + columnPos;
 
-	column.biom = BiomeGeneration(pos);
-	column.treeType = Trees::Nothing;
-	switch (column.biom)
-	{
-	case GenerationType::Ocean:
-		GetOceanData(column, pos);
-		break;
-	case GenerationType::River:
-		GetRiverData(column, pos);
-		break;
-	case GenerationType::GrassLand:
-		GetGrassLandData(column, pos);
-		break;
-	case GenerationType::Swamp:
-		GetSwampData(column, pos);
-		break;
-	case GenerationType::Desert:
-		GetDesertData(column, pos);
-		break;
-	case GenerationType::HighLand:
-		GetHighLandData(column, pos);
-		break;
-	case GenerationType::Snow:
-		GetSnowLandData(column, pos);
-		break;
-	default:
-		column.firstBlockLayer = Block::Dirt;
-		column.lastBlockLayer = Block::Grass;
-		column.approximateElevation = LandGenerationColumn(pos);
-		column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
-		break;
-	}
-	column.exactElevation = glm::clamp((int)column.approximateElevation, -10, 255);
-	// column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
-	return column;
+	GenerationType biom = GenerationBiome(pos);
+	return Generation(chunkPos, columnPos, biom);
 }
 
 MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm::ivec2 columnPos, MapGeneration::GenerationType genType)
@@ -113,9 +65,12 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 	StoredMapData column;
 
 	glm::ivec2 globalChunkPos = chunkPos * 16;
-	glm::vec2 pos = globalChunkPos + columnPos;
+	glm::ivec2 pos = globalChunkPos + columnPos;
+
 	column.firstBlockLayer = Block::Air;
 	column.lastBlockLayer = Block::Air;
+	column.treeType = Trees::Nothing;
+	column.biom = genType;
 
 	switch (genType)
 	{
@@ -125,6 +80,18 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 		case GenerationType::HighLand:
 			GetHighLandData(column, pos);
 			break;
+		case GenerationType::GrassLand:
+			GetGrassLandData(column, pos);
+			break;
+		case GenerationType::Swamp:
+			GetSwampData(column, pos);
+			break;
+		case GenerationType::Desert:
+			GetDesertData(column, pos);
+			break;
+		case GenerationType::Snow:
+			GetSnowLandData(column, pos);
+			break;
 		case GenerationType::Tree:
 			column.approximateElevation = TreeGeneration(pos);
 			column.firstBlockLayer = Block::Leaves;
@@ -133,12 +100,13 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 		case GenerationType::River:
 			GetRiverData(column, pos);
 			break;
+		case GenerationType::Ocean:
+			GetOceanData(column, pos);
+			break;
 		default:
 			GetBasicData(column, pos);
 			break;
 	}
-	column.biom = Nothing;
-	column.treeType = tree.Nothing;
 	column.exactElevation = glm::clamp((int)column.approximateElevation, -10, 255);
 	// column.exactElevation = glm::clamp((int)column.approximateElevation, 0, 255);
 	return column;

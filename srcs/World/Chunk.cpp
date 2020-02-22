@@ -35,7 +35,8 @@ void Chunk::Generate() {
 		{
 			//? First layer (Stone)
 			block = mp.Generation(_position, glm::ivec2(x, z), MapGeneration::Basic); // first layer generation
-			const int firstLayerBorder = MIN_WATER_LEVEL + block.exactElevation;
+			// const int firstLayerBorder = MIN_WATER_LEVEL + block.exactElevation;
+			int firstLayerBorder = MIN_WATER_LEVEL + block.exactElevation;
 			for (int y = 1; y < firstLayerBorder; y++)
 				w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), block.firstBlockLayer);
 			
@@ -74,7 +75,7 @@ void Chunk::Generate() {
 				bool cavesStart = false;
 				int cavesDepth = 0;
 				for (int y = 1; y < lastLayerBorder + (lastLayerBorder % 2); y++) { // caves generation
-					if (mp.CavesGenerations(_position, glm::ivec3(x, y, z)) != -1.f) {
+					if (mp.CavesGeneration(_position, glm::ivec3(x, y, z))) {
 						w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 						cavesHeight = y;
 						cavesStart = true;
@@ -91,9 +92,8 @@ void Chunk::Generate() {
 				//? Ravines
 				int crevicesHeight = 0;
 				int crevicesDepth = firstLayerBorder - 30;
-				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {
-						float e = mp.CrevicesGeneration(_position, glm::ivec3(x, y, z)); // Crevices generation
-						if (e != -1.f) {
+				for (int y = crevicesDepth; y < lastLayerBorder + 1; y++) {  // Crevices generation
+						if (mp.CrevicesGeneration(_position, glm::ivec3(x, y, z))) {
 							w->SetBlock(glm::ivec3(_position.x * 16 + x, y, _position.y * 16 + z), Block::Air);
 							crevicesHeight = y;
 						}

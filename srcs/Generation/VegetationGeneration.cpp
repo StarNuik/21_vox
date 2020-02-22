@@ -20,7 +20,6 @@ bool MapGeneration::IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseTyp
   return false;
 }
 
-// // ! UNNECESSARY
 float MapGeneration::TreeGeneration(glm::ivec2 pos)
 {
   FastNoise& noise = _noises[Tree];
@@ -38,10 +37,8 @@ float MapGeneration::TreeGeneration(glm::ivec2 pos)
     return 1.f;
   return tree.Nothing;
 }
-// // ! Use IsThereAPlant instead with R == 3
 
-//! Rename to ConvertToBlock / ConvertPlantToBlock / PlantToBlock
-__BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
+__BLOCK_TYPE MapGeneration::ConvertPlantToBlock(VegetationType vegetation)
 {
   switch (vegetation)
   {
@@ -75,12 +72,12 @@ __BLOCK_TYPE MapGeneration::RedefinitionPlant(VegetationType vegetation)
 
 MapGeneration::VegetationType MapGeneration::SwampVegetationGeneration(glm::ivec2 pos)
 {
-  int probabilityCalculation = intRand(0, 100);
+  int probabilityCalculation = IntRand(0, 100);
 
   if (probabilityCalculation < 65 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
     return VegetationType::HighGrass;
   else if (probabilityCalculation >= 65 && probabilityCalculation < 90 && IsThereAPlant(pos, 3, GenerationType::Vegetation))
-    return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
+    return (VegetationType)IntRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
   return VegetationType::NothingVegetation;
 }
 
@@ -100,23 +97,21 @@ MapGeneration::VegetationType MapGeneration::CavesVegetationGeneration(glm::ivec
 
 MapGeneration::VegetationType MapGeneration::GrassLandVegetationGeneration(glm::ivec2 pos)
 {
-  int probabilityCalculation = intRand(0, 100);
+  int probabilityCalculation = IntRand(0, 100);
 
   if (probabilityCalculation < 65 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
     return VegetationType::HighGrass;
   else if (probabilityCalculation >= 65 && probabilityCalculation < 90 && IsThereAPlant(pos, 2, GenerationType::Vegetation))
-    return (VegetationType)intRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
+    return (VegetationType)IntRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
   else if (IsThereAPlant(pos, 3, GenerationType::Vegetation))
-      return (VegetationType)intRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
+      return (VegetationType)IntRand(VegetationType::RedMushroom, VegetationType::BrownMushroom + 1);
   return VegetationType::NothingVegetation;
 }
 
-//! biome is MapGeneration::GenerationType
-//! globalPos = chunkPos
-__BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec2 blockPosition, int biome)
+__BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 chunkPos, glm::ivec2 columnPos, GenerationType biome)
 {
-  float globalX = globalPos.x * 16, globalY = globalPos.y * 16;
-  glm::ivec2 pos = glm::ivec2(globalX + blockPosition.x, globalY + blockPosition.y);
+  glm::ivec2 globalChunkPos = chunkPos * 16;
+	glm::ivec2 pos = globalChunkPos + columnPos;
 
   VegetationType vegetation;
 
@@ -138,5 +133,5 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 globalPos, glm::ivec
       return Block::Air;
     break;
   }
-  return RedefinitionPlant(vegetation);
+  return ConvertPlantToBlock(vegetation);
 }
