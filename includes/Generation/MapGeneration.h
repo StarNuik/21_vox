@@ -118,6 +118,7 @@ private:
     VegetationType DesertVegetationGeneration(glm::ivec2 pos);
     VegetationType CavesVegetationGeneration(glm::ivec2 pos);
     VegetationType SwampVegetationGeneration(glm::ivec2 pos);
+    VegetationType ChineseMountainsVegetationGeneration(glm::ivec2 pos);
     bool IsThereAPlant(glm::ivec2 pos, int R, GenerationType noiseType);
 
     int     BeachLength(glm::ivec2 pos);

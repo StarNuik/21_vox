@@ -88,6 +88,17 @@ MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ive
   return VegetationType::NothingVegetation;
 }
 
+MapGeneration::VegetationType MapGeneration::ChineseMountainsVegetationGeneration(glm::ivec2 pos)
+{
+  int probabilityCalculation = IntRand(0, 100);
+
+  if (probabilityCalculation < 75 && IsThereAPlant(pos, 1, GenerationType::Vegetation))
+    return VegetationType::HighGrass;
+  else if (probabilityCalculation >= 75 && probabilityCalculation < 100 && IsThereAPlant(pos, 2, GenerationType::Vegetation))
+    return (VegetationType)IntRand(VegetationType::RedFlower, VegetationType::BlueFlower + 1);
+  return VegetationType::NothingVegetation;
+}
+
 MapGeneration::VegetationType MapGeneration::CavesVegetationGeneration(glm::ivec2 pos)
 {
   if (IsThereAPlant(pos, 8, GenerationType::Tree))
@@ -122,6 +133,9 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 chunkPos, glm::ivec2
     break;
     case GenerationType::Desert:
       vegetation = DesertVegetationGeneration(pos);
+    break;
+    case GenerationType::ChineseMountains:
+      vegetation = ChineseMountainsVegetationGeneration(pos);
     break;
     case GenerationType::Caves:
       vegetation = CavesVegetationGeneration(pos);
