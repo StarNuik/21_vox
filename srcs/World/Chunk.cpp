@@ -70,7 +70,10 @@ void Chunk::FillCaves(const MapGeneration::GenerationType biome, int& cavesHeigh
 
 	bool cavesStart = false;
 	int cavesDepth = 0;
-	for (int y = 1; y < lastLayerBorder + (lastLayerBorder % 2); y++) { // caves generation
+	int height = lastLayerBorder + (lastLayerBorder % 2);
+	if (biome == MapGeneration::ChineseMountains)
+		height = MAX_WATER_LEVEL;
+	for (int y = 1; y < height; y++) { // caves generation
 		if (_mp->CavesGeneration(_position, glm::ivec3(x, y, z))) {
 			SetBlock(glm::ivec3(x, y, z), Block::Air);
 			cavesHeight = y;

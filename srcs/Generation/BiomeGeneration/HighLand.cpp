@@ -1,11 +1,10 @@
 #include "Generation/MapGeneration.h"
 #include "World/Block.h"
-#include <iostream>
 
 float  MapGeneration::GetHighLandElevation(glm::ivec2 pos)
 {
     FastNoise& highlandNoise = _noises[HighLand];
-    float exp = _exp;
+    float exp = 1.2f;;
     float terraceValue = _terraceValue;
 
     float e = 1.f * (highlandNoise.GetNoise(pos.x, pos.y));
@@ -23,7 +22,6 @@ float  MapGeneration::GetHighLandElevation(glm::ivec2 pos)
 void MapGeneration::GetHighLandData(StoredMapData& column, glm::ivec2 pos)
 {
     column.approximateElevation = GetHighLandElevation(pos);
-    // column.approximateElevation += 5.216f;
     column.approximateElevation = SmoothBiomeSeams(column.approximateElevation, pos, HighLand);
     column.approximateElevation = (int)floorf(column.approximateElevation * 10.f);
     column.firstBlockLayer = Block::Stone;

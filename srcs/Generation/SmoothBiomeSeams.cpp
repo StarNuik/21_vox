@@ -30,14 +30,17 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
         ret = GetHighLandElevation(nextColumn);
         ret = SmoothBiomeSeams(ret, nextColumn, biome);
         break;
+      case GenerationType::ChineseMountains:
+        ret = GetChineseMountainsElevation(nextColumn);
+        ret = SmoothBiomeSeams(ret, nextColumn, biome);
       case GenerationType::Swamp:
-        ret = 0.2f;
+        ret = WATER_ELEVATION;
         break;
       case GenerationType::Ocean:
-        ret = 0.2f;
+        ret = WATER_ELEVATION;
         break;
       case GenerationType::River:
-        ret = 0.2f;
+        ret = WATER_ELEVATION;
         break;
       default:
         ret = -1.f;

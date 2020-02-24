@@ -17,6 +17,8 @@
 #define MIN_WATER_LEVEL 40
 #define MAX_WATER_LEVEL 60
 
+#define WATER_ELEVATION 0.2F
+
 #define SWAMP_HEIGHT 0.382f
 
 class MapGeneration
@@ -37,6 +39,7 @@ public:
         Snow,
         Desert,
         HighLand,
+        ChineseMountains,
         Caves,
         Crevices,
         Vegetation,
@@ -125,15 +128,17 @@ private:
     void GetGrassLandData(StoredMapData& column, glm::ivec2 pos);
     void GetSwampData(StoredMapData& column, glm::ivec2 pos);
     void GetDesertData(StoredMapData& column, glm::ivec2 pos);
-    void GetHighLandData(StoredMapData& column, glm::ivec2 pos);
     void GetSnowLandData(StoredMapData& column, glm::ivec2 pos);
+    void GetHighLandData(StoredMapData& column, glm::ivec2 pos);
+    void GetChineseMountainsData(StoredMapData& column, glm::ivec2 pos);
    
     float GetBasicElevation(glm::ivec2 pos);
     float GetLandElevation(glm::ivec2 pos);
     float GetSwampElevation(glm::ivec2 pos);
     float GetDesertElevation(glm::ivec2 pos);
-    float GetHighLandElevation(glm::ivec2 pos);
     float GetSnowLandElevation(glm::ivec2 pos);
+    float GetHighLandElevation(glm::ivec2 pos);
+    float GetChineseMountainsElevation(glm::ivec2 pos);
 
 
     float TreeGeneration(glm::ivec2 pos);

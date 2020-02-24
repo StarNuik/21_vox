@@ -80,6 +80,9 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 		case GenerationType::HighLand:
 			GetHighLandData(column, pos);
 			break;
+		case GenerationType::ChineseMountains:
+			GetChineseMountainsData(column, pos);
+			break;
 		case GenerationType::GrassLand:
 			GetGrassLandData(column, pos);
 			break;
@@ -176,6 +179,11 @@ MapGeneration::MapGeneration()
 	_noises[HighLand].SetNoiseType(FastNoise::Perlin);
 	_noises[HighLand].SetFrequency(0.01);
 
+	_noises[ChineseMountains].SetNoiseType(FastNoise::Cellular);
+	_noises[ChineseMountains].SetCellularDistanceFunction(FastNoise::Natural);
+	_noises[ChineseMountains].SetFrequency(0.05);
+	_noises[ChineseMountains].SetCellularJitter(0.85f);
+
 	_noises[Ore].SetNoiseType(FastNoise::Cellular);
 	_noises[Ore].SetFrequency(0.35);
 	_noises[Ore].SetCellularJitter(0.75);
@@ -191,6 +199,7 @@ MapGeneration::MapGeneration()
 	_noiseNames[Desert] = "Desert";
 	_noiseNames[Snow] = "Snow";
 	_noiseNames[HighLand] = "HighLand";
+	_noiseNames[ChineseMountains] = "ChineseMountains";
 	_noiseNames[Biomes] = "BiomeDefinition";
 	_noiseNames[BeachBordered] = "BeachBordered";
 	_noiseNames[River] = "River";
