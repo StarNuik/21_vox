@@ -115,7 +115,7 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 
 MapGeneration::MapGeneration()
 {
-	_exp = 2.2f;
+	_exp = 1.2f;
 	_terraceValue = 32.f;
 
 	_noises[Biomes].SetNoiseType(FastNoise::Cellular);

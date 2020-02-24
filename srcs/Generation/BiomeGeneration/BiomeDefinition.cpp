@@ -14,7 +14,7 @@ MapGeneration::GenerationType GetBiomeType(float e)
     return MapGeneration::GrassLand;
   else if (e < 0.9f)
     return MapGeneration::Snow;
-  else if (e > 0.9f)
+  else if (e > 0.98f)
     return MapGeneration::HighLand;
   return MapGeneration::GrassLand;
 }
