@@ -166,3 +166,5 @@ void Chunk::PlayerSetBlock(glm::ivec3 pos, Block type) {
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type); //! Conversion plug
 	_shards[y]->UpdateGeometry();
 }
+
+Chunk::State Chunk::GetState() {return _state1;};
