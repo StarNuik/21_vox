@@ -19,7 +19,7 @@ float MapGeneration::GetSwampElevation(glm::ivec2 pos)
     float e2 = 0.13f * (swampNoise.GetNoise(8.f * (pos.x + pX), 8.f * (pos.y + pY)));
     e += e2;
     e = (e * 0.5f + 0.5f);
-    e = e - SWAMP_HEGHT;
+    e = e - SWAMP_HEIGHT;
 
     float elevation = round(e * terraceValue) / terraceValue;
     return elevation;
@@ -29,7 +29,7 @@ void MapGeneration::GetSwampData(StoredMapData& column, glm::ivec2 pos)
 {
 
     column.approximateElevation = GetSwampElevation(pos);
-    column.approximateElevation = column.approximateElevation > 0.f ? (int)floorf(column.approximateElevation * 10.f) : (int)floorf((column.approximateElevation + SWAMP_HEGHT) * 10.f) - 4.f;
+    column.approximateElevation = column.approximateElevation > 0.f ? (int)floorf(column.approximateElevation * 10.f) : (int)floorf((column.approximateElevation + SWAMP_HEIGHT) * 10.f) - 4.f;
     column.firstBlockLayer = Block::Dirt;
     column.lastBlockLayer = Block::Grass;
     if (column.approximateElevation > 0.f && FindBiome(pos, BeachLength(pos), MapGeneration::Ocean).biome == Ocean)

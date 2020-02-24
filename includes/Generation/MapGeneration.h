@@ -17,7 +17,7 @@
 #define MIN_WATER_LEVEL 40
 #define MAX_WATER_LEVEL 60
 
-#define SWAMP_HEGHT 0.382f
+#define SWAMP_HEIGHT 0.382f
 
 class MapGeneration
 {

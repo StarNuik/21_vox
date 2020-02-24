@@ -27,7 +27,7 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
         ret = SmoothBiomeSeams(ret, nextColumn, biome);
         break;
       case GenerationType::HighLand:
-        ret = GetHighLandElevation(nextColumn) + 5.216f;
+        ret = GetHighLandElevation(nextColumn);
         ret = SmoothBiomeSeams(ret, nextColumn, biome);
         break;
       case GenerationType::Swamp:
