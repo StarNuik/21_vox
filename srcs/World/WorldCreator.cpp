@@ -31,39 +31,40 @@ void WorldCreator::Loop() {
 		chunk->Generate();
 		chunk->state = Chunk::AwaitingGeometry;
 	}
-	if (chunk->state == Chunk::AwaitingGeometry) {
-		chunk->GenerateVertices();
-	}
+	// if (chunk->state == Chunk::AwaitingGeometry) {
+	// 	chunk->GenerateVertices();
+	// }
 	AddChunkToQueue(chunk);
 }
 
 Chunk* WorldCreator::GetChunkFromQueue() {
-	lockguard lock(_inMutex);
-	if (_inQueue.empty())
+	lockguard lock(inMutex);
+	if (inQueue.empty())
 		return nullptr;
-	Chunk* chunk = _inQueue.front();
-	_inQueue.pop();
+	Chunk* chunk = inQueue.front();
+	inQueue.pop();
 	return chunk;
 }
 
 void WorldCreator::AddChunkToQueue(Chunk* chunk) {
-	lockguard lock(_outMutex);
-	_outQueue.push(chunk);
+	lockguard lock(outMutex);
+	outQueue.push(chunk);
 }
 
 
 void WorldCreator::LoopTest() {
-	__timepoint start = std::chrono::high_resolution_clock::now();;
-	float runtime = 0;
-	int lastPrint = 0;
+	// __timepoint start = std::chrono::high_resolution_clock::now();;
+	// float runtime = 0;
+	// int lastPrint = 0;
 	while (_active) {
-		__timepoint now = std::chrono::high_resolution_clock::now();
+		// __timepoint now = std::chrono::high_resolution_clock::now();
 
-		float runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(now - start).count() / __S_DIV;
-		int currentSecond = (int)std::floorf(runtime);
-		if (lastPrint + 1 <= currentSecond) {
-			lastPrint = currentSecond;
-			Log::Basic(currentSecond, " seconds have passed!");
-		}
+		// float runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(now - start).count() / __S_DIV;
+		// int currentSecond = (int)std::floorf(runtime);
+		// if (lastPrint + 1 <= currentSecond) {
+		// 	lastPrint = currentSecond;
+		// 	Log::Basic(currentSecond, " seconds have passed!");
+		// }
+		Loop();
 	}
 }

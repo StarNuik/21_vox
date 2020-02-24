@@ -6,6 +6,11 @@
 
 #include "Types.h"
 
+#define WORLD_RADIUS 10
+#define RADIUS_SQUARED (WORLD_RADIUS * WORLD_RADIUS)
+
+#define MAX_UPDATES_PER_FRAME 10
+
 class World {
 public:
 	World(Game*);
@@ -23,9 +28,13 @@ public:
 	Block GetBlock(glm::ivec3 globalPosition);
 	void SetBlock(glm::ivec3 globalPosition, Block);
 	void PlayerSetBlock(glm::ivec3 globalPosition, Block);
+	void AssessChunks(glm::vec3 playerPosition);
 private:
+	void CreateChunks();
+	void DeleteChunks();
 	glm::ivec2 Global2Chunk(glm::ivec3 globalP);
 	glm::ivec3 Global2Local(glm::ivec3 globalP);
 	Game* _game;
 	std::unordered_map<glm::ivec2, Chunk*> _chunks;
+	WorldCreator* _wc;
 };

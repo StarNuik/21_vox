@@ -18,7 +18,7 @@
 #include <algorithm>
 
 void GLRenderer::RenderFrame() {
-	Profiler::Start("RenerFull");
+	Profiler::Start("RenderFull");
 	PrepareData();
 	_static.shadows->Render(_static.rendered);
 	_static.screenFbo->Use();

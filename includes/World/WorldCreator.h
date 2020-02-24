@@ -16,6 +16,10 @@ public:
 	~WorldCreator();
 	void Start();
 	// std::mutex worldMutex;
+	std::mutex inMutex;
+	std::queue<Chunk*> inQueue;
+	std::mutex outMutex;
+	std::queue<Chunk*> outQueue;
 private:
 	Chunk* GetChunkFromQueue();
 	void AddChunkToQueue(Chunk*);
@@ -23,8 +27,4 @@ private:
 	void Loop();
 	bool _active;
 	Game* _game;
-	std::mutex _inMutex;
-	std::queue<Chunk*> _inQueue;
-	std::mutex _outMutex;
-	std::queue<Chunk*> _outQueue;
 };

@@ -147,9 +147,7 @@ void Chunk::FillOre(const MapGeneration::GenerationType biome, const int lastLay
 	}
 }
 
-void Chunk::Generate() {GenerateBlocks();}
-
-void Chunk::GenerateBlocks() {
+void Chunk::Generate() {
 	MapGeneration::StoredMapData block;
 	
 	for (int x = 0; x < 16; x++)
@@ -174,16 +172,9 @@ void Chunk::GenerateBlocks() {
 	}
 }
 
-void Chunk::GenerateVertices() {
-	for (int y = 0; y < 16; y++) {
-		_shards[y]->GenerateVertices();
-	}
-}
-
-void Chunk::GenerateModels() {
-	for (int y = 0; y < 16; y++) {
-		_shards[y]->GenerateModels();
-	}
+void Chunk::Update() {
+	for (int y = 0; y < 16; y++)
+		_shards[y]->UpdateGeometry();
 }
 
 // void Chunk::SetActive(bool state) {
@@ -218,3 +209,5 @@ void Chunk::PlayerSetBlock(glm::ivec3 pos, Block type) {
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type); //! Conversion plug
 	_shards[y]->UpdateGeometry();
 }
+
+glm::ivec2 Chunk::GetPosition() {return _position;}
