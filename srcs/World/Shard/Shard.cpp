@@ -22,18 +22,18 @@ Shard::~Shard() {
 	// SetActive(false);
 };
 
-void Shard::SetActive(bool newState) {
-	GLRenderer* r = _game->GetRenderer();
-	if (_state == false && newState == true) {
-		UpdateGeometry();
-	} else if (_state == true && newState == false) {
-		for (RenderModel* model : _models) {
-			delete model;
-		}
-		_models.clear();
-	}
-	_state = newState;
-}
+// void Shard::SetActive(bool newState) {
+// 	GLRenderer* r = _game->GetRenderer();
+// 	if (_state == false && newState == true) {
+// 		UpdateGeometry();
+// 	} else if (_state == true && newState == false) {
+// 		for (RenderModel* model : _models) {
+// 			delete model;
+// 		}
+// 		_models.clear();
+// 	}
+// 	_state = newState;
+// }
 
 Block Shard::GetBlock(const glm::ivec3 localP) {
 	return _blocks[localP.x][localP.y][localP.z];

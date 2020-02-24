@@ -9,28 +9,27 @@
 class Chunk {
 public:
 	enum State {
-		Empty,
 		Completed,
 		AwaitingGeneration,
 		AwaitingGeometry
 	};
 	Chunk(Game*, glm::ivec2);
 	~Chunk();
+	//! These won't be necessary
+	// void SetActive(bool);
 	void Generate();
-	// void UpdateGeometry();
-	void SetActive(bool);
+	//* Important old stuff
+	void PlayerSetBlock(glm::ivec3, Block);
 	Block GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, Block);
-	void PlayerSetBlock(glm::ivec3, Block);
 	//* New API
-	State GetState();
 	std::atomic<State> state;
 	void GenerateBlocks();
 	void GenerateVertices();
 	void GenerateModels();
 private:
 	bool _state; //! This will be no longer needed
-	Game* _game;
+	Game* _game; //! Maybe this too
 	glm::ivec2 _position;
 	Shard* _shards[16];
 	MapGeneration* _mp;

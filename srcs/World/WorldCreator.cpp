@@ -28,7 +28,7 @@ void WorldCreator::Loop() {
 		return;
 	if (chunk->state == Chunk::AwaitingGeneration) {
 		// GenerateBlocks(chunk);
-		chunk->GenerateBlocks();
+		chunk->Generate();
 		chunk->state = Chunk::AwaitingGeometry;
 	}
 	if (chunk->state == Chunk::AwaitingGeometry) {

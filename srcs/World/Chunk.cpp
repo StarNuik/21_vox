@@ -11,16 +11,17 @@ Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_game = game;
 	_position = pos;
 	_mp = _game->GetGeneration();
+	state = AwaitingGeneration;
 	for (int y = 0; y < 16; y++) {
 		_shards[y] = new Shard(game, glm::ivec3(pos.x, y, pos.y));
 	}
-};
+}
 
 Chunk::~Chunk() {
 	for (int y = 0; y < 16; y++) {
 		delete _shards[y];
 	}
-};
+}
 
 void Chunk::FillFirstLayer(int& firstLayerBorder, const int x, const int z)
 {
@@ -146,7 +147,9 @@ void Chunk::FillOre(const MapGeneration::GenerationType biome, const int lastLay
 	}
 }
 
-void Chunk::Generate() {
+void Chunk::Generate() {GenerateBlocks();}
+
+void Chunk::GenerateBlocks() {
 	MapGeneration::StoredMapData block;
 	
 	for (int x = 0; x < 16; x++)
@@ -171,14 +174,26 @@ void Chunk::Generate() {
 	}
 }
 
-void Chunk::SetActive(bool state) {
-	if (_state == state)
-		return;
-	_state = state;
-	for (int i = 0; i < 16; i++) {
-		_shards[i]->SetActive(state);
+void Chunk::GenerateVertices() {
+	for (int y = 0; y < 16; y++) {
+		_shards[y]->GenerateVertices();
 	}
 }
+
+void Chunk::GenerateModels() {
+	for (int y = 0; y < 16; y++) {
+		_shards[y]->GenerateModels();
+	}
+}
+
+// void Chunk::SetActive(bool state) {
+// 	if (_state == state)
+// 		return;
+// 	_state = state;
+// 	for (int i = 0; i < 16; i++) {
+// 		_shards[i]->SetActive(state);
+// 	}
+// }
 
 Block Chunk::GetBlock(const glm::ivec3 pos) {
 	if (pos.y < 0)
