@@ -8,15 +8,23 @@
 #include "Render/VertexBuffers.h"
 
 #define USED_SHADER "Flower"
+#define BLOCKS_SHADER "Flower"
+#define WATER_SHADER "Flower"
+#define TRANSPARENT_SHADER "Flower"
 
 class Shard {
 public:
 	Shard(Game*, glm::ivec3);
 	~Shard();
+	//! No longer necessary
 	void UpdateGeometry();
-	void SetActive(bool);
+	// void SetActive(bool);
+	//* Valid old API
 	Block GetBlock(glm::ivec3 localP);
 	void SetBlock(glm::ivec3 localP, Block);
+	//* New API
+	void GenerateVertices();
+	void GenerateModels();
 private:
 	bool HasBlock(Block);
 	uint CountBlock(Block);
@@ -32,9 +40,11 @@ private:
 	void AddSideWater(std::vector<float>&, glm::ivec3 l, glm::ivec3 g, glm::ivec3 o, VertexBuffers::BufferType, VertexBuffers::BufferType, World*);
 	void AddSideTransparent(std::vector<float>&, glm::ivec3 l, glm::ivec3 g, glm::ivec3 o, VertexBuffers::BufferType, World*, Block);
 
+	//? Do I even need these anymore?
 	bool _state;
-	glm::ivec3 _position;
 	Game* _game;
+	//?
+	glm::ivec3 _position;
 	Block _blocks[16][16][16] = {Block::Air};
 	uint16 _blockCount[(int)Block::Size] = {4096, 0};
 	std::vector<RenderModel*> _models;

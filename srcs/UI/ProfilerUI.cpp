@@ -1,9 +1,12 @@
+#include <algorithm>
+#include <glm/glm.hpp>
+#include <mutex>
+
 #include "UI/UIController.h"
 #include "Engine/Game.h"
-#include <algorithm>
 #include "Utilities/Profiler.h"
 #include "Player/Player.h"
-#include <glm/glm.hpp>
+#include "World/WorldCreator.h"
 
 void PlotLines(std::deque<float>& storage, const char* label);
 
@@ -12,6 +15,7 @@ UIData::DataProfiler::DataProfiler() {
 	input.resize(UI_PLOT_FRAMES, 0);
 	update.resize(UI_PLOT_FRAMES, 0);
 	renderFull.resize(UI_PLOT_FRAMES, 0);
+	worldGen.resize(UI_PLOT_FRAMES, 0);
 }
 
 void UIController::UpdateProfiler() {
@@ -25,6 +29,16 @@ void UIController::UpdateProfiler() {
 	data.update.push_back(Profiler::GetLastMs("Update"));
 	data.renderFull.pop_front();
 	data.renderFull.push_back(Profiler::GetLastMs("RenderFull"));
+	data.worldGen.pop_front();
+	data.worldGen.push_back(Profiler::GetLastMs("WorldGen"));
+
+	WorldCreator* wc = _game->GetWorldCreator();
+	wc->inMutex.lock();
+	data.generationQueueSize = wc->inQueue.size();
+	wc->inMutex.unlock();
+	// wc->outMutex.lock();
+	// data.geometryQueueSize = wc->outQueue.size();
+	// wc->outMutex.unlock();
 };
 
 void UIController::ProfilerUI() {
@@ -46,11 +60,16 @@ void UIController::ProfilerUI() {
 	ImGui::Text("Pos: [x: %6.1f, y: %6.1f, z: %6.1f]", pos.x, pos.y, pos.z);
 	ImGui::Text("Dir: [x: %6.1f, y: %6.1f, z: %6.1f]", dir.x, dir.y, dir.z);
 	ImGui::Separator();
+	ImGui::Text("Chunks in queues");
+	ImGui::Text("Generation: %4d", data.generationQueueSize);
+	ImGui::Separator();
 	PlotLines(data.frameFull, "Full frame");
 	ImGui::Separator();
 	PlotLines(data.input, "Input loop");
 	ImGui::Separator();
 	PlotLines(data.update, "Update loop");
+	ImGui::Separator();
+	PlotLines(data.worldGen, "World gen");
 	ImGui::Separator();
 	PlotLines(data.renderFull, "Render loop");
 	ImGui::End();

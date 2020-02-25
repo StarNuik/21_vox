@@ -9,16 +9,17 @@ Chunk::Chunk(Game* game, glm::ivec2 pos) {
 	_game = game;
 	_position = pos;
 	_mp = _game->GetGeneration();
+	state = AwaitingGeneration;
 	for (int y = 0; y < 16; y++) {
 		_shards[y] = new Shard(game, glm::ivec3(pos.x, y, pos.y));
 	}
-};
+}
 
 Chunk::~Chunk() {
 	for (int y = 0; y < 16; y++) {
 		delete _shards[y];
 	}
-};
+}
 
 
 
@@ -47,14 +48,19 @@ void Chunk::Generate() {
 	}
 }
 
-void Chunk::SetActive(bool state) {
-	if (_state == state)
-		return;
-	_state = state;
-	for (int i = 0; i < 16; i++) {
-		_shards[i]->SetActive(state);
-	}
+void Chunk::Update() {
+	for (int y = 0; y < 16; y++)
+		_shards[y]->UpdateGeometry();
 }
+
+// void Chunk::SetActive(bool state) {
+// 	if (_state == state)
+// 		return;
+// 	_state = state;
+// 	for (int i = 0; i < 16; i++) {
+// 		_shards[i]->SetActive(state);
+// 	}
+// }
 
 Block Chunk::GetBlock(const glm::ivec3 pos) {
 	if (pos.y < 0)
@@ -79,3 +85,5 @@ void Chunk::PlayerSetBlock(glm::ivec3 pos, Block type) {
 	_shards[y]->SetBlock(glm::ivec3(pos.x, pos.y % 16, pos.z), type); //! Conversion plug
 	_shards[y]->UpdateGeometry();
 }
+
+glm::ivec2 Chunk::GetPosition() {return _position;}

@@ -41,7 +41,8 @@ class Shard;
 class World;
 class NearestBlocks;
 class ShadowRenderer;
-class BlockType;
-#include "World/BlockType.h"
+// class BlockType;
+// #include "World/BlockType.h"
 class Block;
 class Framebuffer;
+class WorldCreator;

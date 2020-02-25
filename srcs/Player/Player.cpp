@@ -199,7 +199,7 @@ void Player::GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm
 	if (_movementPropety.velocity !=  glm::vec3(0)) {
 		_movementPropety.velocity = glm::normalize(_movementPropety.velocity);
 	}
-	Move(_movementPropety.velocity, SPEED);
+	Move(_movementPropety.velocity, FLY_SPEED);
 
 }
 

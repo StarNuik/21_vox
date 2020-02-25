@@ -1,23 +1,35 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <atomic>
 
 #include "Types.h"
 #include "Generation/MapGeneration.h"
 
 class Chunk {
 public:
+	enum State {
+		Empty,
+		Complete,
+		AwaitingGeneration,
+		GenerationComplete
+	};
 	Chunk(Game*, glm::ivec2);
 	~Chunk();
-	void Generate();
-	// void UpdateGeometry();
-	void SetActive(bool);
+	//! These won't be necessary
+	// void SetActive(bool);
+	//* Important old stuff
+	void PlayerSetBlock(glm::ivec3, Block);
 	Block GetBlock(glm::ivec3);
 	void SetBlock(glm::ivec3, Block);
-	void PlayerSetBlock(glm::ivec3, Block);
+	//* New API
+	std::atomic<State> state;
+	void Generate();
+	void Update();
+	glm::ivec2 GetPosition();
 private:
-	bool _state;
-	Game* _game;
+	bool _state; //! This will be no longer needed
+	Game* _game; //! Maybe this too
 	glm::ivec2 _position;
 	Shard* _shards[16];
 	MapGeneration* _mp;

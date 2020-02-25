@@ -171,6 +171,5 @@ void UIController::GenerationUI() {
 
 	if (ImGui::Button("Regenerate world")) {
 		_game->DestroyWorld();
-		_game->InitWorld();
 	}
 };

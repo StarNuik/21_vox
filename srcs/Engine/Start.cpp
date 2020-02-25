@@ -4,6 +4,8 @@
 // #include "Generation/Map.h"
 // #include "World/World.h"
 
+#include <thread>
+
 #include "Render/GLRenderer.h"
 #include "Engine/Game.h"
 #include "Engine/Physics.h"
@@ -15,6 +17,7 @@
 #include "Player/Player.h"
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
+#include "World/WorldCreator.h"
 
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
@@ -45,6 +48,7 @@ void Game::InitSystems() {
 	_input = new Input();
 	_resources = new ResourceLoader(this);
 	_ui = new UIController(this);
+	_worldCreator = new WorldCreator(this);
 	_world = new World(this);
 	_mpGen = new MapGeneration();
 	_physics = new Physics(this);
@@ -54,34 +58,12 @@ void Game::InitSystems() {
 	_renderer->InitChildren();
 };
 
-#define WORLD_RADIUS 10
-
 void Game::InitWorld() {
-	Profiler::Prepare("Generation");
-	Profiler::Prepare("Geometry");
-	const int border = WORLD_RADIUS;
-	Profiler::Start("Generation");
-	for (int x = -border; x <= border; x++)
-		for (int z = -border; z <= border; z++) {
-			_world->GenerateChunk(glm::ivec2(x, z));
-			Profiler::Add("Generation");
-		}
-	Profiler::Start("Geometry");
-	for (int x = -border; x <= border; x++)
-		for (int z = -border; z <= border; z++) {
-			_world->ActivateChunk(glm::ivec2(x, z));
-			Profiler::Add("Geometry");
-		}
-	Log::Important("[Chunk count : ", (WORLD_RADIUS * 2 + 1) * (WORLD_RADIUS * 2 + 1), "]");
-	Log::Important("[Generation T: ", Profiler::GetS("Generation"), "s, A: ", Profiler::GetAverageMs("Generation"), "ms ]");
-	Log::Important("[Geometry   T: ", Profiler::GetS("Geometry"), "s, A: ", Profiler::GetAverageMs("Geometry"), "ms ]");
+	_wcThread = std::thread(&WorldCreator::Start, _worldCreator);
 };
 
 void Game::DestroyWorld() {
-	const int border = WORLD_RADIUS;
-	for (int x = -border; x <= border; x++)
-		for (int z = -border; z <= border; z++)
-			_world->DestroyChunk(glm::ivec2(x, z));
+	_world->DestroyWorld();
 }
 
 Game::~Game() {

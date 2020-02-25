@@ -18,6 +18,9 @@ namespace UIData {
 		std::deque<float> input;
 		std::deque<float> update;
 		std::deque<float> renderFull;
+		std::deque<float> worldGen;
+		int generationQueueSize;
+		int geometryQueueSize;
 	};
 
 	class DataRendering {

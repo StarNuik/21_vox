@@ -59,7 +59,9 @@ RenderModel* Shard::GenerateModelOfBlock(const Block b) {
 			}
 	if (vertexBuffer.size() == 0)
 		return nullptr;
+	Profiler::Start("GL Geometry");
 	Geometry* g = new Geometry(vertexBuffer);
+	Profiler::Add("GL Geometry");
 	RenderModel* model = new RenderModel(r, rs->GetShader(USED_SHADER), rs->GetMaterial(b), g);
 	model->SetPosition(_position * 16);
 	return model;

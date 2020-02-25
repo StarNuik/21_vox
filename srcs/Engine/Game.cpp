@@ -67,4 +67,5 @@ MapGeneration* Game::GetGeneration() {return _mpGen;};
 Physics* Game::GetPhysics() {return _physics;};
 float Game::GetRuntime() {return _runtime;};
 Player* Game::GetPlayer() {return _player;};
+WorldCreator* Game::GetWorldCreator() {return _worldCreator;};
 // uint Game::GetLastFrameTime() {return _lastFrameTime;};
