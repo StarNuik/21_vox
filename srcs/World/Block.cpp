@@ -5,6 +5,7 @@ bool Block::IsTransparent() const {
 		// case NoChunk:
 		case Air:
 		case Water:
+		case WaterForSwamp:
 		case Glass:
 			return true;
 		default:
@@ -16,6 +17,7 @@ bool Block::IsMultisided() const {
 	switch (_block) {
 		case CraftingTable:
 		case Grass:
+		case GrassForSwamp:
 		case Log:
 		case PineLog:
 		case BirchLog:

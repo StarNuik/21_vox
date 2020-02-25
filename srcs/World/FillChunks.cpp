@@ -1,5 +1,6 @@
 #include "Types.h"
 #include "World/Chunk.h"
+#include <iostream>
 
 void Chunk::FillFirstLayer(int& firstLayerBorder, const int x, const int z)
 {
@@ -36,7 +37,7 @@ void Chunk::FillSwampWater(const MapGeneration::GenerationType biome, const int 
 	if (biome != MapGeneration::Swamp || lastLayerBorder >= MAX_WATER_LEVEL)
 		return;
 	for (int y = lastLayerBorder + 1; y <= MAX_WATER_LEVEL; y++)
-		SetBlock(glm::ivec3(x, y, z), Block::Water);
+		SetBlock(glm::ivec3(x, y, z), Block::WaterForSwamp);
 	SetBlock(glm::ivec3(x, lastLayerBorder, z), Block::Dirt);
 }
 
@@ -105,7 +106,7 @@ void Chunk::FillVegetation(const MapGeneration::GenerationType biome, const int 
 
 	__BLOCK_TYPE vegetation = _mp->VegetationGeneration(_position, glm::ivec2(x, z), biome);
 	__BLOCK_TYPE blockType = GetBlock(glm::ivec3(x, lastLayerBorder + 1, z));
-	if (vegetation != Block::Air && blockType != Block::Water)
+	if (vegetation != Block::Air && blockType != Block::Water && blockType != Block::WaterForSwamp)
 			SetBlock(glm::ivec3(x, lastLayerBorder + 1, z), vegetation);
 }
 

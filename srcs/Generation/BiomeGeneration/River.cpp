@@ -22,9 +22,14 @@ void MapGeneration::GetRiverData(StoredMapData& column, glm::ivec2 pos)
 {
   column.aboveRiverBiome = GenerationBiomeWithoutRiver(pos);
   column.lastBlockLayer = Block::Water;
-  if (column.aboveRiverBiome == Snow)
-    column.lastBlockLayer = Block::Ice;
   column.firstBlockLayer = Block::Water;
+  if (column.aboveRiverBiome == GenerationType::Snow)
+    column.lastBlockLayer = Block::Ice;
+  if (column.aboveRiverBiome == GenerationType::Swamp)
+  {
+    column.lastBlockLayer = Block::WaterForSwamp;
+    column.firstBlockLayer = Block::WaterForSwamp;
+  }
   column.approximateElevation = 1.f;
   column.exactElevation = 1;
 }

@@ -132,10 +132,12 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::OreRedstone] = new Material("./resources/Textures/RedstoneOre/RedstoneOre", 1.f, 0.f);
 	_materials[Block::CraftingTable] = new Material("./resources/Textures/CraftingTable/CraftingTable", 1.f, 0.f);
 	_materials[Block::Grass] = new Material("./resources/Textures/Grass/Grass", 32.f, 0.f);
+	_materials[Block::GrassForSwamp] = new Material("./resources/Textures/GrassForSwamp/GrassForSwamp", 32.f, 0.f);
 	_materials[Block::Leaves] = new Material("./resources/Textures/Leaves/Leaves", 1.f, 0.f);
 	_materials[Block::Log] = new Material("./resources/Textures/Log/Log", 1.f, 0.f);
 	_materials[Block::SnowGrass] = new Material("./resources/Textures/SnowGrass/SnowGrass", 4.f, 0.f);
 	_materials[Block::Water] = new Material("./resources/Textures/Water/Water", 32.f, 0.f);
+	_materials[Block::WaterForSwamp] = new Material("./resources/Textures/WaterForSwamp/WaterForSwamp", 32.f, 0.f);
 	_materials[Block::Ice] = new Material("./resources/Textures/Ice/Ice", 4.f, 0.f);
 	_materials[Block::RedFlower] = new Material("./resources/Textures/RedFlower/RedFlower", 1.f, 0.f);
 	_materials[Block::YellowFlower] = new Material("./resources/Textures/YellowFlower/YellowFlower", 1.f, 0.f);
