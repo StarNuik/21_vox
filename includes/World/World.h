@@ -9,7 +9,7 @@
 #define WORLD_RADIUS 10
 #define RADIUS_SQUARED (WORLD_RADIUS * WORLD_RADIUS)
 
-#define MAX_UPDATES_PER_FRAME 10
+#define MAX_UPDATES_PER_FRAME 1
 
 class World {
 public:

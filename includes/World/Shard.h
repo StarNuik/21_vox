@@ -7,10 +7,7 @@
 #include "World/Block.h"
 #include "Render/VertexBuffers.h"
 
-#define USED_SHADER "Flower"
-#define BLOCKS_SHADER "Flower"
-#define WATER_SHADER "Flower"
-#define TRANSPARENT_SHADER "Flower"
+#define USED_SHADER "World"
 
 class Shard {
 public:
