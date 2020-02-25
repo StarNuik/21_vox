@@ -12,6 +12,7 @@
 #include "Utilities/Log.h"
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
+#include "Render/Texture.h"
 
 GLRenderer::GLRenderer() {
 	// _static.glfwOn = false;
@@ -135,4 +136,6 @@ void GLRenderer::InitChildren() {
 	SetPostShader("Post Main: Bloom & HDR Aces approximate & Gamma");
 	_static.bloomShader = _static.rs->GetShader("Post Gaussian Blur 5x5");
 	_static.bloomCutoff = 0.7f;
+	_static.theWorldGradientTexture = new Texture();
+	_static.theWorldGradientTexture->Load("./resources/Textures/TheWorldGradient.png");
 };

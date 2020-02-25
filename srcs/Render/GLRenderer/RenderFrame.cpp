@@ -45,6 +45,10 @@ void GLRenderer::RenderBlocks() {
 		if (shader != lastShader) {
 			shader->Use();
 			shader->SetFloat3("cameraPos", _frame.cameraPos);
+			shader->SetInt("theWorldGradient", 5);
+			glActiveTexture(GL_TEXTURE5);
+			_static.theWorldGradientTexture->Use();
+			shader->SetFloat("standRadius", _static.game->GetTheWorldRadius());
 			_static.skybox->ApplyDirLights(shader);
 			_static.shadows->ApplySelf(shader);
 			lastShader = shader;

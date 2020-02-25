@@ -40,6 +40,9 @@ public:
 	MapGeneration* _mpGen;
 	Physics* _physics;
 	Player* GetPlayer();
+	//* The World
+	float GetTheWorldRadius();
+	void TheWorldOn();
 private:
 	void Update(float delta);
 
@@ -55,4 +58,15 @@ private:
 	float _lastFrame;
 	float _runtime;
 	Player* _player;
+	//* The World
+	bool _theworldOn;
+	float _theworldStart;
 };
+
+#define THE_WORLD_UNSAFE_DIST (270.f)
+#define THE_WORLD_BLOCKS_DIST (176.f)
+#define THE_WORLD_RADIUS (THE_WORLD_UNSAFE_DIST + THE_WORLD_BLOCKS_DIST + 50.f)
+#define THE_WORLD_OFFSET (2.2f)
+#define THE_WORLD_ANIM_TIME (4.0f)
+#define THE_WORLD_COLLAPSE_TIME (2.0f)
+#define THE_WORLD_DURATION (9.f)

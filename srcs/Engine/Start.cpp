@@ -58,7 +58,7 @@ void Game::InitSystems() {
 	_renderer->InitChildren();
 };
 
-#define WORLD_RADIUS 10
+// #define WORLD_RADIUS 10
 
 void Game::InitWorld() {
 	// _worldCreator->Start();

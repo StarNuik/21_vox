@@ -41,6 +41,9 @@ void UIController::UpdateProfiler() {
 	wc->outMutex.unlock();
 };
 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 void UIController::ProfilerUI() {
 	const float margin = 20.f;
 	UIData::DataProfiler& data = _dataProfiler;
@@ -63,7 +66,9 @@ void UIController::ProfilerUI() {
 	ImGui::Text("Chunks in queues");
 	ImGui::Text("Generation: %4d, Geometry: %4d", data.generationQueueSize, data.geometryQueueSize);
 	ImGui::Separator();
-	PlotLines(data.frameFull, "Full frame");
+	std::ostringstream text;
+	text << "Full frame\n" << std::fixed << std::setprecision(3) << data.frameFull.back() << " ms";
+	PlotLines(data.frameFull, text.str().c_str());
 	ImGui::Separator();
 	PlotLines(data.input, "Input loop");
 	ImGui::Separator();

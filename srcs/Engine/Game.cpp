@@ -58,6 +58,36 @@ float Game::GetMoonAngle() {
 	return currentTime / SECONDS_IN_A_MOON_DAY * 360.f;
 }
 
+float Game::GetTheWorldRadius() {
+	if (_theworldOn) {
+		float curr = _runtime - _theworldStart - THE_WORLD_OFFSET;
+		if (curr <= 0.0) {
+			return 0.f;
+		} else if (curr <= THE_WORLD_ANIM_TIME) {
+			float f = curr / THE_WORLD_ANIM_TIME;
+			return THE_WORLD_RADIUS * f;
+		} else if (curr <= THE_WORLD_ANIM_TIME + THE_WORLD_DURATION) {
+			return THE_WORLD_RADIUS;
+		} else if (curr <= THE_WORLD_ANIM_TIME + THE_WORLD_DURATION + THE_WORLD_COLLAPSE_TIME) {
+			float f = 1.0 - (curr - THE_WORLD_ANIM_TIME - THE_WORLD_DURATION) / THE_WORLD_COLLAPSE_TIME;
+			return THE_WORLD_RADIUS * f;
+		} else {
+			_theworldOn = false;
+			return 0.f;
+		}
+	}
+	return 0.f;
+}
+
+void Game::TheWorldOn() {
+	if (not _theworldOn) {
+		system("afplay ~/Downloads/ZA-WARUDO.mp3 &");
+		_theworldOn = true;
+		_theworldStart = _runtime;
+	}
+}
+
+
 GLRenderer* Game::GetRenderer() {return _renderer;};
 Input* Game::GetInput() {return _input;};
 ResourceLoader* Game::GetResources() {return _resources;};

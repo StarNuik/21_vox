@@ -58,6 +58,7 @@ private:
 		Shader* bloomShader;
 		Shader* postShader;
 		Geometry* postQuad;
+		Texture* theWorldGradientTexture;
 	};
 	class FrameData {
 	public:

@@ -6,7 +6,7 @@
 
 #include "Types.h"
 
-#define WORLD_RADIUS 10
+#define WORLD_RADIUS 6
 #define RADIUS_SQUARED (WORLD_RADIUS * WORLD_RADIUS)
 
 #define MAX_UPDATES_PER_FRAME 1

@@ -244,6 +244,9 @@ void Player::Update(float delta) {
 	if (input->KeyJustPressed(GLFW_KEY_G)) {
 		_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
 	}
+	if (input->KeyJustPressed(GLFW_KEY_U)) {
+		_game->TheWorldOn();
+	}
 
 	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
 	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);
