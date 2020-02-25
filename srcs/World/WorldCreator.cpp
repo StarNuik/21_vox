@@ -29,12 +29,12 @@ void WorldCreator::Loop() {
 	if (chunk->state == Chunk::AwaitingGeneration) {
 		// GenerateBlocks(chunk);
 		chunk->Generate();
-		chunk->state = Chunk::AwaitingGeometry;
+		chunk->state = Chunk::GenerationComplete;
 	}
 	// if (chunk->state == Chunk::AwaitingGeometry) {
 	// 	chunk->GenerateVertices();
 	// }
-	AddChunkToQueue(chunk);
+	// AddChunkToQueue(chunk);
 }
 
 Chunk* WorldCreator::GetChunkFromQueue() {
@@ -46,10 +46,10 @@ Chunk* WorldCreator::GetChunkFromQueue() {
 	return chunk;
 }
 
-void WorldCreator::AddChunkToQueue(Chunk* chunk) {
-	lockguard lock(outMutex);
-	outQueue.push(chunk);
-}
+// void WorldCreator::AddChunkToQueue(Chunk* chunk) {
+// 	lockguard lock(outMutex);
+// 	outQueue.push(chunk);
+// }
 
 
 void WorldCreator::LoopTest() {

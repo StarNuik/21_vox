@@ -61,6 +61,18 @@ World::~World() {
 // 	chunk->SetActive(state);
 // }
 
+void World::DestroyWorld() {
+	_wc->inMutex.lock();
+	int size = _wc->inQueue.size();
+	_wc->inMutex.unlock();
+	if (size == 0) {
+		for (auto pair : _chunks) {
+			delete pair.second;
+		}
+		_chunks.clear();
+	}
+}
+
 glm::ivec2 World::Global2Chunk(const glm::ivec3 global) {
 	glm::ivec2 chunk;
 	chunk.x = global.x >= 0 ? global.x >> 4 : (global.x + 1) / 16 - 1;
@@ -111,64 +123,57 @@ void World::PlayerSetBlock(glm::ivec3 globalPos, Block type) {
 	}
 }
 
+namespace {
+int TestNeighbour(std::unordered_map<glm::ivec2, Chunk*>& chunks, glm::ivec2 pos, glm::ivec2 offset) {
+	Chunk* chunk = chunks[pos + offset];
+	if (!chunk)
+		return 0;
+	if (chunk->state == Chunk::Complete or chunk->state == Chunk::GenerationComplete)
+		return 1;
+	return 0;
+}
+}
+
 void World::AssessChunks(glm::vec3 playerPos) {
 	glm::ivec2 playerChunkPos = Global2Chunk(playerPos);
 
-	//* Deletion
-	for (auto pair : _chunks) {
-		Chunk* chunk = pair.second;
-		if (chunk == nullptr) {
-			_chunks.erase(pair.first);
-			continue;
-		}
-		glm::ivec2 local = pair.first - playerChunkPos;
-		if (local.x * local.x + local.y * local.y > RADIUS_SQUARED and chunk->state == Chunk::Completed) {
-			delete chunk;
-			_chunks.erase(pair.first);
-		}
-	}
-
-	//* Add to creation queue
-	for (int x = -WORLD_RADIUS; x <= WORLD_RADIUS; x++)
-		for (int z = -WORLD_RADIUS; z<= WORLD_RADIUS; z++)
-			if (x * x + z * z <= RADIUS_SQUARED) {
-				glm::ivec2 pos = glm::ivec2(x, z) + playerChunkPos;
-				Chunk* chunk = _chunks[pos];
-				if (chunk) {
-					continue;
-				}
+	//* Add to creation queue or delete unnecessary Chunks
+	for (int x = -GENDELETE_RADIUS; x <= GENDELETE_RADIUS; x++)
+		for (int z = -GENDELETE_RADIUS; z <= GENDELETE_RADIUS; z++) {
+			glm::ivec2 pos = glm::ivec2(x, z) + playerChunkPos;
+			Chunk* chunk = _chunks[pos];
+			if (chunk and x * x + z * z > GENERATE_SQUARED) {
+				delete chunk;
+				_chunks.erase(pos);
+			} else if (!chunk and x * x + z * z <= GENERATE_SQUARED) {
 				chunk = new Chunk(_game, pos);
 				_chunks[pos] = chunk;
 				_wc->inMutex.lock();
 				_wc->inQueue.push(chunk);
 				_wc->inMutex.unlock();
 			}
+		}
 	
-	//* Update geometry for those who need it
-	_wc->outMutex.lock();
-	int size = _wc->outQueue.size();
-	_wc->outMutex.unlock();
-	for (int count = 0; count < MAX_UPDATES_PER_FRAME and size > 0; count++, size--) {
-		_wc->outMutex.lock();
-		Chunk* chunk = _wc->outQueue.front();
-		_wc->outQueue.pop();
-		_wc->outMutex.unlock();
-		chunk->Update();
-		chunk->state = Chunk::Completed;
-		//* Update neighbours
-		glm::ivec2 pos = chunk->GetPosition();
-		glm::ivec2 offset;
-		offset = glm::ivec2(1, 0);
-		if (_chunks[pos + offset] and _chunks[pos + offset]->state == Chunk::Completed)
-			_chunks[pos + offset]->Update();
-		offset = glm::ivec2(-1, 0);
-		if (_chunks[pos + offset] and _chunks[pos + offset]->state == Chunk::Completed)
-			_chunks[pos + offset]->Update();
-		offset = glm::ivec2(0, 1);
-		if (_chunks[pos + offset] and _chunks[pos + offset]->state == Chunk::Completed)
-			_chunks[pos + offset]->Update();
-		offset = glm::ivec2(0, -1);
-		if (_chunks[pos + offset] and _chunks[pos + offset]->state == Chunk::Completed)
-			_chunks[pos + offset]->Update();
-	}
+	//* 
+	int count = 0;
+	for (int x = -WORLD_RADIUS; x <= WORLD_RADIUS and count < MAX_UPDATES_PER_FRAME; x++)
+		for (int z = -WORLD_RADIUS; z <= WORLD_RADIUS and count < MAX_UPDATES_PER_FRAME; z++) {
+			glm::ivec2 pos = glm::ivec2(x, z) + playerChunkPos;
+			Chunk* chunk = _chunks[pos];
+			if (!chunk) {
+				continue;
+			}
+			int neighbours = 0;
+
+			neighbours += TestNeighbour(_chunks, pos, glm::ivec2(1, 0));
+			neighbours += TestNeighbour(_chunks, pos, glm::ivec2(-1, 0));
+			neighbours += TestNeighbour(_chunks, pos, glm::ivec2(0, 1));
+			neighbours += TestNeighbour(_chunks, pos, glm::ivec2(0, -1));
+
+			if (chunk->state == Chunk::GenerationComplete and neighbours == 4) {
+				chunk->Update();
+				chunk->state = Chunk::Complete;
+				count++;
+			}
+		}
 }

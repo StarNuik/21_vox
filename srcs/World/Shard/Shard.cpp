@@ -16,10 +16,15 @@ Shard::Shard(Game* game, glm::ivec3 pos) {
 
 Shard::~Shard() {
 	for (RenderModel* model : _models) {
+		//! THIS IS A FIX FOR A GHOST BUG
+		//TODO Fix it
+		//? Description:
+		//? ShadowRenderer crashed on glDrawArrays
+		//? How is this even possible?
+		// _game->GetRenderer()->RemoveModel(model);
 		delete model->GetGeometry();
 		delete model;
 	}
-	// SetActive(false);
 };
 
 // void Shard::SetActive(bool newState) {

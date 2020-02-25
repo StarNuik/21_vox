@@ -18,11 +18,11 @@ public:
 	// std::mutex worldMutex;
 	std::mutex inMutex;
 	std::queue<Chunk*> inQueue;
-	std::mutex outMutex;
-	std::queue<Chunk*> outQueue;
+	// std::mutex outMutex;
+	// std::queue<Chunk*> outQueue;
 private:
 	Chunk* GetChunkFromQueue();
-	void AddChunkToQueue(Chunk*);
+	// void AddChunkToQueue(Chunk*);
 	void LoopTest();
 	void Loop();
 	bool _active;

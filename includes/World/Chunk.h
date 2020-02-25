@@ -10,9 +10,9 @@ class Chunk {
 public:
 	enum State {
 		Empty,
-		Completed,
+		Complete,
 		AwaitingGeneration,
-		AwaitingGeometry
+		GenerationComplete
 	};
 	Chunk(Game*, glm::ivec2);
 	~Chunk();

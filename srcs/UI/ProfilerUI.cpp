@@ -36,9 +36,9 @@ void UIController::UpdateProfiler() {
 	wc->inMutex.lock();
 	data.generationQueueSize = wc->inQueue.size();
 	wc->inMutex.unlock();
-	wc->outMutex.lock();
-	data.geometryQueueSize = wc->outQueue.size();
-	wc->outMutex.unlock();
+	// wc->outMutex.lock();
+	// data.geometryQueueSize = wc->outQueue.size();
+	// wc->outMutex.unlock();
 };
 
 void UIController::ProfilerUI() {
@@ -61,7 +61,7 @@ void UIController::ProfilerUI() {
 	ImGui::Text("Dir: [x: %6.1f, y: %6.1f, z: %6.1f]", dir.x, dir.y, dir.z);
 	ImGui::Separator();
 	ImGui::Text("Chunks in queues");
-	ImGui::Text("Generation: %4d, Geometry: %4d", data.generationQueueSize, data.geometryQueueSize);
+	ImGui::Text("Generation: %4d", data.generationQueueSize);
 	ImGui::Separator();
 	PlotLines(data.frameFull, "Full frame");
 	ImGui::Separator();

@@ -7,9 +7,12 @@
 #include "Types.h"
 
 #define WORLD_RADIUS 10
+#define GENERATED_WORLD_RADIUS (WORLD_RADIUS + 1)
+#define GENERATE_SQUARED (GENERATED_WORLD_RADIUS * GENERATED_WORLD_RADIUS)
+#define GENDELETE_RADIUS (GENERATED_WORLD_RADIUS + 2)
 #define RADIUS_SQUARED (WORLD_RADIUS * WORLD_RADIUS)
 
-#define MAX_UPDATES_PER_FRAME 10
+#define MAX_UPDATES_PER_FRAME 5
 
 class World {
 public:
@@ -29,6 +32,7 @@ public:
 	void SetBlock(glm::ivec3 globalPosition, Block);
 	void PlayerSetBlock(glm::ivec3 globalPosition, Block);
 	void AssessChunks(glm::vec3 playerPosition);
+	void DestroyWorld();
 private:
 	void CreateChunks();
 	void DeleteChunks();
