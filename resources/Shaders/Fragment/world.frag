@@ -81,6 +81,17 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diffuseBase, f
 	return ambient + shadow * (diffuse + specular);
 }
 
+vec3 SphereLine(vec3 inColor, vec3 fragPos, vec3 centerPos, float radius) {
+	const float bias = 0.05;
+
+	vec3 local = fragPos - centerPos;
+	if (dot(local, local) <= pow(radius, 3)) {
+		return inColor;
+	} else {
+		return vec3(0.0);
+	}
+}
+
 void main() {
 	vec4 diffuse = texture(material.diffuse, vsOut.uv);
 	if (diffuse.a == 0.0) {
@@ -90,10 +101,12 @@ void main() {
 	vec3 viewDir = normalize(cameraPos - vsOut.worldPos);
 	float shadow = 1.0 - ShadowCalculation();
 
+	vec3 theWorldDiffuse = SphereLine(diffuse.rgb, vsOut.worldPos, cameraPos, 5.0);
+
 	vec3 result = vec3(0.0);
 	
 	for (int i = 0; i < 2; i++)
-		result += CalcDirLight(dirLight[i], normal, viewDir, diffuse.rgb, shadow);
+		result += CalcDirLight(dirLight[i], normal, viewDir, theWorldDiffuse, shadow);
 
 	vec3 bright = BloomColor(result);
 
