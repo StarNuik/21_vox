@@ -137,14 +137,17 @@ int TestNeighbour(std::unordered_map<glm::ivec2, Chunk*>& chunks, glm::ivec2 pos
 void World::AssessChunks(glm::vec3 playerPos) {
 	glm::ivec2 playerChunkPos = Global2Chunk(playerPos);
 
-	//* Add to creation queue or delete unnecessary Chunks
+	//* Add to creation or destruction queue
 	for (int x = -GENDELETE_RADIUS; x <= GENDELETE_RADIUS; x++)
 		for (int z = -GENDELETE_RADIUS; z <= GENDELETE_RADIUS; z++) {
 			glm::ivec2 pos = glm::ivec2(x, z) + playerChunkPos;
 			Chunk* chunk = _chunks[pos];
 			if (chunk and x * x + z * z > GENERATE_SQUARED) {
-				delete chunk;
+				_destructionQueue.push_back(chunk);
+				_chunks[pos] = nullptr;
 				_chunks.erase(pos);
+				// delete chunk;
+				// _chunks.erase(pos);
 			} else if (!chunk and x * x + z * z <= GENERATE_SQUARED) {
 				chunk = new Chunk(_game, pos);
 				_chunks[pos] = chunk;
@@ -154,7 +157,24 @@ void World::AssessChunks(glm::vec3 playerPos) {
 			}
 		}
 	
-	//* 
+	//* Delete queued chunks
+	for (int pos = 0; pos < _destructionQueue.size(); pos++) {
+		Chunk* chunk = _destructionQueue[pos];
+		if (!chunk)
+			continue;
+		if (chunk->state == Chunk::Complete or chunk->state == Chunk::GenerationComplete) {
+			_destructionQueue[pos] = nullptr;
+			delete chunk;
+		}
+	}
+	//* Giant costil
+	if (_destructionQueue.size() == 0) {
+		_destructionQueue.clear();
+	} else {
+		_destructionQueue.shrink_to_fit();
+	}
+
+	//* Update chunks that have neighbours generated
 	int count = 0;
 	for (int x = -WORLD_RADIUS; x <= WORLD_RADIUS and count < MAX_UPDATES_PER_FRAME; x++)
 		for (int z = -WORLD_RADIUS; z <= WORLD_RADIUS and count < MAX_UPDATES_PER_FRAME; z++) {

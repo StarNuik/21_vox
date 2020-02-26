@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <unordered_map>
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
@@ -40,5 +41,6 @@ private:
 	glm::ivec3 Global2Local(glm::ivec3 globalP);
 	Game* _game;
 	std::unordered_map<glm::ivec2, Chunk*> _chunks;
+	std::vector<Chunk*> _destructionQueue;
 	WorldCreator* _wc;
 };
