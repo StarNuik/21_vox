@@ -156,6 +156,11 @@ MapGeneration::MapGeneration()
 	_noises[Vegetation].SetSeed(1300);
 	_noises[Vegetation].SetFrequency(100.0);
 
+	_noises[GladeVegetation].SetNoiseType(FastNoise::Cellular);
+	_noises[GladeVegetation].SetSeed(1300);
+	_noises[GladeVegetation].SetFrequency(0.23f);
+	_noises[GladeVegetation].SetCellularDistanceFunction(FastNoise::Natural);
+
 	_noises[Caves].SetNoiseType(FastNoise::Perlin);
 	_noises[Caves].SetFrequency(0.1);
 	_noises[Caves].SetSeed(167998);
@@ -212,6 +217,7 @@ MapGeneration::MapGeneration()
 	_noiseNames[River] = "River";
 	_noiseNames[Tree] = "Tree";
 	_noiseNames[Vegetation] = "Vegetation";
+	_noiseNames[GladeVegetation] = "GladeVegetation";
 	_noiseNames[Caves] = "Caves";
 	_noiseNames[Crevices] = "Crevices";
 	_noiseNames[PerlinX] = "PerlinX";

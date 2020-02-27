@@ -88,6 +88,18 @@ MapGeneration::VegetationType MapGeneration::DesertVegetationGeneration(glm::ive
   return VegetationType::NothingVegetation;
 }
 
+MapGeneration::VegetationType MapGeneration::GladeVegetationGeneration(glm::ivec2 pos)
+{
+ int probabilityCalculation = IntRand(0, 100);
+
+  if (probabilityCalculation < 85 && IsThereAPlant(pos, 1, GenerationType::GladeVegetation))
+    return VegetationType::HighGrass;
+  else if (probabilityCalculation >= 85 && probabilityCalculation < 100 && IsThereAPlant(pos, 2, GenerationType::GladeVegetation))
+    return (VegetationType)IntRand(VegetationType::RedFlower, VegetationType::BrownMushroom + 1);
+  return VegetationType::NothingVegetation;
+}
+
+
 MapGeneration::VegetationType MapGeneration::ChineseMountainsVegetationGeneration(glm::ivec2 pos)
 {
   int probabilityCalculation = IntRand(0, 100);
@@ -130,22 +142,25 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 chunkPos, glm::ivec2
   {
     case GenerationType::GrassLand:
       vegetation = GrassLandVegetationGeneration(pos);
-    break;
+     break;
     case GenerationType::Desert:
       vegetation = DesertVegetationGeneration(pos);
-    break;
+      break;
     case GenerationType::ChineseMountains:
       vegetation = ChineseMountainsVegetationGeneration(pos);
-    break;
+      break;
     case GenerationType::Caves:
       vegetation = CavesVegetationGeneration(pos);
-    break;
+      break;
     case GenerationType::Swamp:
       vegetation = SwampVegetationGeneration(pos);
-    break;
+      break;
+    case GenerationType::Glade:
+      vegetation = GladeVegetationGeneration(pos);
+      break;
     default:
       return Block::Air;
-    break;
+      break;
   }
   return ConvertPlantToBlock(vegetation);
 }

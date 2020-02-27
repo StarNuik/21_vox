@@ -43,6 +43,7 @@ public:
         Caves,
         Crevices,
         Vegetation,
+        GladeVegetation,
         Ore,
         OreDimond,
         Tree,
