@@ -95,6 +95,7 @@ public:
 	bool IsMultisided() const;
 	bool IsFlower() const;
 	bool IsWalkthrough() const;
+	bool IsWater() const;
 	glm::vec2 GetUV(Side) const;
 	float GetU(Side) const;
 	float GetV(Side) const;

@@ -44,6 +44,17 @@ bool Block::IsFlower() const {
 	}
 }
 
+bool Block::IsWater() const {
+	switch (_block)
+	{
+		case Water:
+		case WaterForSwamp:
+			return true;
+		default:
+			return false;
+	}
+}
+
 bool Block::IsWalkthrough() const {
 	switch(_block) {
 		case Air:

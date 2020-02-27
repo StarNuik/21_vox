@@ -48,9 +48,9 @@ void Shard::AddSideWater(std::vector<float>& res, glm::ivec3 local, glm::ivec3 g
 		upBlock = w->GetBlock(global + offset);
 	else
 		upBlock = _blocks[local.x][local.y][local.z];
-	if ((block.IsTransparent() or block.IsFlower()) and block != Block::Water) {
+	if ((block.IsTransparent() or block.IsFlower()) and !block.IsWater()) {
 		std::vector<float> buffer;
-		if (upBlock == Block::Water) {
+		if (upBlock.IsWater()) {
 			buffer = VertexBuffers::GetVectorBuffer(side);
 			res.insert(res.end(), buffer.begin(), buffer.end());
 		} else {
