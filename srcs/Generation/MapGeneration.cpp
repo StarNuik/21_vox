@@ -86,6 +86,9 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 		case GenerationType::GrassLand:
 			GetGrassLandData(column, pos);
 			break;
+		case GenerationType::Glade:
+			GetGladeData(column, pos);
+			break;
 		case GenerationType::Swamp:
 			GetSwampData(column, pos);
 			break;
@@ -167,6 +170,9 @@ MapGeneration::MapGeneration()
 	_noises[GrassLand].SetNoiseType(FastNoise::Simplex);
 	_noises[GrassLand].SetFrequency(0.020214);
 
+	_noises[Glade].SetNoiseType(FastNoise::PerlinFractal);
+	_noises[Glade].SetFrequency(0.00214);
+
 	_noises[Swamp].SetNoiseType(FastNoise::Simplex);
 	_noises[Swamp].SetFrequency(0.021);
 
@@ -195,6 +201,7 @@ MapGeneration::MapGeneration()
 
 	_noiseNames[Basic] = "Basic";
 	_noiseNames[GrassLand] = "GrassLand";
+	_noiseNames[Glade] = "Glade";
 	_noiseNames[Swamp] = "Swamp";
 	_noiseNames[Desert] = "Desert";
 	_noiseNames[Snow] = "Snow";
