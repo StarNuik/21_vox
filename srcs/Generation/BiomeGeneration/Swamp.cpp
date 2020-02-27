@@ -32,12 +32,6 @@ void MapGeneration::GetSwampData(StoredMapData& column, glm::ivec2 pos)
     column.approximateElevation = column.approximateElevation > 0.f ? (int)floorf(column.approximateElevation * 10.f) : (int)floorf((column.approximateElevation + SWAMP_HEIGHT) * 10.f) - 4.f;
     column.firstBlockLayer = Block::Dirt;
     column.lastBlockLayer = Block::GrassForSwamp;
-    if (column.approximateElevation > 0.f && FindBiome(pos, BeachLength(pos), MapGeneration::Ocean).biome == Ocean)
-    {
-        column.biom = Beach;
-        column.firstBlockLayer = Block::Sand;
-        column.lastBlockLayer = Block::Sand;
-    }
-    else if (TreeGeneration(pos) != tree.Nothing)
+    if (TreeGeneration(pos) != tree.Nothing)
         column.treeType = IntRand(Trees::First, Trees::OakTreeTypeTwo);
 }
