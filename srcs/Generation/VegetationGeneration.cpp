@@ -141,9 +141,11 @@ __BLOCK_TYPE MapGeneration::VegetationGeneration(glm::ivec2 chunkPos, glm::ivec2
   switch (biome)
   {
     case GenerationType::GrassLand:
-      vegetation = GrassLandVegetationGeneration(pos);
-     break;
+    case GenerationType::GrassLandHills:
+      vegetation=  GrassLandVegetationGeneration(pos);
+      break;
     case GenerationType::Desert:
+    case GenerationType::DesertHills:
       vegetation = DesertVegetationGeneration(pos);
       break;
     case GenerationType::ChineseMountains:

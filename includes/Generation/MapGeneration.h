@@ -38,6 +38,10 @@ public:
         GrassLand,
         Snow,
         Desert,
+        GrassLandHills,
+        DesertHills,
+        SnowHills,
+        Hills,
         HighLand,
         ChineseMountains,
         Caves,
@@ -135,6 +139,9 @@ private:
     void GetHighLandData(StoredMapData& column, glm::ivec2 pos);
     void GetChineseMountainsData(StoredMapData& column, glm::ivec2 pos);
     void GetGladeData(StoredMapData& column, glm::ivec2 pos);
+    void GetGrassLandHillsData(StoredMapData& column, glm::ivec2 pos);
+    void GetDesertHillsData(StoredMapData& column, glm::ivec2 pos);
+    void GetSnowHillsData(StoredMapData& column, glm::ivec2 pos);
    
     float GetBasicElevation(glm::ivec2 pos);
     float GetLandElevation(glm::ivec2 pos);
@@ -144,7 +151,7 @@ private:
     float GetHighLandElevation(glm::ivec2 pos);
     float GetChineseMountainsElevation(glm::ivec2 pos);
     float GetGladeElevation(glm::ivec2 pos);
-
+    float GetHillsElevation(glm::ivec2 pos);
 
     float TreeGeneration(glm::ivec2 pos);
 

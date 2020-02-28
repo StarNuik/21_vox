@@ -98,6 +98,15 @@ MapGeneration::StoredMapData MapGeneration::Generation(glm::ivec2 chunkPos, glm:
 		case GenerationType::Snow:
 			GetSnowLandData(column, pos);
 			break;
+		case GenerationType::GrassLandHills:
+			GetGrassLandHillsData(column, pos);
+			break;
+		case GenerationType::DesertHills:
+			GetDesertHillsData(column, pos);
+			break;
+		case GenerationType::SnowHills:
+			GetSnowHillsData(column, pos);
+			break;
 		case GenerationType::Tree:
 			column.approximateElevation = TreeGeneration(pos);
 			column.firstBlockLayer = Block::Leaves;
@@ -175,6 +184,10 @@ MapGeneration::MapGeneration()
 	_noises[GrassLand].SetNoiseType(FastNoise::Simplex);
 	_noises[GrassLand].SetFrequency(0.020214);
 
+	_noises[Hills].SetNoiseType(FastNoise::Simplex);
+	_noises[Hills].SetSeed(6128);
+	_noises[Hills].SetFrequency(0.0110615);
+
 	_noises[Glade].SetNoiseType(FastNoise::PerlinFractal);
 	_noises[Glade].SetFrequency(0.00214);
 
@@ -206,6 +219,7 @@ MapGeneration::MapGeneration()
 
 	_noiseNames[Basic] = "Basic";
 	_noiseNames[GrassLand] = "GrassLand";
+	_noiseNames[Hills] = "Hills";
 	_noiseNames[Glade] = "Glade";
 	_noiseNames[Swamp] = "Swamp";
 	_noiseNames[Desert] = "Desert";

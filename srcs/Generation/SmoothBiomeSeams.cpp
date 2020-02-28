@@ -18,6 +18,12 @@ float MapGeneration::CheckingTheElevationOfBiomeInTheNextColumn(glm::ivec2 origi
         ret = GetLandElevation(nextColumn);
         ret = SmoothBiomeSeams(ret, nextColumn, biome);
         break;
+      case GenerationType::GrassLandHills:
+      case GenerationType::DesertHills:
+      case GenerationType::SnowHills:
+        ret = GetHillsElevation(nextColumn);
+        ret = SmoothBiomeSeams(ret, nextColumn, biome);
+        break;
       case GenerationType::Glade:
         ret = GetGladeElevation(nextColumn);
         ret = SmoothBiomeSeams(ret, nextColumn, biome);

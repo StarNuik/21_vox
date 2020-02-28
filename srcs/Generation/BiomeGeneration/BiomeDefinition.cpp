@@ -10,8 +10,14 @@ MapGeneration::GenerationType GetBiomeType(float e)
     return MapGeneration::Swamp;
   else if (e < 0.31f)
     return MapGeneration::Desert;
-  else if (e < 0.8f)
+  else if (e < 0.35f)
+    return MapGeneration::DesertHills;
+  else if (e < 0.38f)
+    return MapGeneration::GrassLandHills;
+  else if (e < 0.7f)
     return MapGeneration::GrassLand;
+  else if (e < 0.8f)
+    return MapGeneration::SnowHills;
   else if (e < 0.9f)
     return MapGeneration::Snow;
   else if (e > 0.95f && e < 0.98f)
