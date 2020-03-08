@@ -81,7 +81,7 @@ float Game::GetTheWorldRadius() {
 
 void Game::TheWorldOn() {
 	if (not _theworldOn) {
-		system("afplay ~/Downloads/ZA-WARUDO.mp3 &");
+		system("afplay ./resources/Sounds/ZA-WARUDO.mp3 &");
 		_theworldOn = true;
 		_theworldStart = _runtime;
 	}
