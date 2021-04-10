@@ -1,13 +1,19 @@
 #include "Animation/AnimationModel.h"
+#include "Animation/AnimationClip.h"
+#include "Animation/AnimationSkeletonNode.h"
 #include "Utilities/Log.h"
+#include "Utilities/Utilities.h"
 #include "Render/Geometry.h"
 #include "Render/RenderModel.h"
+#include "Engine/Game.h"
+#include "World/ResourceLoader.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-AnimationModel::AnimationModel(Game* game_BADTIME, GLRenderer *renderer, std::string path, Shader* shader, Material* material) {
+AnimationModel::AnimationModel(Game* game, std::string path) {
+	_game = game;
 	path += ".dae";
 
 	Assimp::Importer importer;
@@ -21,40 +27,18 @@ AnimationModel::AnimationModel(Game* game_BADTIME, GLRenderer *renderer, std::st
 		Log::Error("Assimp failed to load the scene: ", path);
 		return;
 	}
+	if (scene->mNumAnimations <= 0) {
+		Log::Error("File doesn't have any animations: ", path);
+		return;
+	}
 
 	Log::Success("Assimp succedeed");
 	LogSceneInfo(scene, path);
 
-	for (int meshId = 0; meshId < scene->mNumMeshes; meshId++) {
-		aiMesh* mesh = scene->mMeshes[meshId];
-		models.push_back(MeshToModel(mesh, renderer, shader, material));
-	}
-}
+	_startTime = game->GetRuntime();
 
-RenderModel* AnimationModel::MeshToModel(aiMesh* mesh, GLRenderer* renderer, Shader* shader, Material* material) {
-	std::vector<float> vertexData;
-
-	for (int faceId = 0; faceId < mesh->mNumFaces; faceId++) {
-		aiFace face = mesh->mFaces[faceId];
-
-		for (int i = 0; i < face.mNumIndices; i++) {
-			uint index = face.mIndices[i];
-			aiVector3D vertex = mesh->mVertices[index];
-			aiVector3D normal = mesh->mNormals[index];
-			aiVector3D uv = mesh->mTextureCoords[0][index];
-			vertexData.push_back(vertex.x);
-			vertexData.push_back(vertex.y);
-			vertexData.push_back(vertex.z);
-			vertexData.push_back(normal.x);
-			vertexData.push_back(normal.y);
-			vertexData.push_back(normal.z);
-			vertexData.push_back(uv.x);
-			vertexData.push_back(uv.y);
-		}
-	}
-
-	Geometry* g = new Geometry(vertexData);
-	return new RenderModel(renderer, shader, material, g);
+	_skeletonRoot = new AnimationSkeletonNode(game, scene->mRootNode, nullptr);
+	_clip = new AnimationClip(scene->mAnimations[0]);
 }
 
 void AnimationModel::LogSceneInfo(const aiScene* scene, std::string path) {
@@ -82,16 +66,22 @@ void AnimationModel::LogSceneInfo(const aiScene* scene, std::string path) {
 		Log::Basic("\tTicks per Second: ", animation->mTicksPerSecond);
 		Log::Basic("\tMesh Channels: ", animation->mNumMeshChannels);
 		Log::Basic("\tMorph Mesh Channels: ", animation->mNumMorphMeshChannels);
-		Log::Important("\tChannels: ", animation->mNumChannels);
+		Log::Basic("\tChannels: ", animation->mNumChannels);
 		// for (int j = 0; j < animation->mNumChannels; j++) {
 		// 	aiNodeAnim* animNode = animation->mChannels[j];
 		// 	Log::Basic("");
 		// 	Log::Basic("\t\tName: ", animNode->mNodeName.data);
-		// 	Log::Basic("\t\tPosition keys: ", animNode->mNumPositionKeys);
-		// 	Log::Basic("\t\tRotation keys: ", animNode->mNumRotationKeys);
-		// 	Log::Basic("\t\tScaling keys: ", animNode->mNumScalingKeys);
-		// 	Log::Basic("\t\tPre State: ", animNode->mPreState);
-		// 	Log::Basic("\t\tPost State: ", animNode->mPostState);
+		// 	Log::Important("\t\tPosition keys: ", animNode->mNumPositionKeys);
+
+		// 	if (animNode->mNumPositionKeys < 1) continue;
+		// 	aiVectorKey posKey = animNode->mPositionKeys[0];
+		// 	Log::Basic("\t\t\tTime: ", posKey.mTime);
+		// 	Log::Basic("\t\t\tValue: ", glm::vec3(posKey.mValue.x, posKey.mValue.y, posKey.mValue.z));
+
+		// 	if (animNode->mNumScalingKeys < 1) continue;
+		// 	aiVectorKey scaleKey = animNode->mScalingKeys[0];
+		// 	Log::Basic("\t\t\tTime: ", scaleKey.mTime);
+		// 	Log::Basic("\t\t\tValue: ", glm::vec3(scaleKey.mValue.x, scaleKey.mValue.y, scaleKey.mValue.z));
 		// }
 	}
 
@@ -113,17 +103,15 @@ void AnimationModel::LogSceneTree(const aiScene* scene, aiNode* node, uint offse
 	}
 }
 
-bool AnimationModel::SceneHasAnimationChannel(const aiScene* scene, aiString nodeName) {
-	for (int i = 0; i < scene->mNumAnimations; i++) {
-		aiAnimation* anim = scene->mAnimations[i];
-		for (int j = 0; j < anim->mNumChannels; j++) {
-			aiNodeAnim* animNode = anim->mChannels[j];
-			if (strcmp(animNode->mNodeName.data, nodeName.data) == 0) return true;
-		}
-	}
-	return false;
-}
-
 void AnimationModel::Update(float delta) {
+	float time = _game->GetRuntime() - _startTime;
+	if (time > _clip->GetDuration()) {
+		_startTime = _game->GetRuntime();
+		time = 0.f;
+	}
 
+	// Log::Basic("Animation time: ", time);
+	// Log::Basic("Hello world 1");
+	_skeletonRoot->ApplyAnimation(_clip, time);
+	// Log::Basic("Hello world 2");
 }

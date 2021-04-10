@@ -29,6 +29,7 @@ Player::Player(Game* game) {
 	ResourceLoader* rs = _game->GetResources();
 	_selectedBlock = Block::Dirt;
 	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(Block::Cobblestone), rs->GetGeometry("BoxC"));
+	_monkey->SetPosition(glm::vec3(0.f, 3.f, 0.f));
 }
 
 Player::~Player() {

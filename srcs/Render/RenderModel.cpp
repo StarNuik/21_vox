@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "Render/RenderModel.h"
 #include "Render/Shader.h"
@@ -72,6 +73,13 @@ bool RenderModel::operator<(const RenderModel& t) const {
 
 bool RenderModelLess(RenderModel*& x, RenderModel*& y) {
     return ((x->_shaderId << 8) | x->_materialId) < ((y->_shaderId << 8) | y->_materialId);
+}
+
+void RenderModel::SetModelMatrix(glm::mat4 matrix) {
+	_model = matrix;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	glm::decompose(_model, _scale, _rotation, _position, skew, perspective);
 }
 
 void RenderModel::SetPosition(glm::vec3 position) {_position = position; RecalculateModelMatrix();};

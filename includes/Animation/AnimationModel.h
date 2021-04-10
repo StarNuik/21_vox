@@ -2,22 +2,30 @@
 
 #include <glm/glm.hpp>
 #include "Types.h"
+#include "World/Block.h"
 #include "Engine/Entity.h"
 #include <string>
 #include <vector>
 // #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include "Animation/AnimationSkeletonNode.h"
+
+#define ANIM_SHADER (std::string("DirLight"))
+#define ANIM_MATERIAL (Block::GoldBlock)
+#define ANIM_GEOMETRY (std::string("BoxC"))
 
 class AnimationModel : public Entity
 {
 public:
-	AnimationModel(Game* game_BADTIME, GLRenderer *renderer, std::string path, Shader* shader, Material* material);
+	AnimationModel(Game* game, std::string path);
 	void Update(float delta);
-	// ~AnimationModel() {};
 private:
-	bool SceneHasAnimationChannel(const aiScene* scene, aiString nodeName);
 	void LogSceneTree(const aiScene* scene, aiNode* node, uint offset);
 	void LogSceneInfo(const aiScene* scene, std::string path);
-	RenderModel* MeshToModel(aiMesh* mesh, GLRenderer* renderer, Shader* shader, Material* material);
-	std::vector<RenderModel*> models;
+
+	Game* _game;
+	AnimationSkeletonNode* _skeletonRoot;
+	AnimationClip* _clip;
+
+	float _startTime;
 };

@@ -56,13 +56,7 @@ void Game::InitSystems() {
 	_player = new Player(this);
 	AddEntity(_player);
 
-	AddEntity(new AnimationModel(
-		this,
-		_renderer,
-		"./resources/Animations/Hip Hop Dancing",
-		_resources->GetShader("DirLight"),
-		_resources->GetMaterial(Block::GoldBlock)
-	));
+	AddEntity(new AnimationModel(this, "./resources/Animations/Hip Hop Dancing"));
 
 	_renderer->InitChildren();
 };

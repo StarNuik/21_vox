@@ -17,6 +17,7 @@ public:
 	void SetPosition(glm::vec3);
 	void SetRotation(glm::quat);
 	void SetScale(glm::vec3);
+	void SetModelMatrix(glm::mat4);
 	glm::vec3 GetPosition();
 	glm::quat GetRotation();
 	glm::vec3 GetScale();

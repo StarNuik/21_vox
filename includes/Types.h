@@ -47,3 +47,5 @@ class Block;
 class Framebuffer;
 class WorldCreator;
 class AnimationModel;
+class AnimationSkeletonNode;
+class AnimationClip;
