@@ -29,13 +29,13 @@ void UIController::UpdateProfiler() {
 	data.update.push_back(Profiler::GetLastMs("Update"));
 	data.renderFull.pop_front();
 	data.renderFull.push_back(Profiler::GetLastMs("RenderFull"));
-	data.worldGen.pop_front();
-	data.worldGen.push_back(Profiler::GetLastMs("WorldGen"));
+	// data.worldGen.pop_front();
+	// data.worldGen.push_back(Profiler::GetLastMs("WorldGen"));
 
-	WorldCreator* wc = _game->GetWorldCreator();
-	wc->inMutex.lock();
-	data.generationQueueSize = wc->inQueue.size();
-	wc->inMutex.unlock();
+	// WorldCreator* wc = _game->GetWorldCreator();
+	// wc->inMutex.lock();
+	// data.generationQueueSize = wc->inQueue.size();
+	// wc->inMutex.unlock();
 	// wc->outMutex.lock();
 	// data.geometryQueueSize = wc->outQueue.size();
 	// wc->outMutex.unlock();

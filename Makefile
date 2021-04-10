@@ -23,7 +23,7 @@ INCL += -I PerlinNoise/
 # Additional settings
 #FLAGS = -Wall -Wextra -Werror
 FLAGS = -std=c++11 -g -O2
-LIB = -lm -L ~/.brew/lib/ -lglfw -lglew
+LIB = -lm -L ~/.brew/lib/ -lglfw -lglew -lassimp
 FRAMEWORK = -framework OpenGL
 OBJS = $(SRCS:.cpp=.o)
 DEPENDS = $(patsubst %.cpp, %.d, $(SRCS))
@@ -34,6 +34,7 @@ all: binclean $(OBJS) $(NAME)
 -include $(DEPENDS)
 
 %.o: %.cpp
+	@echo "f: $<"
 	@g++ $(FLAGS) -MMD -MP -c $< -o $@ $(INCL)
 
 $(NAME): $(OBJS)

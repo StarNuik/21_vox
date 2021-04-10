@@ -46,3 +46,4 @@ class ShadowRenderer;
 class Block;
 class Framebuffer;
 class WorldCreator;
+class AnimationModel;

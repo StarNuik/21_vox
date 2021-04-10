@@ -20,7 +20,7 @@ Player::Player(Game* game) {
 	_physics = _game->GetPhysics();
 	//! Looks like a fucking costil
 	_game->GetUI()->SetPlayer(this);
-	_position = glm::vec3(0.f, 120.f, 3.f);
+	_position = glm::vec3(0.f, 0.f, 3.f);
 	_rotation = glm::identity<glm::quat>();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
@@ -227,7 +227,7 @@ void Player::Update(float delta) {
 	glm::vec3 right;
 
 	_delta = delta;
-	BlockSelection();
+	// BlockSelection();
 	if (input->KeyJustPressed(GLFW_KEY_E)) {
 		bool state = !_game->GetUI()->GetState();
 		_game->GetUI()->SetState(state);
@@ -241,36 +241,36 @@ void Player::Update(float delta) {
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 
-	if (input->KeyJustPressed(GLFW_KEY_G)) {
-		_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
-	}
+	// if (input->KeyJustPressed(GLFW_KEY_G)) {
+	// 	_movementPropety.godMode = (_movementPropety.godMode + 1) % 2;
+	// }
 
 	_rotation = glm::quat(-glm::vec3(glm::radians(_camAngleY), glm::radians(_camAngleX), 0.f));
 	forward = glm::mat4_cast(_rotation) * glm::vec4(0.f, 0.f, -1.f, 0.f);
 	up = glm::mat4_cast(_rotation) * glm::vec4(0.f, 1.f, 0.f, 0.f);
 	right = glm::mat4_cast(_rotation) * glm::vec4(1.f, 0.f, 0.f, 0.f);
 
-	if (input->KeyPressed(GLFW_KEY_R)) {
-		Physics::RayCastHitInfo info = _physics->RayCast(_position, forward, 25.f, 0.1f);
-		_monkey->SetPosition(info.hitRayPos);
-	}
+	// if (input->KeyPressed(GLFW_KEY_R)) {
+	// 	Physics::RayCastHitInfo info = _physics->RayCast(_position, forward, 25.f, 0.1f);
+	// 	_monkey->SetPosition(info.hitRayPos);
+	// }
 
-	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-		DestroyBlock(_position, forward);
-	}
+	// if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+	// 	DestroyBlock(_position, forward);
+	// }
 
-	if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-		PutBlock(_position, forward, _selectedBlock);
-	}
+	// if (input->MouseKeyJustPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
+	// 	PutBlock(_position, forward, _selectedBlock);
+	// }
 
-	if (!_movementPropety.godMode) {
-		_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
-		PlayerHorizontalMovement(input, forward, right);
-		PlayerVerticalMovement(input);
-	} else {
+	// if (!_movementPropety.godMode) {
+	// 	_movementPropety.velocity = glm::vec3(0.f, _movementPropety.velocity.y, 0.f);
+	// 	PlayerHorizontalMovement(input, forward, right);
+	// 	PlayerVerticalMovement(input);
+	// } else {
 		_movementPropety.velocity = glm::vec3(0);
 		GodMovement(input, forward, right, up);
-	}
+	// }
 
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);

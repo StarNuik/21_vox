@@ -24,7 +24,7 @@ void Game::GameLoop() {
 	Profiler::Prepare("Input");
 	Profiler::Prepare("Update");
 	Profiler::Prepare("RenderFull");
-	Profiler::Prepare("WorldGen");
+	// Profiler::Prepare("WorldGen");
 
 	Log::Success("[Game::GameLoop]\nGame loop started.");
 	while (!_finished)
@@ -44,9 +44,9 @@ void Game::GameLoop() {
 
 		_renderer->RenderFrame();
 
-		Profiler::Start("WorldGen");
-		_world->AssessChunks(_player->GetPosition());
-		Profiler::Add("WorldGen");
+		// Profiler::Start("WorldGen");
+		// _world->AssessChunks(_player->GetPosition());
+		// Profiler::Add("WorldGen");
 
 		Profiler::Add("FrameFull");
 	}

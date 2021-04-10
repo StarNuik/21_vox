@@ -5,7 +5,7 @@
 
 #include "Types.h"
 
-#define VERTICE_SIZE 6
+#define VERTICE_SIZE (8)
 
 class Geometry {
 public:

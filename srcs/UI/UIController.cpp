@@ -25,6 +25,6 @@ void UIController::UpdateData() {
 	UpdateProfiler();
 	UpdatePlayer();
 	UpdateRendering();
-	UpdateGeneration();
+	// UpdateGeneration();
 	UpdateResources();
 }

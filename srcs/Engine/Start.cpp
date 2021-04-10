@@ -18,6 +18,7 @@
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
 #include "World/WorldCreator.h"
+#include "Animation/AnimationModel.h"
 
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
@@ -48,22 +49,30 @@ void Game::InitSystems() {
 	_input = new Input();
 	_resources = new ResourceLoader(this);
 	_ui = new UIController(this);
-	_worldCreator = new WorldCreator(this);
-	_world = new World(this);
-	_mpGen = new MapGeneration();
-	_physics = new Physics(this);
+	// _worldCreator = new WorldCreator(this);
+	// _world = new World(this);
+	// _mpGen = new MapGeneration();
+	// _physics = new Physics(this);
 	_player = new Player(this);
 	AddEntity(_player);
+
+	AddEntity(new AnimationModel(
+		this,
+		_renderer,
+		"./resources/Animations/Hip Hop Dancing",
+		_resources->GetShader("DirLight"),
+		_resources->GetMaterial(Block::GoldBlock)
+	));
 
 	_renderer->InitChildren();
 };
 
 void Game::InitWorld() {
-	_wcThread = std::thread(&WorldCreator::Start, _worldCreator);
+	// _wcThread = std::thread(&WorldCreator::Start, _worldCreator);
 };
 
 void Game::DestroyWorld() {
-	_world->DestroyWorld();
+	// _world->DestroyWorld();
 }
 
 Game::~Game() {

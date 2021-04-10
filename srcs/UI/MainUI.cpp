@@ -9,9 +9,9 @@ void UIController::MainUI() {
 		if (ImGui::CollapsingHeader("Rendering")) {
 			RenderingUI();
 		}
-		if (ImGui::CollapsingHeader("Generation")) {
-			GenerationUI();
-		}
+		// if (ImGui::CollapsingHeader("Generation")) {
+		// 	GenerationUI();
+		// }
 		if (ImGui::CollapsingHeader("Resources")) {
 			ResourcesUI();
 		}
