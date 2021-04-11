@@ -113,6 +113,10 @@ void AnimationModel::LogSceneInfo(const aiScene* scene, std::string path) {
 	LogSceneTree(scene, scene->mRootNode, 0);
 }
 
+void AnimationModel::MuteBoneModel(std::string key) {
+	_skeletonRoot->Mute(key);
+}
+
 void AnimationModel::LogSceneTree(const aiScene* scene, aiNode* node, uint offset) {
 	std::string spaces = "";
 	for (int i = 0; i < offset; i++) {

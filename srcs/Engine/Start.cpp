@@ -60,6 +60,9 @@ void Game::InitSystems() {
 
 	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.1f));
 	animka->AddOverlayMatrix("RootNode", overlay);
+	animka->MuteBoneModel("RootNode");
+	animka->MuteBoneModel("Beta_Joints");
+	animka->MuteBoneModel("Beta_Surface");
 
 	AddEntity(animka);
 

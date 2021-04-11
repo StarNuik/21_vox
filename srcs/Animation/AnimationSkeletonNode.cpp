@@ -32,6 +32,53 @@ AnimationSkeletonNode::AnimationSkeletonNode(Game* game, aiNode* node, Animation
 	}
 
 	_overlayTransform = glm::identity<glm::mat4>();
+	_muted = false;
+	// _modelOverride = glm::mat4(1.f);
+}
+
+void AnimationSkeletonNode::Mute(std::string key) {
+	if (_animKey == key) {
+		_muted = true;
+		return;
+	}
+	for (AnimationSkeletonNode* child : _children) {
+		child->Mute(key);
+	}
+}
+
+glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
+	if (_children.size() == 0) return glm::mat4(_worldTransform);
+
+	glm::vec3 pos0;
+	{
+		glm::vec3 v3;
+		glm::vec4 v4;
+		glm::quat q;
+		glm::decompose(_worldTransform, v3, q, pos0, v3, v4);
+	}
+	glm::vec3 pos1;
+	{
+		// glm::vec3 sum(0.f);
+		// for (AnimationSkeletonNode* child : _children) {
+			glm::vec3 v3;
+			glm::vec4 v4;
+			glm::quat q;
+			glm::vec3 pos;
+			// glm::decompose(child->_worldTransform, v3, q, pos, v3, v4);
+			glm::decompose(_children[0]->_worldTransform, v3, q, pos1, v3, v4);
+			// sum += pos;
+		// }
+		// pos1 = sum / glm::vec3(_children.size());
+	}
+	glm::vec3 position = glm::mix(pos0, pos1, 0.5f);
+	glm::quat rotation = glm::quatLookAt(glm::normalize(pos1 - pos0), glm::vec3(0.f, 1.f, 0.f));
+	glm::vec3 scale = glm::vec3(LIMB_WIDTH, LIMB_WIDTH, glm::distance(pos0, pos1));
+
+	glm::mat4 result(1.f);
+	result = glm::translate(result, position);
+	result = result * glm::mat4_cast(rotation);
+	result = glm::scale(result, scale);
+	return result;
 }
 
 void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
@@ -40,14 +87,18 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 		_worldTransform = _parent->_worldTransform * _worldTransform;
 	}
 
-	_model->SetModelMatrix(_worldTransform);
-	//! 
-	_model->SetScale(glm::vec3(1.f));
-	//! 
-
 	for (AnimationSkeletonNode* child : _children) {
 		child->ApplyAnimation(clip, time);
 	}
+
+	if (_muted) {
+		_model->SetModelMatrix(glm::mat4(0.f));
+	} else {
+		_model->SetModelMatrix(CalculateModelOverride());
+	}
+	//! 
+	// _model->SetScale(glm::vec3(1.f));
+	//! 
 }
 
 void AnimationSkeletonNode::ApplyOverlay(std::string key, glm::mat4 matrix) {
