@@ -10,22 +10,30 @@
 #include <assimp/scene.h>
 #include "Animation/AnimationSkeletonNode.h"
 
-#define ANIM_SHADER (std::string("DirLight"))
-#define ANIM_MATERIAL (Block::GoldBlock)
-#define ANIM_GEOMETRY (std::string("BoxC"))
+#define ANIM_SHADER (std::string("Shadows"))
+#define ANIM_MATERIAL (Block::Grass)
+#define ANIM_GEOMETRY (std::string("BoxOffset"))
+// #define ANIM_GEOMETRY (std::string("BoxC"))
+
+// #define MAX_BONE_COUNT (256)
 
 class AnimationModel : public Entity
 {
 public:
 	AnimationModel(Game* game, std::string path);
+	void AddOverlayMatrix(std::string key, glm::mat4 matrix);
 	void Update(float delta);
 private:
 	void LogSceneTree(const aiScene* scene, aiNode* node, uint offset);
 	void LogSceneInfo(const aiScene* scene, std::string path);
+	// void PrepareBoneBuffer();
+
+	// uint _ubo;
 
 	Game* _game;
 	AnimationSkeletonNode* _skeletonRoot;
 	AnimationClip* _clip;
 
-	float _startTime;
+	bool _isPaused;
+	float _animationTime;
 };

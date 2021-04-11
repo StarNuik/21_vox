@@ -9,7 +9,7 @@
 #include "World/Block.h"
 
 #define SPEED 10.f
-#define FLY_SPEED 25.f
+#define FLY_SPEED 5.f
 #define CROUCHING_SPEED 2.f
 #define MOUSE_SENSITIVITY 7.5f
 

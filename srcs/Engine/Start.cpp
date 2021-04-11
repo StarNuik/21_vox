@@ -56,7 +56,12 @@ void Game::InitSystems() {
 	_player = new Player(this);
 	AddEntity(_player);
 
-	AddEntity(new AnimationModel(this, "./resources/Animations/Hip Hop Dancing"));
+	AnimationModel* animka = new AnimationModel(this, "./resources/Animations/Hip Hop Dancing");
+
+	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.1f));
+	animka->AddOverlayMatrix("RootNode", overlay);
+
+	AddEntity(animka);
 
 	_renderer->InitChildren();
 };

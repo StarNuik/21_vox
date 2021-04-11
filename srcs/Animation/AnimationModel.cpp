@@ -1,3 +1,4 @@
+#include "base.h"
 #include "Animation/AnimationModel.h"
 #include "Animation/AnimationClip.h"
 #include "Animation/AnimationSkeletonNode.h"
@@ -7,6 +8,7 @@
 #include "Render/RenderModel.h"
 #include "Engine/Game.h"
 #include "World/ResourceLoader.h"
+#include "Input/Input.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -35,11 +37,33 @@ AnimationModel::AnimationModel(Game* game, std::string path) {
 	Log::Success("Assimp succedeed");
 	LogSceneInfo(scene, path);
 
-	_startTime = game->GetRuntime();
+	_animationTime = game->GetRuntime();
+
+	_isPaused = false;
 
 	_skeletonRoot = new AnimationSkeletonNode(game, scene->mRootNode, nullptr);
 	_clip = new AnimationClip(scene->mAnimations[0]);
 }
+
+void AnimationModel::Update(float delta) {
+	if (_game->GetInput()->KeyJustPressed(GLFW_KEY_TAB)) {
+		_isPaused = !_isPaused;
+	}
+
+	if (_isPaused) return;
+
+	_animationTime += delta;
+	if (_animationTime > _clip->GetDuration()) {
+		_animationTime = 0.f;
+	}
+
+	_skeletonRoot->ApplyAnimation(_clip, _animationTime);
+}
+
+void AnimationModel::AddOverlayMatrix(std::string key, glm::mat4 matrix) {
+	_skeletonRoot->ApplyOverlay(key, matrix);
+}
+
 
 void AnimationModel::LogSceneInfo(const aiScene* scene, std::string path) {
 	Log::Basic("Mesh info of: ", path);
@@ -101,17 +125,4 @@ void AnimationModel::LogSceneTree(const aiScene* scene, aiNode* node, uint offse
 	for (int i = 0; i < node->mNumChildren; i++) {
 		LogSceneTree(scene, node->mChildren[i], offset + 1);
 	}
-}
-
-void AnimationModel::Update(float delta) {
-	float time = _game->GetRuntime() - _startTime;
-	if (time > _clip->GetDuration()) {
-		_startTime = _game->GetRuntime();
-		time = 0.f;
-	}
-
-	// Log::Basic("Animation time: ", time);
-	// Log::Basic("Hello world 1");
-	_skeletonRoot->ApplyAnimation(_clip, time);
-	// Log::Basic("Hello world 2");
 }

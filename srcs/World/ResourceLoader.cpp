@@ -54,6 +54,7 @@ void ResourceLoader::LoadShaders() {
 	_shaders["Shadows"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/shadows.frag");
 	_shaders["Bloom"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/bloom.frag");
 	_shaders["Flower"] = new Shader("./resources/Shaders/Vertex/shadows.vert", "./resources/Shaders/Fragment/flower.frag");
+	_shaders["SkinnedMesh"] = new Shader("./resources/Shaders/Vertex/skinned.vert", "./resources/Shaders/Fragment/shadows.frag");
 
 	//* Post-Processing
 	_shaders["Post Main: Bloom & HDR Aces approximate & Gamma"] = new Shader("./resources/Shaders/Vertex/post.vert", "./resources/Shaders/Post/acesaBloom.frag");
@@ -91,6 +92,7 @@ void ResourceLoader::LoadShaders() {
 void ResourceLoader::LoadGeometries() {
 	// _geometries["Box"] = new Geometry("./resources/Models/Box.obj");
 	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
+	_geometries["BoxOffset"] = new Geometry("./resources/Models/BoxOffset.obj");
 	// _geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
 	_geometries["Sun"] = new Geometry("./resources/Models/Sun.obj");
