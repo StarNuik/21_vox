@@ -14,7 +14,9 @@ class AnimationChannel;
 
 class AnimationClip {
 public:
-	AnimationClip(aiAnimation* animation);
+	// AnimationClip(aiAnimation* animation);
+	~AnimationClip();
+	AnimationClip(std::string path);
 	glm::mat4 GetModelMatrix(std::string key, double time);
 	double GetDuration();
 private:

@@ -56,15 +56,17 @@ void Game::InitSystems() {
 	_player = new Player(this);
 	AddEntity(_player);
 
-	AnimationModel* animka = new AnimationModel(this, "./resources/Animations/Hip Hop Dancing");
+	_humangl = new AnimationModel(this, "./resources/Animations/Hip Hop Dancing");
 
 	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.1f));
-	animka->AddOverlayMatrix("RootNode", overlay);
-	animka->MuteBoneModel("RootNode");
-	animka->MuteBoneModel("Beta_Joints");
-	animka->MuteBoneModel("Beta_Surface");
+	_humangl->AddOverlayMatrix("RootNode", overlay);
+	_humangl->MuteBoneModel("RootNode");
+	_humangl->MuteBoneModel("Beta_Joints");
+	_humangl->MuteBoneModel("Beta_Surface");
 
-	AddEntity(animka);
+	_humangl->SetAnimationClip(_resources->GetAnimationClip("Dance1"));
+
+	AddEntity(_humangl);
 
 	_renderer->InitChildren();
 };
@@ -85,4 +87,5 @@ Game::~Game() {
 	delete _input;
 	delete _renderer;
 	delete _physics;
+	delete _humangl;
 };

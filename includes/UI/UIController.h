@@ -53,6 +53,8 @@ namespace UIData {
 		float jitter;
 	};
 
+	class DataAnimation {};
+
 	class DataResources {};
 }
 
@@ -73,12 +75,14 @@ private:
 	void UpdateRendering();
 	void UpdateGeneration();
 	void UpdateResources();
+	void UpdateAnimation();
 
 	void ProfilerUI();
 	void PlayerUI();
 	void RenderingUI();
 	void GenerationUI();
 	void ResourcesUI();
+	void AnimationUI();
 
 
 	Player* _player;
@@ -90,7 +94,6 @@ private:
 	UIData::DataGeneration _dataGeneration;
 	UIData::DataResources _dataResources;
 	UIData::DataProfiler _dataProfiler;
+	UIData::DataAnimation _dataAnimation;
 	bool _showProfiler;
 };
-
-

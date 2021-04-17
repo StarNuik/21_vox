@@ -14,6 +14,17 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+AnimationSkeletonNode* AnimationModel::GetRoot() { return _skeletonRoot; }
+
+void AnimationModel::SetAnimationClip(AnimationClip* clip) {
+	_clip = clip;
+	_animationTime = 0.f;
+}
+
+AnimationModel::~AnimationModel() {
+	delete _skeletonRoot;
+}
+
 AnimationModel::AnimationModel(Game* game, std::string path) {
 	_game = game;
 	path += ".dae";
@@ -34,15 +45,16 @@ AnimationModel::AnimationModel(Game* game, std::string path) {
 		return;
 	}
 
-	Log::Success("Assimp succedeed");
 	LogSceneInfo(scene, path);
 
-	_animationTime = game->GetRuntime();
+	_animationTime = 0.f;
 
 	_isPaused = false;
 
 	_skeletonRoot = new AnimationSkeletonNode(game, scene->mRootNode, nullptr);
-	_clip = new AnimationClip(scene->mAnimations[0]);
+	Log::Success("Assimp succedeed");
+
+	speed = 1.f;
 }
 
 void AnimationModel::Update(float delta) {
@@ -52,7 +64,7 @@ void AnimationModel::Update(float delta) {
 
 	if (_isPaused) return;
 
-	_animationTime += delta;
+	_animationTime += delta * speed;
 	if (_animationTime > _clip->GetDuration()) {
 		_animationTime = 0.f;
 	}

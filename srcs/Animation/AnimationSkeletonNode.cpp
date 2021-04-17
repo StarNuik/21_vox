@@ -8,6 +8,23 @@
 #include "Utilities/Log.h"
 #include <glm/gtx/matrix_decompose.hpp>
 
+AnimationSkeletonNode::~AnimationSkeletonNode() {
+	delete _model;
+	for (AnimationSkeletonNode* child : _children) {
+		delete child;
+	}
+}
+
+std::string AnimationSkeletonNode::GetKey() { return _animKey; }
+std::vector<AnimationSkeletonNode*> AnimationSkeletonNode::GetChildren() { return std::vector<AnimationSkeletonNode*>(_children); }
+
+glm::vec3 AnimationSkeletonNode::GetScale() { return glm::vec3(_overlayTransform[0][0], _overlayTransform[1][1], _overlayTransform[2][2]); }
+void AnimationSkeletonNode::SetScale(glm::vec3 scale) {
+	_overlayTransform[0][0] = scale.x;
+	_overlayTransform[1][1] = scale.y;
+	_overlayTransform[2][2] = scale.z;
+}
+
 AnimationSkeletonNode::AnimationSkeletonNode(Game* game, aiNode* node, AnimationSkeletonNode* parent) {
 	_parent = parent;
 	_animKey = std::string(node->mName.data);
@@ -33,6 +50,8 @@ AnimationSkeletonNode::AnimationSkeletonNode(Game* game, aiNode* node, Animation
 
 	_overlayTransform = glm::identity<glm::mat4>();
 	_muted = false;
+
+	// _modelOverride = CalculateModelOverride();
 	// _modelOverride = glm::mat4(1.f);
 }
 
@@ -95,6 +114,7 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 		_model->SetModelMatrix(glm::mat4(0.f));
 	} else {
 		_model->SetModelMatrix(CalculateModelOverride());
+		// _model->SetModelMatrix(_worldTransform * _modelOverride);
 	}
 	//! 
 	// _model->SetScale(glm::vec3(1.f));
@@ -103,7 +123,7 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 
 void AnimationSkeletonNode::ApplyOverlay(std::string key, glm::mat4 matrix) {
 	if (_animKey == key) {
-		Log::Important("Overlay applied");
+		// Log::Important("Overlay applied");
 		_overlayTransform = matrix;
 		return;
 	}

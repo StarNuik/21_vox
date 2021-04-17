@@ -58,6 +58,7 @@ float Game::GetMoonAngle() {
 	return currentTime / SECONDS_IN_A_MOON_DAY * 360.f;
 }
 
+AnimationModel* Game::GetHuman() { return _humangl; }
 GLRenderer* Game::GetRenderer() {return _renderer;};
 Input* Game::GetInput() {return _input;};
 ResourceLoader* Game::GetResources() {return _resources;};

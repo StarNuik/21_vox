@@ -1,9 +1,47 @@
 #include "Animation/AnimationClip.h"
 #include <glm/glm.hpp>
 #include "Utilities/Log.h"
-// #include "assim"
 
-AnimationClip::AnimationClip(aiAnimation* animation) {
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
+// AnimationClip::AnimationClip(aiAnimation* animation) {
+// 	for (int i = 0; i < animation->mNumChannels; i++) {
+// 		aiNodeAnim* animNode = animation->mChannels[i];
+// 		std::string key(animNode->mNodeName.data);
+// 		_channels[key] = new AnimationChannel(animNode);
+// 	}
+// 	_duration = animation->mDuration;
+// }
+
+AnimationClip::~AnimationClip() {
+	for (auto pair : _channels) {
+		delete pair.second;
+	}
+}
+
+AnimationClip::AnimationClip(std::string path) {
+	path += ".dae";
+
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(
+		path,
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices
+	);
+
+	if (!scene) {
+		Log::Error("Assimp failed to load the scene: ", path);
+		return;
+	}
+	if (scene->mNumAnimations <= 0) {
+		Log::Error("File doesn't have any animations: ", path);
+		return;
+	}
+
+	aiAnimation* animation = scene->mAnimations[0];
+
 	for (int i = 0; i < animation->mNumChannels; i++) {
 		aiNodeAnim* animNode = animation->mChannels[i];
 		std::string key(animNode->mNodeName.data);
@@ -39,7 +77,14 @@ AnimationChannel::AnimationChannel(aiNodeAnim* animNode) {
 	for (int i = 0; i < animNode->mNumScalingKeys; i++) {
 		aiQuatKey rotationKey = animNode->mRotationKeys[i];
 		aiQuaternion quat = rotationKey.mValue;
-		_rotations[rotationKey.mTime] = glm::quat(quat.w, quat.x, quat.y, quat.z);
+		glm::quat q = glm::quat(quat.w, quat.x, quat.y, quat.z);
+		// q = glm::normalize(q);
+		// if (glm::length(q) == 0) {
+		// 	q = glm::identity<glm::quat>();
+		// }
+		_rotations[rotationKey.mTime] = q;
+		// _rotations[rotationKey.mTime]
+
 	}
 }
 
@@ -49,26 +94,26 @@ glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
 	AnimTimeStamp scaleTime = FindKeys(time, _scales);
 	AnimTimeStamp rotationTime = FindKeys(time, _rotations);
 
-	// glm::vec3 position = glm::mix(
-	// 	_positions[std::get<0>(positionTime)],
-	// 	_positions[std::get<1>(positionTime)],
-	// 	(float)((time - std::get<0>(positionTime)) / std::get<1>(positionTime))
-	// );
+	glm::vec3 position = glm::mix(
+		_positions[std::get<0>(positionTime)],
+		_positions[std::get<1>(positionTime)],
+		(float)((time - std::get<0>(positionTime)) / (std::get<1>(positionTime)  - std::get<0>(positionTime)))
+	);
 
-	// glm::vec3 scale = glm::mix(
-	// 	_scales[std::get<0>(scaleTime)],
-	// 	_scales[std::get<1>(scaleTime)],
-	// 	(float)((time - std::get<0>(scaleTime)) / std::get<1>(scaleTime))
-	// );
+	glm::vec3 scale = glm::mix(
+		_scales[std::get<0>(scaleTime)],
+		_scales[std::get<1>(scaleTime)],
+		(float)((time - std::get<0>(scaleTime)) / (std::get<1>(scaleTime)  - std::get<0>(scaleTime)))
+	);
 
-	// glm::quat rotation = glm::mix(
-	// 	_rotations[std::get<0>(rotationTime)],
-	// 	_rotations[std::get<1>(rotationTime)],
-	// 	(float)((time - std::get<0>(rotationTime)) / std::get<1>(rotationTime))
-	// );
-	glm::vec3 position = _positions[std::get<0>(positionTime)];
-	glm::vec3 scale = _scales[std::get<0>(scaleTime)];
-	glm::quat rotation = _rotations[std::get<0>(rotationTime)];
+	glm::quat rotation = glm::slerp(
+		_rotations[std::get<0>(rotationTime)],
+		_rotations[std::get<1>(rotationTime)],
+		(float)((time - std::get<0>(rotationTime)) / (std::get<1>(rotationTime)  - std::get<0>(rotationTime)))
+	);
+	// glm::vec3 position = _positions[std::get<0>(positionTime)];
+	// glm::vec3 scale = _scales[std::get<0>(scaleTime)];
+	// glm::quat rotation = _rotations[std::get<0>(rotationTime)];
 
 	glm::mat4 result = glm::identity<glm::mat4>();
 	result = glm::translate(result, position);

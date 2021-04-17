@@ -40,6 +40,7 @@ public:
 	MapGeneration* _mpGen;
 	Physics* _physics;
 	Player* GetPlayer();
+	AnimationModel* GetHuman();
 private:
 	void Update(float delta);
 
@@ -55,4 +56,5 @@ private:
 	float _lastFrame;
 	float _runtime;
 	Player* _player;
+	AnimationModel* _humangl;
 };

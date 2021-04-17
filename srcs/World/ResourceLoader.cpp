@@ -9,6 +9,7 @@
 #include "Render/Material.h"
 #include "Utilities/Log.h"
 #include "World/Block.h"
+#include "Animation/AnimationClip.h"
 
 ResourceLoader::ResourceLoader(Game* game) {
 	_game = game;
@@ -17,6 +18,7 @@ ResourceLoader::ResourceLoader(Game* game) {
 	LoadGeometries();
 	LoadCubeMaps();
 	LoadMaterials();
+	LoadAnimationClips();
 	// _skybox = new Skybox(_game, _shaders["Skybox"], _cubemaps["Skybox Day"], _cubemaps["Skybox Night"]);
 	Log::Success("[ResourceLoader::ResourceLoader]\nResources loaded.");
 };
@@ -34,6 +36,9 @@ ResourceLoader::~ResourceLoader() {
 	for (auto pair : _cubemaps) {
 		delete pair.second;
 	}
+	for (auto pair : _animationClips) {
+		delete pair.second;
+	}
 	delete _skybox;
 	VertexBuffers::Destroy();
 };
@@ -42,6 +47,7 @@ Shader* ResourceLoader::GetShader(std::string name) {return _shaders[name];};
 Texture* ResourceLoader::GetTexture(std::string name) {return _textures[name];};
 Geometry* ResourceLoader::GetGeometry(std::string name) {return _geometries[name];};
 CubeMap* ResourceLoader::GetCubeMap(std::string name) {return _cubemaps[name];};
+AnimationClip* ResourceLoader::GetAnimationClip(std::string name) { return _animationClips[name];};
 Skybox* ResourceLoader::GetSkybox() {return _skybox;};
 Material* ResourceLoader::GetMaterial(Block block) {return _materials[block];};
 
@@ -93,6 +99,7 @@ void ResourceLoader::LoadGeometries() {
 	// _geometries["Box"] = new Geometry("./resources/Models/Box.obj");
 	_geometries["BoxC"] = new Geometry("./resources/Models/Cube_Centered.obj");
 	_geometries["BoxOffset"] = new Geometry("./resources/Models/BoxOffset.obj");
+	_geometries["-BoxOffset"] = new Geometry("./resources/Models/-BoxOffset.obj");
 	// _geometries["Monkey"] = new Geometry("./resources/Models/Monkey.obj");
 	_geometries["Screen Quad"] = new Geometry("./resources/Models/ScreenQuad.obj");
 	_geometries["Sun"] = new Geometry("./resources/Models/Sun.obj");
@@ -161,4 +168,10 @@ void ResourceLoader::LoadMaterials() {
 	_materials[Block::HighGrass] = new Material("./resources/Textures/HighGrass/HighGrass", 1.f, 0.f);
 	_materials[Block::Sun] = new Material("./resources/Textures/Sun/Sun", 0.f, 1000.f);
 	_materials[Block::Moon] = new Material("./resources/Textures/Moon/Moon", 0.f, .5f);
+};
+
+void ResourceLoader::LoadAnimationClips() {
+	_animationClips["Dance1"] = new AnimationClip("./resources/Animations/Hip Hop Dancing");
+	_animationClips["Dance2"] = new AnimationClip("./resources/Animations/Hip Hop Dancing 2");
+	_animationClips["Dance3"] = new AnimationClip("./resources/Animations/Breakdance Freezes");
 };

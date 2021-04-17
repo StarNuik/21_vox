@@ -9,6 +9,7 @@
 #include "Render/RenderModel.h"
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
+#include "Animation/AnimationModel.h"
 // #include <glm/gtx/euler_angles.hpp>
 // #include <glm/gtx/quaternion.hpp>
 
@@ -275,6 +276,19 @@ void Player::Update(float delta) {
 
 	if (_rotateCamera) {
 		_camera->SetRotation(_rotation);
+	}
+
+	{
+		ResourceLoader* r = _game->GetResources();
+		if (input->KeyJustPressed(GLFW_KEY_1)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance1"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_2)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance2"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_3)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance3"));
+		}
 	}
 
 	_camera->SetPosition(_position);

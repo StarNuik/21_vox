@@ -20,6 +20,7 @@ public:
 	CubeMap* GetCubeMap(std::string);
 	Skybox* GetSkybox();
 	Material* GetMaterial(Block);
+	AnimationClip* GetAnimationClip(std::string);
 	// Block* GetBlock(BlockType);
 private:
 	Game* _game;
@@ -27,11 +28,13 @@ private:
 	void LoadGeometries();
 	void LoadCubeMaps();
 	void LoadMaterials();
+	void LoadAnimationClips();
 	std::unordered_map<std::string, Shader*> _shaders;
 	std::unordered_map<std::string, Texture*> _textures;
 	std::unordered_map<Block, Material*> _materials;
 	std::unordered_map<std::string, Geometry*> _geometries;
 	std::unordered_map<std::string, CubeMap*> _cubemaps;
+	std::unordered_map<std::string, AnimationClip*> _animationClips;
 	Skybox* _skybox;
 	VertexBuffers _vbs();
 };
