@@ -15,6 +15,7 @@ void Shard::UpdateGeometry() {
 
 	//* Delete old geometry and models
 	for (RenderModel* model : _models) {
+		delete model->GetGeometry();
 		delete model;
 	}
 	_models.clear();
