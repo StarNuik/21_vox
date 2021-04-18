@@ -29,8 +29,9 @@ Player::Player(Game* game) {
 	MovementProperty _movementPropety;
 	ResourceLoader* rs = _game->GetResources();
 	_selectedBlock = Block::Dirt;
-	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Base"), rs->GetMaterial(Block::Cobblestone), rs->GetGeometry("BoxC"));
-	_monkey->SetPosition(glm::vec3(0.f, 3.f, 0.f));
+	_monkey = new RenderModel(_game->GetRenderer(), rs->GetShader("Shadows"), rs->GetMaterial(Block::Stone), rs->GetGeometry("BoxC"));
+	_monkey->SetScale(glm::vec3(5.f));
+	_monkey->SetPosition(glm::vec3(0.f, -2.5f, 0.f));
 }
 
 Player::~Player() {
@@ -281,13 +282,40 @@ void Player::Update(float delta) {
 	{
 		ResourceLoader* r = _game->GetResources();
 		if (input->KeyJustPressed(GLFW_KEY_1)) {
-			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance1"));
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Idle"));
 		}
 		if (input->KeyJustPressed(GLFW_KEY_2)) {
-			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance2"));
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Walk"));
 		}
 		if (input->KeyJustPressed(GLFW_KEY_3)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Jump"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_4)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Jumping Jacks"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_5)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Boxing1"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_6)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Boxing2"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_7)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Gun"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_8)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance1"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_9)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance2"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_0)) {
 			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance3"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_MINUS)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance4"));
+		}
+		if (input->KeyJustPressed(GLFW_KEY_EQUAL)) {
+			_game->GetHuman()->SetAnimationClip(r->GetAnimationClip("Dance5"));
 		}
 	}
 

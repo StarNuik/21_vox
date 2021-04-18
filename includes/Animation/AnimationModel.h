@@ -11,9 +11,9 @@
 #include "Animation/AnimationSkeletonNode.h"
 
 #define ANIM_SHADER (std::string("Shadows"))
-#define ANIM_MATERIAL (Block::Grass)
+#define ANIM_MATERIAL (Block::Planks)
 #define ANIM_GEOMETRY (std::string("BoxOffset"))
-#define LIMB_WIDTH (0.5f)
+#define LIMB_WIDTH (0.05f)
 // #define ANIM_GEOMETRY (std::string("BoxC"))
 
 // #define MAX_BONE_COUNT (256)

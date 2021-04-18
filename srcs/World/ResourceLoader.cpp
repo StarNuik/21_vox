@@ -171,7 +171,18 @@ void ResourceLoader::LoadMaterials() {
 };
 
 void ResourceLoader::LoadAnimationClips() {
-	_animationClips["Dance1"] = new AnimationClip("./resources/Animations/Hip Hop Dancing");
-	_animationClips["Dance2"] = new AnimationClip("./resources/Animations/Hip Hop Dancing 2");
+	_animationClips["Gun"] = new AnimationClip("./resources/Animations/Aiming Gun");
+	_animationClips["Boxing2"] = new AnimationClip("./resources/Animations/Boxing 2");
+	_animationClips["Boxing1"] = new AnimationClip("./resources/Animations/Boxing");
 	_animationClips["Dance3"] = new AnimationClip("./resources/Animations/Breakdance Freezes");
+	_animationClips["Dance4"] = new AnimationClip("./resources/Animations/Brooklyn Uprock");
+	_animationClips["Dance5"] = new AnimationClip("./resources/Animations/Flair");
+	_animationClips["Golf"] = new AnimationClip("./resources/Animations/Golf Drive");
+	_animationClips["Dance2"] = new AnimationClip("./resources/Animations/Hip Hop Dancing 2");
+	_animationClips["Dance1"] = new AnimationClip("./resources/Animations/Hip Hop Dancing");
+	_animationClips["Idle"] = new AnimationClip("./resources/Animations/Idle");
+	_animationClips["Jump"] = new AnimationClip("./resources/Animations/Jump");
+	_animationClips["Jumping Jacks"] = new AnimationClip("./resources/Animations/Jumping Jacks");
+	_animationClips["Ninja Idle"] = new AnimationClip("./resources/Animations/Ninja Idle");
+	_animationClips["Walk"] = new AnimationClip("./resources/Animations/Walk In Circle");
 };

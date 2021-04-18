@@ -56,15 +56,15 @@ void Game::InitSystems() {
 	_player = new Player(this);
 	AddEntity(_player);
 
-	_humangl = new AnimationModel(this, "./resources/Animations/Hip Hop Dancing");
+	_humangl = new AnimationModel(this, "./resources/Animations/Ninja Idle");
 
-	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.1f));
+	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.01f));
 	_humangl->AddOverlayMatrix("RootNode", overlay);
 	_humangl->MuteBoneModel("RootNode");
 	_humangl->MuteBoneModel("Beta_Joints");
 	_humangl->MuteBoneModel("Beta_Surface");
 
-	_humangl->SetAnimationClip(_resources->GetAnimationClip("Dance1"));
+	_humangl->SetAnimationClip(_resources->GetAnimationClip("Idle"));
 
 	AddEntity(_humangl);
 
