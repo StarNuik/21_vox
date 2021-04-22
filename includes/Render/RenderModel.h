@@ -1,7 +1,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 #include <glm/gtc/quaternion.hpp>
+
+#include "Mathf/Mathf.h"
 
 #include "Types.h"
 
@@ -14,13 +17,13 @@ public:
 	Shader* Use(Camera* camera);
 	void ApplySelf(Camera*, Shader*);
 	void ApplySelf(Shader*);
-	void SetPosition(glm::vec3);
+	void SetPosition(mathf::vec3);
 	void SetRotation(glm::quat);
-	void SetScale(glm::vec3);
+	void SetScale(mathf::vec3);
 	void SetModelMatrix(glm::mat4);
-	glm::vec3 GetPosition();
+	mathf::vec3 GetPosition();
 	glm::quat GetRotation();
-	glm::vec3 GetScale();
+	mathf::vec3 GetScale();
 	// glm::mat4 GetAphineMatrix();
 	void RecalculateModelMatrix();
 	uint GetPolygonCount();
@@ -36,7 +39,7 @@ private:
 	Shader* _shader;
 	Material* _material;
 	Geometry* _geometry;
-	glm::vec3 _position, _scale;
+	mathf::vec3 _position, _scale;
 	glm::quat _rotation;
 	GLRenderer* _renderer;
 	uint _geometryId;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 
 #include "Types.h"
 
@@ -10,14 +11,14 @@ public:
 	~DirLight();
 	void ApplySelf(Shader*, int);
 	void ApplySelfLight(Shader*, int);
-	void SetDirection(glm::vec3);
-	void SetDiffuse(glm::vec3);
-	void SetAmbient(glm::vec3);
-	glm::vec3 GetDirection();
-	glm::vec3 GetDiffuse();
-	glm::vec3 GetAmbient();
+	void SetDirection(mathf::vec3);
+	void SetDiffuse(mathf::vec3);
+	void SetAmbient(mathf::vec3);
+	mathf::vec3 GetDirection();
+	mathf::vec3 GetDiffuse();
+	mathf::vec3 GetAmbient();
 private:
-	glm::vec3 _direction;
-	glm::vec3 _diffuse;
-	glm::vec3 _ambient;
+	mathf::vec3 _direction;
+	mathf::vec3 _diffuse;
+	mathf::vec3 _ambient;
 };

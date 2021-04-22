@@ -8,6 +8,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <tuple>
 
+#include "Mathf/Mathf.h"
+
 using AnimTimeStamp = std::tuple<double, double>;
 
 class AnimationChannel;
@@ -28,11 +30,11 @@ class AnimationChannel {
 public:
 	AnimationChannel(aiNodeAnim* animNode);
 	glm::mat4 GetModelMatrixAtTime(double time);
-	AnimTimeStamp FindKeys(double time, std::map<double, glm::vec3>& map);
+	AnimTimeStamp FindKeys(double time, std::map<double, mathf::vec3>& map);
 	AnimTimeStamp FindKeys(double time, std::map<double, glm::quat>& map);
 private:
 	std::string _key;
-	std::map<double, glm::vec3> _positions;
-	std::map<double, glm::vec3> _scales;
+	std::map<double, mathf::vec3> _positions;
+	std::map<double, mathf::vec3> _scales;
 	std::map<double, glm::quat> _rotations;
 };

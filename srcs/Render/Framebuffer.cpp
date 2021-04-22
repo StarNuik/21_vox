@@ -8,7 +8,7 @@
 Framebuffer::Framebuffer() {};
 Framebuffer::~Framebuffer() {};
 
-void Framebuffer::NewBloom(glm::ivec2 winSize) {
+void Framebuffer::NewBloom(mathf::ivec2 winSize) {
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -37,7 +37,7 @@ void Framebuffer::NewBloom(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };
 
-void Framebuffer::NewColor(glm::ivec2 winSize) {
+void Framebuffer::NewColor(mathf::ivec2 winSize) {
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
@@ -64,7 +64,7 @@ void Framebuffer::NewColor(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };
 
-void Framebuffer::NewShadow(glm::ivec2 winSize) {
+void Framebuffer::NewShadow(mathf::ivec2 winSize) {
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	
@@ -90,7 +90,7 @@ void Framebuffer::NewShadow(glm::ivec2 winSize) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };
 
-void Framebuffer::Resize(glm::ivec2 newSize) {
+void Framebuffer::Resize(mathf::ivec2 newSize) {
 	if (_color0)
 		_color0->Resize(newSize.x, newSize.y);
 	if (_color1)

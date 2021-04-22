@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 #include <glm/gtc/type_ptr.hpp>
 
 #include "UI/UIController.h"
 #include "Engine/Game.h"
 #include "Utilities/Profiler.h"
 #include "Player/Player.h"
-#include "World/WorldCreator.h"
 #include "Animation/AnimationModel.h"
 #include "Animation/AnimationSkeletonNode.h"
 
@@ -17,7 +17,7 @@ void UIController::UpdateAnimation() {
 void DrawSkeletonTree(AnimationSkeletonNode* node) {
 	if (ImGui::TreeNode(node->GetKey().c_str()))
 	{
-		glm::vec3 origScale = node->GetScale();
+		glm::vec3 origScale = node->GetScale().to_glm();
 
 		glm::vec3 newScale = origScale;
 		ImGui::SliderFloat3("Scale", glm::value_ptr(newScale), 0.01f, 5.0f);

@@ -5,7 +5,6 @@
 #include "Render/GLRenderer.h"
 #include "Input/Input.h"
 #include "Engine/Entity.h"
-#include "World/World.h"
 #include "Player/Player.h"
 #include "Utilities/Profiler.h"
 #include "Utilities/Log.h"

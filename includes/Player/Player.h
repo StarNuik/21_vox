@@ -3,9 +3,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "Mathf/Mathf.h"
+
 #include "Types.h"
 #include "Engine/Entity.h"
-#include "World/World.h"
 #include "World/Block.h"
 
 #define SPEED 10.f
@@ -18,8 +19,8 @@ public:
 	Player(Game* game);
 	virtual ~Player();
 	void Update(float delta);
-	glm::vec3 GetPosition();
-	glm::vec3 GetDirection();
+	mathf::vec3 GetPosition();
+	mathf::vec3 GetDirection();
 
 private:
     struct MovementProperty
@@ -33,7 +34,7 @@ private:
         bool isAir = false;
         bool isJump = false;
         bool isCrouch = false;
-        glm::vec3 velocity = glm::vec3(0);
+        mathf::vec3 velocity = mathf::vec3(0);
     };
 
 	Game* _game;
@@ -41,11 +42,8 @@ private:
 	World* _world;
 	Physics* _physics;
 	MovementProperty _movementPropety;
-	glm::vec3 _position;
+	mathf::vec3 _position;
 	glm::quat _rotation;
-	glm::vec3 _upperBody;
-	glm::vec3 _middleBody;
-	glm::vec3 _lowerBody;
 	bool _rotateCamera;
 	float _camAngleX;
 	float _camAngleY;
@@ -56,32 +54,11 @@ private:
 	RenderModel* _monkey;
 
 
-	inline void Move(const glm::vec3 vel, const float& speed)
+	inline void Move(const mathf::vec3 vel, const float& speed)
 	{
 		_position += vel * _delta * speed;
 	}
 
-	inline glm::vec3 GetLowerBody()
-	{
-		return glm::vec3(_position.x, _position.y - (_movementPropety.currObjectHeight * 0.95f), _position.z);
-	}
-
-	inline glm::vec3 GetMiddleBody()
-	{
-		return glm::vec3(_position.x, _position.y - (_movementPropety.currObjectHeight * 0.50f), _position.z);
-	}
-
-	inline glm::vec3 GetUpperBody()
-	{
-		return _position;
-	}
-
-	void PlayerHorizontalMovement(Input* input, glm::vec3& forward, glm::vec3& right);
-	void PlayerVerticalMovement(Input* input);
-	void GodMovement(Input* input, glm::vec3& forward, glm::vec3& right, glm::vec3& up);
-
-	void DestroyBlock(glm::vec3& _position, glm::vec3& forward);
-	void PutBlock(glm::vec3& _position, glm::vec3& forward, Block blockType);
-	void BlockSelection();
+	void GodMovement(Input* input, mathf::vec3& forward, mathf::vec3& right, mathf::vec3& up);
 };
 

@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 #include <assimp/Importer.hpp>
 
 using string = std::string;

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
+
+#include "Mathf/Mathf.h"
 
 #include "Types.h"
 
@@ -8,13 +11,13 @@ class Framebuffer {
 public:
 	Framebuffer();
 	~Framebuffer();
-	void NewBloom(glm::ivec2 bufferSize);
-	void NewColor(glm::ivec2 bufferSize);
-	void NewShadow(glm::ivec2 bufferSize);
+	void NewBloom(mathf::ivec2 bufferSize);
+	void NewColor(mathf::ivec2 bufferSize);
+	void NewShadow(mathf::ivec2 bufferSize);
 	void Bind();
 	void Use();
 	void Unbind();
-	void Resize(glm::ivec2 newSize);
+	void Resize(mathf::ivec2 newSize);
 	Texture* GetColorTexture();
 	Texture* GetColorTexture(int);
 	Texture* GetDepthTexture();

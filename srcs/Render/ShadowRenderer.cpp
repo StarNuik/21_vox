@@ -24,7 +24,7 @@ void ShadowRenderer::Init(Game* game) {
 	_shader = game->GetResources()->GetShader("Shadow Renderer");
 	_player = _game->GetPlayer();
 	
-	_shadowFbo->NewShadow(glm::ivec2(SHADOWMAP_SIDE, SHADOWMAP_SIDE));	
+	_shadowFbo->NewShadow(mathf::ivec2(SHADOWMAP_SIDE, SHADOWMAP_SIDE));	
 };
 
 ShadowRenderer::~ShadowRenderer() {
@@ -32,11 +32,11 @@ ShadowRenderer::~ShadowRenderer() {
 }
 
 void ShadowRenderer::PrepareData(float sunAngle) {
-	glm::quat rotation = glm::quat(glm::vec3(glm::radians(sunAngle), 0.f, 0.f));
-	glm::vec3 sunDir = glm::vec3(0.f, 0.f, 1.f) * rotation;
+	glm::quat rotation = glm::quat(mathf::vec3(glm::radians(sunAngle), 0.f, 0.f).to_glm());
+	mathf::vec3 sunDir = mathf::vec3(0.f, 0.f, 1.f).to_glm() * rotation;
 
-	glm::vec3 playerPos = _player->GetPosition();
-	_view = glm::lookAt(playerPos + sunDir, playerPos, glm::vec3(0.f, 1.f, 0.f));
+	mathf::vec3 playerPos = _player->GetPosition();
+	_view = glm::lookAt(playerPos.to_glm() + sunDir.to_glm(), playerPos.to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm());
 	_projection = glm::ortho(-32.f, 32.f, -32.f, 32.f, -32.f, 32.f);
 	_lightSpace = _projection * _view;
 }
@@ -64,7 +64,7 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 
-	glm::ivec2 winSize = _game->GetRenderer()->GetWindowSize();
+	mathf::ivec2 winSize = _game->GetRenderer()->GetWindowSize();
 	glViewport(0, 0, winSize.x, winSize.y);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 };

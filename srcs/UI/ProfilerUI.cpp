@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 #include <mutex>
 
 #include "UI/UIController.h"
 #include "Engine/Game.h"
 #include "Utilities/Profiler.h"
 #include "Player/Player.h"
-#include "World/WorldCreator.h"
 
 void PlotLines(std::deque<float>& storage, const char* label);
 
@@ -55,8 +55,8 @@ void UIController::ProfilerUI() {
 	ImGuiWindowFlags_NoFocusOnAppearing |
 	ImGuiWindowFlags_NoNav;
 	ImGui::Begin("Profiler", nullptr, windowFlags);
-	glm::vec3 pos = _player->GetPosition();
-	glm::vec3 dir = _player->GetDirection();
+	mathf::vec3 pos = _player->GetPosition();
+	mathf::vec3 dir = _player->GetDirection();
 	ImGui::Text("Pos: [x: %6.1f, y: %6.1f, z: %6.1f]", pos.x, pos.y, pos.z);
 	ImGui::Text("Dir: [x: %6.1f, y: %6.1f, z: %6.1f]", dir.x, dir.y, dir.z);
 	ImGui::Separator();

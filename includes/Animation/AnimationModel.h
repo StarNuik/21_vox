@@ -10,6 +10,8 @@
 #include <assimp/scene.h>
 #include "Animation/AnimationSkeletonNode.h"
 
+#include "Mathf/Mathf.h"
+
 #define ANIM_SHADER (std::string("Shadows"))
 #define ANIM_MATERIAL (Block::Planks)
 #define ANIM_GEOMETRY (std::string("BoxOffset"))

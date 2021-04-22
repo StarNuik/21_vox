@@ -3,6 +3,7 @@
 #include <string>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
 
 class Utilities {
 public:

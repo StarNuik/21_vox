@@ -18,8 +18,8 @@ AnimationSkeletonNode::~AnimationSkeletonNode() {
 std::string AnimationSkeletonNode::GetKey() { return _animKey; }
 std::vector<AnimationSkeletonNode*> AnimationSkeletonNode::GetChildren() { return std::vector<AnimationSkeletonNode*>(_children); }
 
-glm::vec3 AnimationSkeletonNode::GetScale() { return glm::vec3(_overlayTransform[0][0], _overlayTransform[1][1], _overlayTransform[2][2]); }
-void AnimationSkeletonNode::SetScale(glm::vec3 scale) {
+mathf::vec3 AnimationSkeletonNode::GetScale() { return mathf::vec3(_overlayTransform[0][0], _overlayTransform[1][1], _overlayTransform[2][2]); }
+void AnimationSkeletonNode::SetScale(mathf::vec3 scale) {
 	_overlayTransform[0][0] = scale.x;
 	_overlayTransform[1][1] = scale.y;
 	_overlayTransform[2][2] = scale.z;
@@ -68,35 +68,39 @@ void AnimationSkeletonNode::Mute(std::string key) {
 glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
 	if (_children.size() == 0) return glm::mat4(_worldTransform);
 
-	glm::vec3 pos0;
+	glm::vec3 ps0;
 	{
 		glm::vec3 v3;
 		glm::vec4 v4;
 		glm::quat q;
-		glm::decompose(_worldTransform, v3, q, pos0, v3, v4);
+		glm::decompose(_worldTransform, v3, q, ps0, v3, v4);
 	}
-	glm::vec3 pos1;
+	glm::vec3 ps1;
 	{
-		// glm::vec3 sum(0.f);
+		// mathf::vec3 sum(0.f);
 		// for (AnimationSkeletonNode* child : _children) {
 			glm::vec3 v3;
 			glm::vec4 v4;
 			glm::quat q;
 			glm::vec3 pos;
 			// glm::decompose(child->_worldTransform, v3, q, pos, v3, v4);
-			glm::decompose(_children[0]->_worldTransform, v3, q, pos1, v3, v4);
+			glm::decompose(_children[0]->_worldTransform, v3, q, ps1, v3, v4);
 			// sum += pos;
 		// }
-		// pos1 = sum / glm::vec3(_children.size());
+		// pos1 = sum / mathf::vec3(_children.size());
 	}
-	glm::vec3 position = glm::mix(pos0, pos1, 0.5f);
-	glm::quat rotation = glm::quatLookAt(glm::normalize(pos1 - pos0), glm::vec3(0.f, 1.f, 0.f));
-	glm::vec3 scale = glm::vec3(LIMB_WIDTH, LIMB_WIDTH, glm::distance(pos0, pos1));
+
+	mathf::vec3 pos0(ps0);
+	mathf::vec3 pos1(ps1);
+
+	mathf::vec3 position = mathf::vec3(glm::mix(pos0.to_glm(), pos1.to_glm(), 0.5f));
+	glm::quat rotation = glm::quatLookAt((pos1 - pos0).normalize().to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm());
+	mathf::vec3 scale = mathf::vec3(LIMB_WIDTH, LIMB_WIDTH, mathf::vec3::distance(pos0, pos1));
 
 	glm::mat4 result(1.f);
-	result = glm::translate(result, position);
+	result = glm::translate(result, position.to_glm());
 	result = result * glm::mat4_cast(rotation);
-	result = glm::scale(result, scale);
+	result = glm::scale(result, scale.to_glm());
 	return result;
 }
 
@@ -117,7 +121,7 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 		// _model->SetModelMatrix(_worldTransform * _modelOverride);
 	}
 	//! 
-	// _model->SetScale(glm::vec3(1.f));
+	// _model->SetScale(mathf::vec3(1.f));
 	//! 
 }
 

@@ -36,7 +36,7 @@ void GLRenderer::SetPostShader(std::string newShaderName) {
 }
 
 GLFWwindow* GLRenderer::GetWindow() {return _static.window;}
-glm::ivec2 GLRenderer::GetWindowSize() {return _static.windowSize;};
+mathf::ivec2 GLRenderer::GetWindowSize() {return _static.windowSize;};
 Camera* GLRenderer::GetActiveCamera() {return _static.activeCamera;};
 float GLRenderer::GetBloomCutoff() {return _static.bloomCutoff;};
 void GLRenderer::SetBloomCutoff(float val) {_static.bloomCutoff = val;};

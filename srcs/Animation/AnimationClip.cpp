@@ -65,13 +65,13 @@ AnimationChannel::AnimationChannel(aiNodeAnim* animNode) {
 	for (int i = 0; i < animNode->mNumPositionKeys; i++) {
 		aiVectorKey positionKey = animNode->mPositionKeys[i];
 		aiVector3D vec = positionKey.mValue;
-		_positions[positionKey.mTime] = glm::vec3(vec.x, vec.y, vec.z);
+		_positions[positionKey.mTime] = mathf::vec3(vec.x, vec.y, vec.z);
 	}
 
 	for (int i = 0; i < animNode->mNumScalingKeys; i++) {
 		aiVectorKey scaleKey = animNode->mScalingKeys[i];
 		aiVector3D vec = scaleKey.mValue;
-		_scales[scaleKey.mTime] = glm::vec3(vec.x, vec.y, vec.z);
+		_scales[scaleKey.mTime] = mathf::vec3(vec.x, vec.y, vec.z);
 	}
 
 	for (int i = 0; i < animNode->mNumScalingKeys; i++) {
@@ -94,15 +94,15 @@ glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
 	AnimTimeStamp scaleTime = FindKeys(time, _scales);
 	AnimTimeStamp rotationTime = FindKeys(time, _rotations);
 
-	glm::vec3 position = glm::mix(
-		_positions[std::get<0>(positionTime)],
-		_positions[std::get<1>(positionTime)],
+	mathf::vec3 position = glm::mix(
+		_positions[std::get<0>(positionTime)].to_glm(),
+		_positions[std::get<1>(positionTime)].to_glm(),
 		(float)((time - std::get<0>(positionTime)) / (std::get<1>(positionTime)  - std::get<0>(positionTime)))
 	);
 
-	glm::vec3 scale = glm::mix(
-		_scales[std::get<0>(scaleTime)],
-		_scales[std::get<1>(scaleTime)],
+	mathf::vec3 scale = glm::mix(
+		_scales[std::get<0>(scaleTime)].to_glm(),
+		_scales[std::get<1>(scaleTime)].to_glm(),
 		(float)((time - std::get<0>(scaleTime)) / (std::get<1>(scaleTime)  - std::get<0>(scaleTime)))
 	);
 
@@ -111,19 +111,19 @@ glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
 		_rotations[std::get<1>(rotationTime)],
 		(float)((time - std::get<0>(rotationTime)) / (std::get<1>(rotationTime)  - std::get<0>(rotationTime)))
 	);
-	// glm::vec3 position = _positions[std::get<0>(positionTime)];
-	// glm::vec3 scale = _scales[std::get<0>(scaleTime)];
+	// mathf::vec3 position = _positions[std::get<0>(positionTime)];
+	// mathf::vec3 scale = _scales[std::get<0>(scaleTime)];
 	// glm::quat rotation = _rotations[std::get<0>(rotationTime)];
 
 	glm::mat4 result = glm::identity<glm::mat4>();
-	result = glm::translate(result, position);
+	result = glm::translate(result, position.to_glm());
 	result = result * glm::mat4_cast(rotation);
-	result = glm::scale(result, scale);
-	// result = glm::scale(result, glm::vec3(5.f));
+	result = glm::scale(result, scale.to_glm());
+	// result = glm::scale(result, mathf::vec3(5.f));
 	return result;
 }
 
-AnimTimeStamp AnimationChannel::FindKeys(double time, std::map<double, glm::vec3>& map) {
+AnimTimeStamp AnimationChannel::FindKeys(double time, std::map<double, mathf::vec3>& map) {
 	double previous = 0.f;
 	for (auto pair : map) {
 		if (pair.first >= time) {

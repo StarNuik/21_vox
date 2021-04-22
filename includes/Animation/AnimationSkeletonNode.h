@@ -4,6 +4,8 @@
 #include <vector>
 #include <assimp/scene.h>
 
+#include "Mathf/Mathf.h"
+
 #include "Types.h"
 
 class AnimationSkeletonNode {
@@ -12,13 +14,13 @@ public:
 	~AnimationSkeletonNode();
 	std::vector<AnimationSkeletonNode*> GetChildren();
 	std::string GetKey();
-	glm::vec3 GetScale();
-	void SetScale(glm::vec3);
+	mathf::vec3 GetScale();
+	void SetScale(mathf::vec3);
 private:
 	AnimationSkeletonNode(Game* game, aiNode* node, AnimationSkeletonNode* parent);
 	void ApplyAnimation(AnimationClip* clip, float time);
 	void ApplyOverlay(std::string key, glm::mat4 matrix);
-	void OverrideModelScale(std::string key, glm::vec3 scale);
+	void OverrideModelScale(std::string key, mathf::vec3 scale);
 	void Mute(std::string key);
 	glm::mat4 CalculateModelOverride();
 	AnimationSkeletonNode* _parent;

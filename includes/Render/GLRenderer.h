@@ -4,6 +4,10 @@
 #include <vector>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "Mathf/Mathf.h"
+
+#include "Mathf/Mathf.h"
+
 
 #include "Types.h"
 
@@ -21,7 +25,7 @@ public:
 	void SetCursor(bool enabled);
 	void SetActiveCamera(Camera*);
 	Camera* GetActiveCamera();
-	glm::ivec2 GetWindowSize();
+	mathf::ivec2 GetWindowSize();
 	void SetPostShader(std::string);
 	float GetBloomCutoff();
 	void SetBloomCutoff(float);
@@ -40,7 +44,7 @@ private:
 		bool glfwOn;
 		bool imguiOn;
 		bool ready;
-		glm::ivec2 windowSize;
+		mathf::ivec2 windowSize;
 		bool cursorEnabled;
 		float bloomCutoff;
 
@@ -64,7 +68,7 @@ private:
 		glm::mat4 view;
 		glm::mat4 projection;
 		glm::mat4 vp;
-		glm::vec3 cameraPos;
+		mathf::vec3 cameraPos;
 	};
 	StaticData _static;
 	FrameData _frame;
@@ -72,8 +76,8 @@ private:
 
 class GLRenderer::RenderEngineConfig {
 public:
-	glm::ivec2 windowSize;
-	glm::ivec2 windowPos;
+	mathf::ivec2 windowSize;
+	mathf::ivec2 windowPos;
 	std::string windowName;
 	bool windowResizeable;
 	bool cursorEnabled;

@@ -8,22 +8,18 @@
 
 #include "Render/GLRenderer.h"
 #include "Engine/Game.h"
-#include "Engine/Physics.h"
 #include "Input/Input.h"
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
-#include "World/World.h"
-#include "Generation/MapGeneration.h"
 #include "Player/Player.h"
 #include "Utilities/Log.h"
 #include "Utilities/Profiler.h"
-#include "World/WorldCreator.h"
 #include "Animation/AnimationModel.h"
 
 GLRenderer::RenderEngineConfig glConfig() {
 	GLRenderer::RenderEngineConfig config;
-	config.windowSize = glm::ivec2(3840, 2160);
-	config.windowPos = glm::ivec2(0, 0);
+	config.windowSize = mathf::ivec2(3840, 2160);
+	config.windowPos = mathf::ivec2(0, 0);
 	config.windowName = std::string("V O X");
 	config.windowResizeable = false;
 	config.cursorEnabled = false;
@@ -58,7 +54,7 @@ void Game::InitSystems() {
 
 	_humangl = new AnimationModel(this, "./resources/Animations/Ninja Idle");
 
-	glm::mat4 overlay = glm::scale(glm::mat4(1.f), glm::vec3(0.01f));
+	glm::mat4 overlay = glm::scale(glm::mat4(1.f), mathf::vec3(0.01f).to_glm());
 	_humangl->AddOverlayMatrix("RootNode", overlay);
 	_humangl->MuteBoneModel("RootNode");
 	_humangl->MuteBoneModel("Beta_Joints");
@@ -80,12 +76,12 @@ void Game::DestroyWorld() {
 }
 
 Game::~Game() {
-	delete _mpGen;
-	delete _world;
+	// delete _mpGen;
+	// delete _world;
 	delete _ui;
 	delete _resources;
 	delete _input;
 	delete _renderer;
-	delete _physics;
+	// delete _physics;
 	delete _humangl;
 };
