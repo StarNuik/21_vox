@@ -31,10 +31,10 @@ public:
 	AnimationChannel(aiNodeAnim* animNode);
 	glm::mat4 GetModelMatrixAtTime(double time);
 	AnimTimeStamp FindKeys(double time, std::map<double, mathf::vec3>& map);
-	AnimTimeStamp FindKeys(double time, std::map<double, glm::quat>& map);
+	AnimTimeStamp FindKeys(double time, std::map<double, mathf::quat>& map);
 private:
 	std::string _key;
 	std::map<double, mathf::vec3> _positions;
 	std::map<double, mathf::vec3> _scales;
-	std::map<double, glm::quat> _rotations;
+	std::map<double, mathf::quat> _rotations;
 };

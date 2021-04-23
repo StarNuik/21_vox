@@ -20,7 +20,8 @@ Player::Player(Game* game) {
 	//! Looks like a fucking costil
 	_game->GetUI()->SetPlayer(this);
 	_position = mathf::vec3(0.f, 0.f, 3.f);
-	_rotation = glm::identity<glm::quat>();
+	// _rotation = glm::identity<mathf::quat>();
+	_rotation = mathf::quat::identity();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
 	MovementProperty _movementPropety;
@@ -85,12 +86,12 @@ void Player::Update(float delta) {
 		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 
-	_rotation = glm::quat((-mathf::vec3(mathf::radians(_camAngleY), mathf::radians(_camAngleX), 0.f)).to_glm());
-	forward = mathf::vec3(glm::mat4_cast(_rotation) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());
-	up = mathf::vec3(glm::mat4_cast(_rotation) * mathf::vec4(0.f, 1.f, 0.f, 0.f).to_glm());
-	right = mathf::vec3(glm::mat4_cast(_rotation) * mathf::vec4(1.f, 0.f, 0.f, 0.f).to_glm());
+	_rotation = mathf::quat((-mathf::vec3(mathf::radians(_camAngleY), mathf::radians(_camAngleX), 0.f)));
+	forward = mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());
+	up = mathf::vec3((glm::mat4_cast(_rotation.to_glm())) * mathf::vec4(0.f, 1.f, 0.f, 0.f).to_glm());
+	right = mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(1.f, 0.f, 0.f, 0.f).to_glm());
 
-	_movementPropety.velocity = mathf::vec3(0).to_glm();
+	_movementPropety.velocity = mathf::vec3(0);
 	GodMovement(input, forward, right, up);
 
 	if (_rotateCamera) {
@@ -137,8 +138,8 @@ void Player::Update(float delta) {
 		}
 	}
 
-	_camera->SetPosition(_position.to_glm());
+	_camera->SetPosition(_position);
 }
 
 mathf::vec3 Player::GetPosition() {return _position;};
-mathf::vec3 Player::GetDirection() {return mathf::vec3(glm::mat4_cast(_rotation) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());}
+mathf::vec3 Player::GetDirection() {return mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());}

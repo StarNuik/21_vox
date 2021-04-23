@@ -1,8 +1,16 @@
 #pragma once
+#include "Quaternion.h"
 #include "Vector.h"
+
 
 namespace mathf
 {
+	inline
+	vec3 operator*(vec3 v, quat q)
+	{
+		return quat::inverse(q) * v;
+	}
+
 	inline
 	float radians(float degrees) noexcept
 	{

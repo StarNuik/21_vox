@@ -16,9 +16,9 @@ public:
 	void SetFloat2(std::string varName, float x, float y);
 	void SetFloat3(std::string varName, float x, float y, float z);
 	void SetFloat4(std::string varName, float x, float y, float z, float w);
-	void SetFloat2(std::string varName, glm::vec2 vector);
+	void SetFloat2(std::string varName, mathf::vec2 vector);
 	void SetFloat3(std::string varName, mathf::vec3 vector);
-	void SetFloat4(std::string varName, glm::vec4 vector);
+	void SetFloat4(std::string varName, mathf::vec4 vector);
 	void SetMatrix4(std::string varName, glm::mat4 matrix);
 	uint GetId();
 private:

@@ -43,7 +43,7 @@ private:
 	Physics* _physics;
 	MovementProperty _movementPropety;
 	mathf::vec3 _position;
-	glm::quat _rotation;
+	mathf::quat _rotation;
 	bool _rotateCamera;
 	float _camAngleX;
 	float _camAngleY;

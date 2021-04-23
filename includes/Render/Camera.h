@@ -16,11 +16,11 @@ public:
 	glm::mat4 GetProjectionMatrix();
 	void SetProjectionMatrix(glm::mat4); //? This is a costil, isn't it
 	void SetPosition(mathf::vec3);
-	void SetRotation(glm::quat);
+	void SetRotation(mathf::quat);
 	mathf::vec3 GetPosition();
-	glm::quat GetRotation();
+	mathf::quat GetRotation();
 private:
 	mathf::vec3 _position;
-	glm::quat _rotation;
+	mathf::quat _rotation;
 	glm::mat4 _projectionMatrix;
 };

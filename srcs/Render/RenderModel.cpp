@@ -18,7 +18,7 @@ RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Material* materia
 	_geometryId = _geometry->GetId();
 	_position = mathf::vec3(0.f);
 	_scale = mathf::vec3(1.f);
-	_rotation = glm::identity<glm::quat>();
+	_rotation = mathf::quat::identity();
 	_model = glm::mat4(1.f);
 	if (_renderer)
 		_renderer->AddModel(this);
@@ -63,7 +63,7 @@ void RenderModel::RecalculateModelMatrix() {
 	_model = glm::identity<glm::mat4>();
 
 	_model = glm::translate(_model, _position.to_glm());
-	_model = _model * glm::mat4_cast(_rotation);
+	_model = _model * glm::mat4_cast(_rotation.to_glm());
 	_model = glm::scale(_model, _scale.to_glm());
 };
 
@@ -81,7 +81,10 @@ void RenderModel::SetModelMatrix(glm::mat4 matrix) {
 	glm::vec4 perspective;
 	glm::vec3 pos;
 	glm::vec3 scl;
-	glm::decompose(_model, scl, _rotation, pos, skew, perspective);
+	glm::quat qw;
+	glm::decompose(_model, scl, qw, pos, skew, perspective);
+	mathf::quat q(qw);
+	_rotation = q;
 	_position.x = pos.x;
 	_position.y = pos.y;
 	_position.z = pos.z;
@@ -91,10 +94,10 @@ void RenderModel::SetModelMatrix(glm::mat4 matrix) {
 }
 
 void RenderModel::SetPosition(mathf::vec3 position) {_position = position; RecalculateModelMatrix();};
-void RenderModel::SetRotation(glm::quat rotation) {_rotation = rotation; RecalculateModelMatrix();};
+void RenderModel::SetRotation(mathf::quat rotation) {_rotation = rotation; RecalculateModelMatrix();};
 void RenderModel::SetScale(mathf::vec3 scale) {_scale = scale; RecalculateModelMatrix();};
 mathf::vec3 RenderModel::GetPosition() {return _position;};
-glm::quat RenderModel::GetRotation() {return _rotation;};
+mathf::quat RenderModel::GetRotation() {return _rotation;};
 mathf::vec3 RenderModel::GetScale() {return _scale;};
 uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};

@@ -18,11 +18,11 @@ public:
 	void ApplySelf(Camera*, Shader*);
 	void ApplySelf(Shader*);
 	void SetPosition(mathf::vec3);
-	void SetRotation(glm::quat);
+	void SetRotation(mathf::quat);
 	void SetScale(mathf::vec3);
 	void SetModelMatrix(glm::mat4);
 	mathf::vec3 GetPosition();
-	glm::quat GetRotation();
+	mathf::quat GetRotation();
 	mathf::vec3 GetScale();
 	// glm::mat4 GetAphineMatrix();
 	void RecalculateModelMatrix();
@@ -40,7 +40,7 @@ private:
 	Material* _material;
 	Geometry* _geometry;
 	mathf::vec3 _position, _scale;
-	glm::quat _rotation;
+	mathf::quat _rotation;
 	GLRenderer* _renderer;
 	uint _geometryId;
 	glm::mat4 _model;

@@ -267,7 +267,7 @@ namespace mathf
         float y;
         float z;
 
-        vec3(glm::vec3 v)
+        explicit vec3(const glm::vec3& v)
         {
             x = v.x;
             y = v.y;

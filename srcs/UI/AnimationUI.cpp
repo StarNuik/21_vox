@@ -23,7 +23,7 @@ void DrawSkeletonTree(AnimationSkeletonNode* node) {
 		ImGui::SliderFloat3("Scale", glm::value_ptr(newScale), 0.01f, 5.0f);
 
 		if (newScale != origScale) {
-			node->SetScale(newScale);
+			node->SetScale(mathf::vec3(newScale));
 		}
 
 		for (AnimationSkeletonNode* child : node->GetChildren()) {
