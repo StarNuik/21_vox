@@ -2,8 +2,6 @@
 
 #include "Vector.h"
 #include <math.h>
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
 #include <iostream>
 #include <limits>
 
@@ -63,14 +61,6 @@ namespace mathf
 			this->x = sx * cy * cz - cx * sy * sz;
 			this->y = cx * sy * cz + sx * cy * sz;
 			this->z = cx * cy * sz - sx * sy * cz;
-		}
-
-		quat(const glm::quat& qw)
-		{
-			x = qw.x;
-			y = qw.y;
-			z = qw.z;
-			w = qw.w;
 		}
 
 		void print()
@@ -312,12 +302,6 @@ namespace mathf
 			res.w = q0.w - value * (q0.w - q1.w);
 
 			return res;
-		}
-
-		inline
-		glm::quat to_glm()
-		{
-			return glm::quat(this->w, this->x, this->y, this->z);
 		}
 	};
 }

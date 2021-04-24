@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include <glm/glm.hpp>
+
 #include "Mathf/Mathf.h"
 
 #include "Types.h"

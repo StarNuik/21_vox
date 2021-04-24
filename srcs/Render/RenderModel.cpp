@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-#include <glm/gtx/matrix_decompose.hpp>
 
 #include "Render/RenderModel.h"
 #include "Render/Shader.h"
@@ -31,27 +30,14 @@ RenderModel::~RenderModel() {
 };
 
 void RenderModel::ApplySelf(Camera* camera, Shader* shader) {
-	// glUseProgram(_shaderId);
 	shader->Use();
 	_geometry->Use();
-	// glBindVertexArray(_geometryId);
-	// _material->Use(shader);
 	shader->SetMatrix4("model", _model);
-	// shader->SetMatrix4("view", camera->GetViewMatrix());
-	// shader->SetMatrix4("projection", camera->GetProjectionMatrix());
-	// shader->SetFloat3("cameraPos", camera->GetPosition());
 };
 
 void RenderModel::ApplySelf(Shader* shader) {
-	// glUseProgram(_shaderId);
-	// shader->Use();
 	_geometry->Use();
-	// glBindVertexArray(_geometryId);
-	// _material->Use(shader);
 	shader->SetMatrix4("model", _model);
-	// shader->SetMatrix4("view", camera->GetViewMatrix());
-	// shader->SetMatrix4("projection", camera->GetProjectionMatrix());
-	// shader->SetFloat3("cameraPos", camera->GetPosition());
 };
 
 Shader* RenderModel::Use(Camera* camera) {

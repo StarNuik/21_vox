@@ -2,7 +2,6 @@
 // #include "Utilities/Utilities.h"
 // #include "Engine/Log.h"
 #include <string>
-#include <glm/gtc/type_ptr.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

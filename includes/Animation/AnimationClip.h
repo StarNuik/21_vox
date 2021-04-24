@@ -2,7 +2,7 @@
 
 #include "Types.h"
 #include <assimp/scene.h>
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 #include <vector>
 #include <map>
 #include <glm/gtc/quaternion.hpp>

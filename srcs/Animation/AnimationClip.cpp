@@ -1,5 +1,5 @@
 #include "Animation/AnimationClip.h"
-#include <glm/glm.hpp>
+
 #include "Utilities/Log.h"
 
 #include "assimp/Importer.hpp"

@@ -15,17 +15,6 @@ namespace mathf
 			::memset(data, 0x0, sizeof(data));
 		}
 
-		mat4x4(const glm::mat4& mat)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					data[i][j] = mat[i][j];
-				}
-			}
-		}
-
 		mat4x4& operator=(const mat4x4& mat)
 		{
 			::memcpy(this->data, &mat.data, sizeof(data));
@@ -367,22 +356,6 @@ namespace mathf
 			position.x = mat[3][0];
 			position.y = mat[3][1];
 			position.z = mat[3][2];
-		}
-
-
-		glm::mat4x4 to_glm()
-		{
-			glm::mat4 mat;
-
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					mat[i][j] = data[i][j];
-				}
-			}
-
-			return mat;
 		}
 	};
 

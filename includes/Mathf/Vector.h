@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <iostream>
-#include <glm/glm.hpp>
 
 namespace mathf
 {
@@ -263,18 +262,6 @@ namespace mathf
 
         inline
         static float distance(const vec4& from, const vec4& to);
-
-        glm::vec4 to_glm()
-        {
-            glm::vec4 res;
-
-            res.x = this->x;
-            res.y = this->y;
-            res.z = this->z;
-            res.w = this->w;
-
-            return res;
-        }
     };
 
     inline
@@ -291,13 +278,6 @@ namespace mathf
         float x;
         float y;
         float z;
-
-        explicit vec3(const glm::vec3& v)
-        {
-            x = v.x;
-            y = v.y;
-            z = v.z;
-        }
 
         vec3()
         {
@@ -325,7 +305,7 @@ namespace mathf
             this->z = vec.z;
         }
 
-        vec3 (const mathf::vec4& vec)
+        vec3(const mathf::vec4& vec)
         {
             this->x = vec.x;
             this->y = vec.y;
@@ -565,17 +545,6 @@ namespace mathf
 
         inline
         static float distance(const vec3& from, const vec3& to);
-
-        glm::vec3 to_glm()
-        {
-            glm::vec3 res;
-
-            res.x = this->x;
-            res.y = this->y;
-            res.z = this->z;
-
-            return res;
-        }
     };
 
     inline
@@ -797,17 +766,6 @@ namespace mathf
         }
 
         static float distance(const vec2& from, const vec2& to);
-
-        inline
-        glm::vec2 to_glm()
-        {
-            glm::vec2 res;
-
-            res.x = this->x;
-            res.y = this->y;
-
-            return res;
-        }
     };
 
 
@@ -1031,17 +989,6 @@ namespace mathf
         }
 
         static float distance(const ivec2& from, const ivec2& to);
-
-        inline
-        glm::ivec2 to_glm()
-        {
-            glm::ivec2 res;
-
-            res.x = this->x;
-            res.y = this->y;
-
-            return res;
-        }
     };
 
 

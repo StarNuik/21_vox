@@ -3,11 +3,8 @@
 #include <string>
 #include <vector>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include "Mathf/Mathf.h"
 
 #include "Mathf/Mathf.h"
-
 
 #include "Types.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "Mathf/Mathf.h"
 
 #include "Types.h"

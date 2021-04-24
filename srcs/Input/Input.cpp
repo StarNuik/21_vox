@@ -22,8 +22,8 @@ bool Input::KeyPressed(uint keycode) {return _pressMap[keycode];};
 bool Input::KeyJustPressed(uint keycode) {return _justPressedMap[keycode];};
 bool Input::MouseKeyPressed(uint keycode) {return _mousePressMap[keycode];};
 bool Input::MouseKeyJustPressed(uint keycode) {return _mouseJustPressMap[keycode];};
-glm::ivec2 Input::MousePos() {return _mousePos;};
-glm::ivec2 Input::MousePosDelta() {return _mousePosDelta;};
+mathf::ivec2 Input::MousePos() {return _mousePos;};
+mathf::ivec2 Input::MousePosDelta() {return _mousePosDelta;};
 
 void Input::Update(GLFWwindow* window) {
 	glfwPollEvents();
@@ -52,7 +52,7 @@ void Input::Update(GLFWwindow* window) {
 
 	double xPos, yPos;
 	glfwGetCursorPos(window, &xPos, &yPos);
-	glm::ivec2 mousePos = glm::ivec2(xPos, yPos);
+	mathf::ivec2 mousePos = mathf::ivec2(xPos, yPos);
 	_mousePosDelta = mousePos - _mousePos;
 	_mousePos = mousePos;
 }

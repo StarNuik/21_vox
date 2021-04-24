@@ -1,7 +1,6 @@
 #include <algorithm>
-#include <glm/glm.hpp>
+
 #include "Mathf/Mathf.h"
-#include <glm/gtc/type_ptr.hpp>
 
 #include "UI/UIController.h"
 #include "Engine/Game.h"

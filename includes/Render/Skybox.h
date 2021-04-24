@@ -1,9 +1,7 @@
 #pragma once
 
 #include <string>
-#include <glm/glm.hpp>
 #include "Mathf/Mathf.h"
-#include <glm/gtc/quaternion.hpp>
 
 #include "Types.h"
 

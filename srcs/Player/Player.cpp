@@ -9,8 +9,6 @@
 #include "World/ResourceLoader.h"
 #include "UI/UIController.h"
 #include "Animation/AnimationModel.h"
-// #include <glm/gtx/euler_angles.hpp>
-// #include <glm/gtx/quaternion.hpp>
 
 Player::Player(Game* game) {
 	_camAngleX = 0.f;
@@ -79,7 +77,7 @@ void Player::Update(float delta) {
 		_rotateCamera = !state;
 	}
 	if (_rotateCamera) {
-		glm::ivec2 mousePos = input->MousePosDelta();
+		mathf::ivec2 mousePos = input->MousePosDelta();
 		_camAngleX += mousePos.x * MOUSE_SENSITIVITY * delta;
 		_camAngleY += mousePos.y * MOUSE_SENSITIVITY * delta;
 		_camAngleY = mathf::clamp(_camAngleY, -89.5f, 89.5f);

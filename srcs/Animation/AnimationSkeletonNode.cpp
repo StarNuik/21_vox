@@ -6,7 +6,6 @@
 #include "Engine/Game.h"
 #include "Utilities/Utilities.h"
 #include "Utilities/Log.h"
-#include <glm/gtx/matrix_decompose.hpp>
 
 AnimationSkeletonNode::~AnimationSkeletonNode() {
 	delete _model;

@@ -1,5 +1,4 @@
 #include <string>
-#include <glm/glm.hpp>
 #include "Mathf/Mathf.h"
 #include "UI/UIController.h"
 #include "Engine/Game.h"
