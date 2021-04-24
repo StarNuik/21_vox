@@ -3,10 +3,17 @@
 #include <cmath>
 #include <iostream>
 #include <glm/glm.hpp>
-#include "Mathf/Mathf.h"
 
 namespace mathf
 {
+
+    inline
+    static float mix(const float v0, const float v1, const float value) noexcept
+    {
+        return v0 * (1.f - value) + (v1 * value);
+    }
+
+
     struct vec4
     {
     public:
@@ -234,6 +241,25 @@ namespace mathf
         vec4		normalize_safe() const
         {
             return normalize_safe(*this);
+        }
+
+        inline
+        static vec4 lerp(const vec4& a, const vec4& b, const float& value)
+        {
+            vec4 res;
+
+            res.x =  mix(a.x, b.x, value);
+            res.y =  mix(a.y, b.y, value);
+            res.z =  mix(a.z, b.z, value);
+            res.w =  mix(a.z, b.z, value);
+
+            return res;
+        }
+
+        inline
+        vec4 lerp(const vec4& b, const float& value) const
+        {
+            return lerp(*this, b, value);
         }
 
         inline
@@ -518,6 +544,24 @@ namespace mathf
         vec3		normalize_safe() const
         {
             return normalize_safe(*this);
+        }
+
+        inline
+        static vec3 lerp(const vec3& a, const vec3& b, const float& value)
+        {
+            vec3 res;
+
+            res.x =  mix(a.x, b.x, value);
+            res.y =  mix(a.y, b.y, value);
+            res.z =  mix(a.z, b.z, value);
+
+            return res;
+        }
+
+        inline
+        vec3 lerp(const vec3& b, const float& value) const
+        {
+            return lerp(*this, b, value);
         }
 
         inline

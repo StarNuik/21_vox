@@ -4,6 +4,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <limits>
 
 namespace mathf
 {
@@ -95,6 +96,18 @@ namespace mathf
 			return *this;
 		}
 
+		quat operator-() const
+		{
+			quat res = *this;
+
+			res.x = -res.x;
+			res.y = -res.y;
+			res.z = -res.z;
+			res.w = -res.w;
+
+			return res;
+		}
+
 
 		quat operator-(const quat& q)
 		{
@@ -105,7 +118,6 @@ namespace mathf
 			res.z = this->z - q.z;
 			res.w = this->w - q.w;
 
-			*this = res;
 			return res;
 		}
 
@@ -141,10 +153,15 @@ namespace mathf
 
 		quat operator*(const float& value) const
 		{
-			return (quat){this->w * value, this->x * value, this->y * value, this->z * value};
+			return (quat){this->x * value, this->y * value, this->z * value, this->w * value};
 		}
 
-		const float operator[](int i) const
+		quat operator/(const float& value) const
+		{
+			return (quat){this->x / value, this->y / value, this->z / value, this->w / value};
+		}
+
+		const float& operator[](const int i) const
 		{
 			if (i == 0)
 				return x;
@@ -156,7 +173,7 @@ namespace mathf
 				return w;
 		}
 
-		float operator[](int i)
+		float& operator[](int i)
 		{
 			if (i == 0)
 				return x;
@@ -175,23 +192,27 @@ namespace mathf
 		}
 
 		inline
-		static float	legth(quat& q)
+		static float	length(quat& q)
 		{
 			return (sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w));
+		}
+
+		inline
+		static float dot(const quat& left, const quat& right)
+		{
+			return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 		}
 
 		inline
 		static quat	normalize(quat& q)
 		{
 			quat	res;
-			float	length;
+			float	len;
 
-			length = legth(q);
-			res.x = q.x / length;
-			res.y = q.y / length;
-			res.z = q.z / length;
-			res.w = q.w / length;
-			return (res);
+			len = length(q);
+			res = q / len;
+
+			return res;
 		}
 
 		inline
@@ -263,6 +284,25 @@ namespace mathf
 			mathf::vec3 rotAxis = (mathf::vec3::cross(mathf::vec3(0.f, 0.f, 1.f), direction)).normalize();
 			
 			return create_from_axis_angle(rotAxis, rotAngle);
+		}
+
+		inline
+		static quat lerp(quat q0, quat q1, float value)
+		{
+			float l2 = dot(q0, q1);
+
+			if(l2 < 0.0f)
+			{
+				q1 = -q1;
+			}
+
+			quat res;
+			res.x = q0.x - value * (q0.x - q1.x);
+			res.y = q0.y - value * (q0.y - q1.y);
+			res.z = q0.z - value * (q0.z - q1.z);
+			res.w = q0.w - value * (q0.w - q1.w);
+
+			return res;
 		}
 
 		inline
