@@ -85,7 +85,7 @@ glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
 		glm::vec3 v3;
 		glm::vec4 v4;
 		glm::quat q;
-		glm::decompose(_worldTransform, worldScale, worldRotation, ps0, v3, v4);
+		glm::decompose(_worldTransform, worldScale, q, ps0, v3, v4);
 	}
 	glm::vec3 ps1;
 	{
