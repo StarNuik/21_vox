@@ -60,7 +60,7 @@ void ShadowRenderer::Render(std::vector<RenderModel*>& rendered) {
 			glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
 			lastMaterial = material;
 		}
-		_shader->SetMatrix4("lightMVP", _lightSpace * model->GetModelMatrix().to_glm());
+		_shader->SetMatrix4("lightMVP", _lightSpace * model->GetModelMatrix());
 		glDrawArrays(GL_TRIANGLES, 0, model->GetPolygonCount() * 3);
 	}
 
@@ -86,4 +86,4 @@ void ShadowRenderer::ApplySelf(Shader* shader) {
 	shader->SetMatrix4("lightSpace", _lightSpace);
 };
 
-glm::mat4 ShadowRenderer::GetLightSpace() {return _lightSpace;};
+mathf::mat4x4 ShadowRenderer::GetLightSpace() {return _lightSpace;};

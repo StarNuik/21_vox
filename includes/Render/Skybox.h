@@ -49,9 +49,9 @@ private:
 	Camera* _activeCamera;
 
 	//* Render data
-	glm::mat4 _mvpSky;
-	glm::mat4 _mvpMoon;
-	glm::mat4 _projection;
+	mathf::mat4x4 _mvpSky;
+	mathf::mat4x4 _mvpMoon;
+	mathf::mat4x4 _projection;
 	float _sunVal;
 	bool _easySunApply;
 	float _moonVal;
