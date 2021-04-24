@@ -12,9 +12,9 @@ class Camera {
 public:
 	Camera(GLRenderer* ren, float FOV, float nearPlane, float farPlane);
 	~Camera();
-	glm::mat4 GetViewMatrix();
-	glm::mat4 GetProjectionMatrix();
-	void SetProjectionMatrix(glm::mat4); //? This is a costil, isn't it
+	mathf::mat4x4 GetViewMatrix();
+	mathf::mat4x4 GetProjectionMatrix();
+	void SetProjectionMatrix(mathf::mat4x4); //? This is a costil, isn't it
 	void SetPosition(mathf::vec3);
 	void SetRotation(mathf::quat);
 	mathf::vec3 GetPosition();
@@ -22,5 +22,5 @@ public:
 private:
 	mathf::vec3 _position;
 	mathf::quat _rotation;
-	glm::mat4 _projectionMatrix;
+	mathf::mat4x4 _projectionMatrix;
 };
