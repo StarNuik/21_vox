@@ -93,6 +93,6 @@ void Shader::SetFloat4(std::string variableName, mathf::vec4 vec) {
 	glUniform4f(glGetUniformLocation(_id, variableName.c_str()), vec.x, vec.y, vec.z, vec.w);
 }
 
-void Shader::SetMatrix4(std::string variableName, glm::mat4 value) {
-	glUniformMatrix4fv(glGetUniformLocation(_id, variableName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+void Shader::SetMatrix4(std::string variableName, mathf::mat4x4 value) {
+	glUniformMatrix4fv(glGetUniformLocation(_id, variableName.c_str()), 1, GL_FALSE, (GLfloat *)&value);
 }

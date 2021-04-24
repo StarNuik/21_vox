@@ -87,9 +87,9 @@ void Player::Update(float delta) {
 	}
 
 	_rotation = mathf::quat((-mathf::vec3(mathf::radians(_camAngleY), mathf::radians(_camAngleX), 0.f)));
-	forward = mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());
-	up = mathf::vec3((glm::mat4_cast(_rotation.to_glm())) * mathf::vec4(0.f, 1.f, 0.f, 0.f).to_glm());
-	right = mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(1.f, 0.f, 0.f, 0.f).to_glm());
+	forward = mathf::vec3(mathf::mat4x4::cast(_rotation) * mathf::vec4(0.f, 0.f, -1.f, 0.f));
+	up = mathf::vec3(mathf::mat4x4::cast(_rotation) * mathf::vec4(0.f, 1.f, 0.f, 0.f));
+	right = mathf::vec3(mathf::mat4x4::cast(_rotation) * mathf::vec4(1.f, 0.f, 0.f, 0.f));
 
 	_movementPropety.velocity = mathf::vec3(0);
 	GodMovement(input, forward, right, up);
@@ -142,4 +142,4 @@ void Player::Update(float delta) {
 }
 
 mathf::vec3 Player::GetPosition() {return _position;};
-mathf::vec3 Player::GetDirection() {return mathf::vec3(glm::mat4_cast(_rotation.to_glm()) * mathf::vec4(0.f, 0.f, -1.f, 0.f).to_glm());}
+mathf::vec3 Player::GetDirection() {return mathf::vec3(mathf::mat4x4::cast(_rotation) * mathf::vec4(0.f, 0.f, -1.f, 0.f));}
