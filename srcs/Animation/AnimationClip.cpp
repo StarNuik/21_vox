@@ -94,21 +94,21 @@ glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
 	AnimTimeStamp scaleTime = FindKeys(time, _scales);
 	AnimTimeStamp rotationTime = FindKeys(time, _rotations);
 
-	mathf::vec3 position = mathf::vec3(glm::mix(
-		_positions[std::get<0>(positionTime)].to_glm(),
-		_positions[std::get<1>(positionTime)].to_glm(),
+	mathf::vec3 position = mathf::vec3(mathf::vec3::lerp(
+		_positions[std::get<0>(positionTime)],
+		_positions[std::get<1>(positionTime)],
 		(float)((time - std::get<0>(positionTime)) / (std::get<1>(positionTime)  - std::get<0>(positionTime)))
 	));
 
-	mathf::vec3 scale = mathf::vec3(glm::mix(
-		_scales[std::get<0>(scaleTime)].to_glm(),
-		_scales[std::get<1>(scaleTime)].to_glm(),
+	mathf::vec3 scale = mathf::vec3(mathf::vec3::lerp(
+		_scales[std::get<0>(scaleTime)],
+		_scales[std::get<1>(scaleTime)],
 		(float)((time - std::get<0>(scaleTime)) / (std::get<1>(scaleTime)  - std::get<0>(scaleTime)))
 	));
 
-	mathf::quat rotation = mathf::quat(glm::slerp(
-		_rotations[std::get<0>(rotationTime)].to_glm(),
-		_rotations[std::get<1>(rotationTime)].to_glm(),
+	mathf::quat rotation = mathf::quat(mathf::quat::lerp(
+		_rotations[std::get<0>(rotationTime)],
+		_rotations[std::get<1>(rotationTime)],
 		(float)((time - std::get<0>(rotationTime)) / (std::get<1>(rotationTime)  - std::get<0>(rotationTime))))
 	);
 	// mathf::vec3 position = _positions[std::get<0>(positionTime)];

@@ -1,7 +1,6 @@
 #pragma once
-#include "Quaternion.h"
 #include "Vector.h"
-
+#include "Quaternion.h"
 
 namespace mathf
 {
@@ -22,5 +21,6 @@ namespace mathf
 	{
 		return radians * 57.2957795130823f;
 	}
-    
+
+
 }
