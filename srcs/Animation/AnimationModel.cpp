@@ -103,22 +103,6 @@ void AnimationModel::LogSceneInfo(const aiScene* scene, std::string path) {
 		Log::Basic("\tMesh Channels: ", animation->mNumMeshChannels);
 		Log::Basic("\tMorph Mesh Channels: ", animation->mNumMorphMeshChannels);
 		Log::Basic("\tChannels: ", animation->mNumChannels);
-		// for (int j = 0; j < animation->mNumChannels; j++) {
-		// 	aiNodeAnim* animNode = animation->mChannels[j];
-		// 	Log::Basic("");
-		// 	Log::Basic("\t\tName: ", animNode->mNodeName.data);
-		// 	Log::Important("\t\tPosition keys: ", animNode->mNumPositionKeys);
-
-		// 	if (animNode->mNumPositionKeys < 1) continue;
-		// 	aiVectorKey posKey = animNode->mPositionKeys[0];
-		// 	Log::Basic("\t\t\tTime: ", posKey.mTime);
-		// 	Log::Basic("\t\t\tValue: ", glm::vec3(posKey.mValue.x, posKey.mValue.y, posKey.mValue.z));
-
-		// 	if (animNode->mNumScalingKeys < 1) continue;
-		// 	aiVectorKey scaleKey = animNode->mScalingKeys[0];
-		// 	Log::Basic("\t\t\tTime: ", scaleKey.mTime);
-		// 	Log::Basic("\t\t\tValue: ", glm::vec3(scaleKey.mValue.x, scaleKey.mValue.y, scaleKey.mValue.z));
-		// }
 	}
 
 	Log::Important("Hierarchy");

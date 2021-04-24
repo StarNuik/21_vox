@@ -7,8 +7,26 @@
 #include <iostream>
 #include <limits>
 
+
+
 namespace mathf
 {
+
+	inline
+	static float clamp(float value, float min, float max)
+	{
+		if (value < min)
+		{
+			value = min;
+		}
+		else if (value > max)
+		{
+			value = max;
+		}
+
+		return value;
+	}
+
 	struct quat
 	{
 		float x;
@@ -233,21 +251,6 @@ namespace mathf
 
 			res = normalize(res);
 			return res;
-		}
-
-		inline
-		static float clamp(float value, float min, float max)
-		{
-			if (value < min)
-			{
-				value = min;
-			}
-			else if (value > max)
-			{
-				value = max;
-			}
-
-			return value;
 		}
 
 		inline

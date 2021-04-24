@@ -31,8 +31,8 @@ GLRenderer::GLRenderer() {
 	_static.skybox = new Skybox();
 	_static.shadows = new ShadowRenderer();
 	_static.rendered = std::vector<RenderModel*>();
-	_frame.view = glm::mat4(1.f);
-	_frame.projection = glm::mat4(1.f);
+	_frame.view = mathf::mat4x4::identity();
+	_frame.projection = mathf::mat4x4::identity();
 	_frame.cameraPos = mathf::vec3(0.f);
 }
 

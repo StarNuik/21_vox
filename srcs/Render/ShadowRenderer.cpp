@@ -32,7 +32,7 @@ ShadowRenderer::~ShadowRenderer() {
 }
 
 void ShadowRenderer::PrepareData(float sunAngle) {
-	mathf::quat rotation = mathf::quat(mathf::vec3(glm::radians(sunAngle), 0.f, 0.f));
+	mathf::quat rotation = mathf::quat(mathf::vec3(mathf::radians(sunAngle), 0.f, 0.f));
 	mathf::vec3 sunDir = mathf::vec3(0.f, 0.f, 1.f) * rotation;
 
 	mathf::vec3 playerPos = _player->GetPosition();

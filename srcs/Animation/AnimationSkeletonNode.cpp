@@ -48,11 +48,9 @@ AnimationSkeletonNode::AnimationSkeletonNode(Game* game, aiNode* node, Animation
 		_children.push_back(new AnimationSkeletonNode(game, node->mChildren[i], this));
 	}
 
-	_overlayTransform = glm::identity<glm::mat4>();
+	_overlayTransform = mathf::mat4x4::identity();
 	_muted = false;
 
-	// _modelOverride = CalculateModelOverride();
-	// _modelOverride = glm::mat4(1.f);
 }
 
 void AnimationSkeletonNode::Mute(std::string key) {
@@ -66,7 +64,6 @@ void AnimationSkeletonNode::Mute(std::string key) {
 }
 
 mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
-	// if (_children.size() == 0) return glm::mat4(_worldTransform);
 	if (_children.size() == 0) return mathf::mat4x4(_worldTransform);
 
 	mathf::vec3 ps0;
@@ -78,17 +75,11 @@ mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
 	}
 	mathf::vec3 ps1;
 	{
-		// mathf::vec3 sum(0.f);
-		// for (AnimationSkeletonNode* child : _children) {
 			mathf::vec3 v3;
 			mathf::vec4 v4;
 			mathf::quat q;
 			mathf::vec3 pos;
-			// mathf::decompose(child->_worldTransform, v3, q, pos, v3, v4);
 			mathf::mat4x4::decompose(_children[0]->_worldTransform, v3, q, ps1);
-			// sum += pos;
-		// }
-		// pos1 = sum / mathf::vec3(_children.size());
 	}
 
 	mathf::vec3 pos0(ps0);
@@ -120,7 +111,6 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 		_model->SetModelMatrix(m);
 	} else {
 		_model->SetModelMatrix(CalculateModelOverride());
-		// _model->SetModelMatrix(_worldTransform * _modelOverride);
 	}
 	//! 
 	// _model->SetScale(mathf::vec3(1.f));

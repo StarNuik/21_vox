@@ -7,7 +7,7 @@ Camera::Camera(GLRenderer* renderer, float fov, float nearPlane, float farPlane)
 	if (!renderer)
 		return;
 	mathf::ivec2 winSize = renderer->GetWindowSize();
-	_projectionMatrix = glm::perspective(glm::radians(fov), (float)winSize.x / (float)winSize.y, nearPlane, farPlane);
+	_projectionMatrix = mathf::mat4x4::projection(mathf::radians(fov), (float)winSize.x / (float)winSize.y, nearPlane, farPlane);
 };
 
 Camera::~Camera() {};

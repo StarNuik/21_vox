@@ -20,7 +20,6 @@ Player::Player(Game* game) {
 	//! Looks like a fucking costil
 	_game->GetUI()->SetPlayer(this);
 	_position = mathf::vec3(0.f, 0.f, 3.f);
-	// _rotation = glm::identity<mathf::quat>();
 	_rotation = mathf::quat::identity();
 	_camera = new Camera(_game->GetRenderer(), 90.f, 0.1f, 300.f);
 	_game->GetRenderer()->SetActiveCamera(_camera);
@@ -83,7 +82,7 @@ void Player::Update(float delta) {
 		glm::ivec2 mousePos = input->MousePosDelta();
 		_camAngleX += mousePos.x * MOUSE_SENSITIVITY * delta;
 		_camAngleY += mousePos.y * MOUSE_SENSITIVITY * delta;
-		_camAngleY = glm::clamp(_camAngleY, -89.5f, 89.5f);
+		_camAngleY = mathf::clamp(_camAngleY, -89.5f, 89.5f);
 	}
 
 	_rotation = mathf::quat((-mathf::vec3(mathf::radians(_camAngleY), mathf::radians(_camAngleX), 0.f)));

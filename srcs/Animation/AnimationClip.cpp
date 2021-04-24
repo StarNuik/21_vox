@@ -78,13 +78,7 @@ AnimationChannel::AnimationChannel(aiNodeAnim* animNode) {
 		aiQuatKey rotationKey = animNode->mRotationKeys[i];
 		aiQuaternion quat = rotationKey.mValue;
 		mathf::quat q = mathf::quat(quat.x, quat.y, quat.z, quat.w);
-		// q = glm::normalize(q);
-		// if (glm::length(q) == 0) {
-		// 	q = glm::identity<mathf::quat>();
-		// }
 		_rotations[rotationKey.mTime] = q;
-		// _rotations[rotationKey.mTime]
-
 	}
 }
 
@@ -111,16 +105,12 @@ mathf::mat4x4 AnimationChannel::GetModelMatrixAtTime(double time) {
 		_rotations[std::get<1>(rotationTime)],
 		(float)((time - std::get<0>(rotationTime)) / (std::get<1>(rotationTime)  - std::get<0>(rotationTime))))
 	);
-	// mathf::vec3 position = _positions[std::get<0>(positionTime)];
-	// mathf::vec3 scale = _scales[std::get<0>(scaleTime)];
-	// mathf::quat rotation = _rotations[std::get<0>(rotationTime)];
 
-	// glm::mat4 result = glm::identity<glm::mat4>();
 	mathf::mat4x4 result = mathf::mat4x4::identity();
 	result = mathf::mat4x4::translate(result, position);
 	result = result * mathf::mat4x4::cast(rotation);
 	result = mathf::mat4x4::scale(result, scale);
-	// result = glm::scale(result, mathf::vec3(5.f));
+
 	return result;
 }
 
