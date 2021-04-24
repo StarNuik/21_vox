@@ -19,10 +19,10 @@ void DrawSkeletonTree(AnimationSkeletonNode* node) {
 	{
 		glm::vec3 origScale = node->GetScale().to_glm();
 
-		glm::vec3 newScale = origScale;
-		ImGui::SliderFloat3("Scale", glm::value_ptr(newScale), 0.01f, 5.0f);
+		float newScale = origScale.x;
+		ImGui::SliderFloat("Scale", &newScale, 0.01f, 5.0f);
 
-		if (newScale != origScale) {
+		if (newScale != origScale.x) {
 			node->SetScale(mathf::vec3(newScale));
 		}
 

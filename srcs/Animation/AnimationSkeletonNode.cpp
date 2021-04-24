@@ -68,12 +68,24 @@ void AnimationSkeletonNode::Mute(std::string key) {
 glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
 	if (_children.size() == 0) return glm::mat4(_worldTransform);
 
+	//? CURRENT
+	//? Find global bone positions
+	//? place the model inbetween bones
+	//? Look rotation
+	//? Size is distance between points
+	//TODO DESIRED
+	//TODO Find local bone positions
+	//TODO Determine local size
+	//TODO place inbetween global positions
+	//TODO Look rotation
+	//TODO size is local size * global scale
 	glm::vec3 ps0;
+	glm::vec3 worldScale;
 	{
 		glm::vec3 v3;
 		glm::vec4 v4;
 		glm::quat q;
-		glm::decompose(_worldTransform, v3, q, ps0, v3, v4);
+		glm::decompose(_worldTransform, worldScale, worldRotation, ps0, v3, v4);
 	}
 	glm::vec3 ps1;
 	{
@@ -95,7 +107,16 @@ glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
 
 	mathf::vec3 position = mathf::vec3(glm::mix(pos0.to_glm(), pos1.to_glm(), 0.5f));
 	mathf::quat rotation = mathf::quat(glm::quatLookAt((pos1 - pos0).normalize().to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm()));
-	mathf::vec3 scale = mathf::vec3(LIMB_WIDTH, LIMB_WIDTH, mathf::vec3::distance(pos0, pos1));
+
+	float distance = mathf::vec3::distance(pos0, pos1);
+	glm::vec3 simpleScale = glm::vec3(distance);
+	float scaleSide = mathf::vec3::distance(pos0, pos1);
+	float limbWidth = mathf::min(scaleSide, LIMB_WIDTH);
+
+	float limbWidthX = mathf::min(scaleSide, LIMB_WIDTH * worldScale.x);
+	float limbWidthY = mathf::min(scaleSide, LIMB_WIDTH * worldScale.y);
+
+	mathf::vec3 scale = mathf::vec3(limbWidthX, limbWidthY, scaleSide);
 
 	glm::mat4 result(1.f);
 	result = glm::translate(result, position.to_glm());
