@@ -20,17 +20,17 @@ public:
 	void SetPosition(mathf::vec3);
 	void SetRotation(mathf::quat);
 	void SetScale(mathf::vec3);
-	void SetModelMatrix(glm::mat4);
+	void SetModelMatrix(mathf::mat4x4);
 	mathf::vec3 GetPosition();
 	mathf::quat GetRotation();
 	mathf::vec3 GetScale();
-	// glm::mat4 GetAphineMatrix();
+	// mathf::mat4x4 GetAphineMatrix();
 	void RecalculateModelMatrix();
 	uint GetPolygonCount();
 	Geometry* GetGeometry();
 	Material* GetMaterial();
 	Shader* GetShader();
-	glm::mat4 GetModelMatrix();
+	mathf::mat4x4 GetModelMatrix();
 	bool operator<(const RenderModel&) const;
 	uint _shaderId;
 	uint _materialId;
@@ -43,5 +43,5 @@ private:
 	mathf::quat _rotation;
 	GLRenderer* _renderer;
 	uint _geometryId;
-	glm::mat4 _model;
+	mathf::mat4x4 _model;
 };

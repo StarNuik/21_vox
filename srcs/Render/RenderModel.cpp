@@ -19,7 +19,7 @@ RenderModel::RenderModel(GLRenderer* renderer, Shader* shader, Material* materia
 	_position = mathf::vec3(0.f);
 	_scale = mathf::vec3(1.f);
 	_rotation = mathf::quat::identity();
-	_model = glm::mat4(1.f);
+	_model = mathf::mat4x4::identity();
 	if (_renderer)
 		_renderer->AddModel(this);
 }
@@ -60,11 +60,11 @@ Shader* RenderModel::Use(Camera* camera) {
 }
 
 void RenderModel::RecalculateModelMatrix() {
-	_model = glm::identity<glm::mat4>();
+	_model = mathf::mat4x4::identity();
 
-	_model = glm::translate(_model, _position.to_glm());
-	_model = _model * glm::mat4_cast(_rotation.to_glm());
-	_model = glm::scale(_model, _scale.to_glm());
+	_model = mathf::mat4x4::translate(_model, _position);
+	_model = _model * mathf::mat4x4::cast(_rotation);
+	_model = mathf::mat4x4::scale(_model, _scale);
 };
 
 bool RenderModel::operator<(const RenderModel& t) const {
@@ -75,22 +75,10 @@ bool RenderModelLess(RenderModel*& x, RenderModel*& y) {
     return ((x->_shaderId << 8) | x->_materialId) < ((y->_shaderId << 8) | y->_materialId);
 }
 
-void RenderModel::SetModelMatrix(glm::mat4 matrix) {
+void RenderModel::SetModelMatrix(mathf::mat4x4 matrix) {
 	_model = matrix;
-	glm::vec3 skew;
-	glm::vec4 perspective;
-	glm::vec3 pos;
-	glm::vec3 scl;
-	glm::quat qw;
-	glm::decompose(_model, scl, qw, pos, skew, perspective);
-	mathf::quat q(qw);
-	_rotation = q;
-	_position.x = pos.x;
-	_position.y = pos.y;
-	_position.z = pos.z;
-	_scale.x = scl.x;
-	_scale.y = scl.y;
-	_scale.z = scl.z;
+	mathf::mat4x4::decompose(_model, _scale, _rotation, _position);
+
 }
 
 void RenderModel::SetPosition(mathf::vec3 position) {_position = position; RecalculateModelMatrix();};
@@ -103,4 +91,4 @@ uint RenderModel::GetPolygonCount() {return _geometry->GetPolygonCount();};
 Geometry* RenderModel::GetGeometry() {return _geometry;};
 Material* RenderModel::GetMaterial() {return _material;};
 Shader* RenderModel::GetShader() {return _shader;};
-glm::mat4 RenderModel::GetModelMatrix() {return _model;};
+mathf::mat4x4 RenderModel::GetModelMatrix() {return _model;};

@@ -50,9 +50,9 @@ AnimationClip::AnimationClip(std::string path) {
 	_duration = animation->mDuration;
 }
 
-glm::mat4 AnimationClip::GetModelMatrix(std::string key, double time) {
+mathf::mat4x4 AnimationClip::GetModelMatrix(std::string key, double time) {
 	if (_channels[key] == nullptr) {
-		return glm::mat4(1.f);
+		return mathf::mat4x4::identity();
 	}
 	return _channels[key]->GetModelMatrixAtTime(time);
 }
@@ -89,7 +89,7 @@ AnimationChannel::AnimationChannel(aiNodeAnim* animNode) {
 }
 
 
-glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
+mathf::mat4x4 AnimationChannel::GetModelMatrixAtTime(double time) {
 	AnimTimeStamp positionTime = FindKeys(time, _positions);
 	AnimTimeStamp scaleTime = FindKeys(time, _scales);
 	AnimTimeStamp rotationTime = FindKeys(time, _rotations);
@@ -115,10 +115,11 @@ glm::mat4 AnimationChannel::GetModelMatrixAtTime(double time) {
 	// mathf::vec3 scale = _scales[std::get<0>(scaleTime)];
 	// mathf::quat rotation = _rotations[std::get<0>(rotationTime)];
 
-	glm::mat4 result = glm::identity<glm::mat4>();
-	result = glm::translate(result, position.to_glm());
-	result = result * glm::mat4_cast(rotation.to_glm());
-	result = glm::scale(result, scale.to_glm());
+	// glm::mat4 result = glm::identity<glm::mat4>();
+	mathf::mat4x4 result = mathf::mat4x4::identity();
+	result = mathf::mat4x4::translate(result, position);
+	result = result * mathf::mat4x4::cast(rotation);
+	result = mathf::mat4x4::scale(result, scale);
 	// result = glm::scale(result, mathf::vec3(5.f));
 	return result;
 }

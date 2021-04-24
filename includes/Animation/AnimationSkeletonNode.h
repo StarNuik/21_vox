@@ -19,15 +19,15 @@ public:
 private:
 	AnimationSkeletonNode(Game* game, aiNode* node, AnimationSkeletonNode* parent);
 	void ApplyAnimation(AnimationClip* clip, float time);
-	void ApplyOverlay(std::string key, glm::mat4 matrix);
+	void ApplyOverlay(std::string key, mathf::mat4x4 matrix);
 	void OverrideModelScale(std::string key, mathf::vec3 scale);
 	void Mute(std::string key);
-	glm::mat4 CalculateModelOverride();
+	mathf::mat4x4 CalculateModelOverride();
 	AnimationSkeletonNode* _parent;
 	std::vector<AnimationSkeletonNode*> _children;
 	RenderModel* _model;
 	std::string _animKey;
-	glm::mat4 _worldTransform;
-	glm::mat4 _overlayTransform;
+	mathf::mat4x4 _worldTransform;
+	mathf::mat4x4 _overlayTransform;
 	bool _muted;
 };

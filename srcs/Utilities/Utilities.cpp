@@ -20,8 +20,8 @@ char* Utilities::ReadFile(std::string path)
 	return (buffer);
 }
 
-glm::mat4 Utilities::mat4_cast(aiMatrix4x4 matrix) {
-	glm::mat4 result(0.f);
+mathf::mat4x4 Utilities::mat4_cast(aiMatrix4x4 matrix) {
+	mathf::mat4x4 result = mathf::mat4x4::identity();
 
 	result[0][0] = matrix[0][0];
 	result[1][0] = matrix[0][1];

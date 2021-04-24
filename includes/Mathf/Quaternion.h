@@ -4,6 +4,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <iostream>
 #include <limits>
 
 namespace mathf
@@ -52,6 +53,11 @@ namespace mathf
 			y = qw.y;
 			z = qw.z;
 			w = qw.w;
+		}
+
+		void print()
+		{
+			std::cout<<"quat: "<<this->x<< " " << this->y<< " " << this->z << " "<< this->w<<std::endl;
 		}
 
 		quat& operator=(const quat& q)

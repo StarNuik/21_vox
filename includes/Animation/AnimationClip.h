@@ -19,7 +19,7 @@ public:
 	// AnimationClip(aiAnimation* animation);
 	~AnimationClip();
 	AnimationClip(std::string path);
-	glm::mat4 GetModelMatrix(std::string key, double time);
+	mathf::mat4x4 GetModelMatrix(std::string key, double time);
 	double GetDuration();
 private:
 	double _duration;
@@ -29,7 +29,7 @@ private:
 class AnimationChannel {
 public:
 	AnimationChannel(aiNodeAnim* animNode);
-	glm::mat4 GetModelMatrixAtTime(double time);
+	mathf::mat4x4 GetModelMatrixAtTime(double time);
 	AnimTimeStamp FindKeys(double time, std::map<double, mathf::vec3>& map);
 	AnimTimeStamp FindKeys(double time, std::map<double, mathf::quat>& map);
 private:

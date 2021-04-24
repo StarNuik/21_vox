@@ -65,26 +65,27 @@ void AnimationSkeletonNode::Mute(std::string key) {
 	}
 }
 
-glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
-	if (_children.size() == 0) return glm::mat4(_worldTransform);
+mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
+	// if (_children.size() == 0) return glm::mat4(_worldTransform);
+	if (_children.size() == 0) return mathf::mat4x4(_worldTransform);
 
-	glm::vec3 ps0;
+	mathf::vec3 ps0;
 	{
-		glm::vec3 v3;
-		glm::vec4 v4;
-		glm::quat q;
-		glm::decompose(_worldTransform, v3, q, ps0, v3, v4);
+		mathf::vec3 v3;
+		mathf::vec4 v4;
+		mathf::quat q;
+		mathf::mat4x4::decompose(_worldTransform, v3, q, ps0);
 	}
-	glm::vec3 ps1;
+	mathf::vec3 ps1;
 	{
 		// mathf::vec3 sum(0.f);
 		// for (AnimationSkeletonNode* child : _children) {
-			glm::vec3 v3;
-			glm::vec4 v4;
-			glm::quat q;
-			glm::vec3 pos;
-			// glm::decompose(child->_worldTransform, v3, q, pos, v3, v4);
-			glm::decompose(_children[0]->_worldTransform, v3, q, ps1, v3, v4);
+			mathf::vec3 v3;
+			mathf::vec4 v4;
+			mathf::quat q;
+			mathf::vec3 pos;
+			// mathf::decompose(child->_worldTransform, v3, q, pos, v3, v4);
+			mathf::mat4x4::decompose(_children[0]->_worldTransform, v3, q, ps1);
 			// sum += pos;
 		// }
 		// pos1 = sum / mathf::vec3(_children.size());
@@ -93,14 +94,18 @@ glm::mat4 AnimationSkeletonNode::CalculateModelOverride() {
 	mathf::vec3 pos0(ps0);
 	mathf::vec3 pos1(ps1);
 
-	mathf::vec3 position = mathf::vec3(glm::mix(pos0.to_glm(), pos1.to_glm(), 0.5f));
-	mathf::quat rotation = mathf::quat(glm::quatLookAt((pos1 - pos0).normalize().to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm()));
+	mathf::vec3 position = mathf::vec3(mathf::vec3::lerp(pos0, pos1, 0.5f));
+	mathf::quat rotation = mathf::quat(mathf::quat::look_at((pos1 - pos0).normalize(), mathf::vec3(0.f, 1.f, 0.f)));
+	// mathf::quat rotation = mathf::quat(glm::quatLookAt((pos1 - pos0).normalize().to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm()));
 	mathf::vec3 scale = mathf::vec3(LIMB_WIDTH, LIMB_WIDTH, mathf::vec3::distance(pos0, pos1));
 
-	glm::mat4 result(1.f);
-	result = glm::translate(result, position.to_glm());
-	result = result * glm::mat4_cast(rotation.to_glm());
-	result = glm::scale(result, scale.to_glm());
+	mathf::mat4x4 result = mathf::mat4x4::identity();
+	result = mathf::mat4x4::translate(result, position);
+	result = result * mathf::mat4x4::cast(rotation);
+	result = mathf::mat4x4::scale(result, scale);
+	// result = glm::translate(result, position.to_glm());
+	// result = result * glm::mat4_cast(rotation.to_glm());
+	// result = glm::scale(result, scale.to_glm());
 	return result;
 }
 
@@ -115,7 +120,8 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 	}
 
 	if (_muted) {
-		_model->SetModelMatrix(glm::mat4(0.f));
+		mathf::mat4x4 m;
+		_model->SetModelMatrix(m);
 	} else {
 		_model->SetModelMatrix(CalculateModelOverride());
 		// _model->SetModelMatrix(_worldTransform * _modelOverride);
@@ -125,7 +131,7 @@ void AnimationSkeletonNode::ApplyAnimation(AnimationClip* clip, float time) {
 	//! 
 }
 
-void AnimationSkeletonNode::ApplyOverlay(std::string key, glm::mat4 matrix) {
+void AnimationSkeletonNode::ApplyOverlay(std::string key, mathf::mat4x4 matrix) {
 	if (_animKey == key) {
 		// Log::Important("Overlay applied");
 		_overlayTransform = matrix;

@@ -26,8 +26,8 @@ public:
 	~AnimationModel();
 	AnimationModel(Game* game, std::string path);
 	void SetAnimationClip(AnimationClip* clip);
-	void AddOverlayMatrix(std::string key, glm::mat4 matrix);
-	glm::mat4 GetOverlayMatrix(std::string key);
+	void AddOverlayMatrix(std::string key, mathf::mat4x4 matrix);
+	mathf::mat4x4 GetOverlayMatrix(std::string key);
 	void Update(float delta);
 	void MuteBoneModel(std::string key);
 	AnimationSkeletonNode* GetRoot();

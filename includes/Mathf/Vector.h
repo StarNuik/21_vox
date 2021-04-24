@@ -6,7 +6,6 @@
 
 namespace mathf
 {
-
     inline
     static float mix(const float v0, const float v1, const float value) noexcept
     {

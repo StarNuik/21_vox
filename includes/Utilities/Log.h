@@ -67,19 +67,35 @@ namespace {
 		std::cout << TEXT_DEFAULT + BG_DEFAULT;
 	}
 	template<>
-	void Print<glm::mat4>(string textColor, string bgColor, glm::mat4 val) {
+	void Print<mathf::mat4x4>(string textColor, string bgColor, mathf::mat4x4 val) {
 		std::cout << std::endl;
 		std::cout << textColor + bgColor;
-		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][0] << " " << val[1][0] << " " << val[2][0] << " " << val[3][0] << " ]";
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][0] << " " << val[0][1] << " " << val[0][2] << " " << val[0][3] << " ]";
 		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
 		std::cout << textColor + bgColor;
-		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][1] << " " << val[1][1] << " " << val[2][1] << " " << val[3][1] << " ]";
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[1][0] << " " << val[1][1] << " " << val[1][2] << " " << val[1][3] << " ]";
 		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
 		std::cout << textColor + bgColor;
-		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][2] << " " << val[1][2] << " " << val[2][2] << " " << val[3][2] << " ]";
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[2][0] << " " << val[2][1] << " " << val[2][2] << " " << val[2][3] << " ]";
 		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
 		std::cout << textColor + bgColor;
-		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][3] << " " << val[1][3] << " " << val[2][3] << " " << val[3][3] << " ]";
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[3][0] << " " << val[3][1] << " " << val[3][2] << " " << val[3][3] << " ]";
+		std::cout << TEXT_DEFAULT + BG_DEFAULT;
+	}
+	template<>
+	void Print<glm::mat4x4>(string textColor, string bgColor, glm::mat4x4 val) {
+		std::cout << std::endl;
+		std::cout << textColor + bgColor;
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[0][0] << " " << val[0][1] << " " << val[0][2] << " " << val[0][3] << " ]";
+		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
+		std::cout << textColor + bgColor;
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[1][0] << " " << val[1][1] << " " << val[1][2] << " " << val[1][3] << " ]";
+		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
+		std::cout << textColor + bgColor;
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[2][0] << " " << val[2][1] << " " << val[2][2] << " " << val[2][3] << " ]";
+		std::cout << TEXT_DEFAULT + BG_DEFAULT << std::endl;
+		std::cout << textColor + bgColor;
+		std::cout << std::fixed << std::setprecision(2) << "[ " << val[3][0] << " " << val[3][1] << " " << val[3][2] << " " << val[3][3] << " ]";
 		std::cout << TEXT_DEFAULT + BG_DEFAULT;
 	}
 	template<>

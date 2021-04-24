@@ -65,9 +65,9 @@ private:
 	};
 	class FrameData {
 	public:
-		glm::mat4 view;
-		glm::mat4 projection;
-		glm::mat4 vp;
+		mathf::mat4x4 view;
+		mathf::mat4x4 projection;
+		mathf::mat4x4 vp;
 		mathf::vec3 cameraPos;
 	};
 	StaticData _static;

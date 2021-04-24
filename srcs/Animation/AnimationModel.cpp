@@ -72,7 +72,7 @@ void AnimationModel::Update(float delta) {
 	_skeletonRoot->ApplyAnimation(_clip, _animationTime);
 }
 
-void AnimationModel::AddOverlayMatrix(std::string key, glm::mat4 matrix) {
+void AnimationModel::AddOverlayMatrix(std::string key, mathf::mat4x4 matrix) {
 	_skeletonRoot->ApplyOverlay(key, matrix);
 }
 

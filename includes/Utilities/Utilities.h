@@ -8,5 +8,5 @@
 class Utilities {
 public:
 	static char* ReadFile(std::string path);
-	static glm::mat4 mat4_cast(aiMatrix4x4);
+	static mathf::mat4x4 mat4_cast(aiMatrix4x4);
 };

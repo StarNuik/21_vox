@@ -54,7 +54,7 @@ void Game::InitSystems() {
 
 	_humangl = new AnimationModel(this, "./resources/Animations/Ninja Idle");
 
-	glm::mat4 overlay = glm::scale(glm::mat4(1.f), mathf::vec3(0.01f).to_glm());
+	mathf::mat4x4 overlay = mathf::mat4x4::scale(mathf::mat4x4::identity(), mathf::vec3(0.01f));
 	_humangl->AddOverlayMatrix("RootNode", overlay);
 	_humangl->MuteBoneModel("RootNode");
 	_humangl->MuteBoneModel("Beta_Joints");
