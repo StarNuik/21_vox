@@ -66,12 +66,12 @@ mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
 	if (_children.size() == 0) return mathf::mat4x4(_worldTransform);
 
 	mathf::vec3 ps0;
-	{
-		mathf::vec3 v3;
-		mathf::vec4 v4;
-		mathf::quat q;
-		mathf::mat4x4::decompose(_worldTransform, v3, q, ps0);
-	}
+	mathf::vec3 worldScale;
+	mathf::vec3 v3;
+	mathf::vec4 v4;
+	mathf::quat q;
+	mathf::mat4x4::decompose(_worldTransform, worldScale, q, ps0);
+
 	mathf::vec3 ps1;
 	{
 			mathf::vec3 v3;
@@ -86,7 +86,16 @@ mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
 
 	mathf::vec3 position = mathf::vec3(mathf::vec3::lerp(pos0, pos1, 0.5f));
 	mathf::quat rotation = mathf::quat(mathf::quat::look_at((pos1 - pos0).normalize(), mathf::vec3(0.f, 1.f, 0.f)));
-	mathf::vec3 scale = mathf::vec3(LIMB_WIDTH, LIMB_WIDTH, mathf::vec3::distance(pos0, pos1));
+
+	float distance = mathf::vec3::distance(pos0, pos1);
+	glm::vec3 simpleScale = glm::vec3(distance);
+	float scaleSide = mathf::vec3::distance(pos0, pos1);
+	float limbWidth = mathf::min(scaleSide, LIMB_WIDTH);
+
+	float limbWidthX = mathf::min(scaleSide, LIMB_WIDTH * worldScale.x);
+	float limbWidthY = mathf::min(scaleSide, LIMB_WIDTH * worldScale.y);
+
+	mathf::vec3 scale = mathf::vec3(limbWidthX, limbWidthY, scaleSide);
 
 	mathf::mat4x4 result = mathf::mat4x4::identity();
 	result = mathf::mat4x4::translate(result, position);

@@ -23,5 +23,16 @@ namespace mathf
 		return radians * 57.2957795130823f;
 	}
 
+	inline
+	float min(float left, float right) noexcept
+	{
+		return left < right ? left : right;
+	}
 
+	inline
+	float max(float left, float right) noexcept
+	{
+		return left > right ? left : right; 
+	}
+    
 }
