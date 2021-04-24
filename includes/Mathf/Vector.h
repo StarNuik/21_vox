@@ -830,7 +830,7 @@ namespace mathf
             ivec2(0.f);
         }
 
-        ivec2(const int& value)
+        explicit ivec2(const int& value)
         {
             this->x = value;
             this->y = value;

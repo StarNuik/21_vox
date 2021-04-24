@@ -98,24 +98,24 @@ void Skybox::PrepareData(float sunAngle, float moonAngle, float sunVal, float mo
 	_easyMoonApply = _moonVal == moonVal ? true : false;
 	_sunVal = sunVal;
 	_moonVal = moonVal;
-	glm::mat4 view = glm::mat4(glm::mat3(_activeCamera->GetViewMatrix()));
+
+	mathf::mat4x4 view = mathf::mat4x4(mathf::mat4x4::cast_mat3(_activeCamera->GetViewMatrix()));
 	mathf::quat sunRotation = mathf::quat(mathf::vec3(mathf::radians(-sunAngle), 0.f, 0.f));
 	mathf::quat moonRotation = mathf::quat(mathf::vec3(mathf::radians(-moonAngle), 27.498f, 0.f));
-	glm::mat4 skyModel = glm::mat4(1.f) * glm::mat4_cast(sunRotation.to_glm());
-	glm::mat4 moonModel = glm::mat4(1.f) * glm::mat4_cast(moonRotation.to_glm());
+	mathf::mat4x4 skyModel = mathf::mat4x4::identity() * mathf::mat4x4::cast(sunRotation);
+	mathf::mat4x4 moonModel = mathf::mat4x4::identity() * mathf::mat4x4::cast(moonRotation);
 	_mvpSky = _projection * view * skyModel;
 	_mvpMoon = _projection * view * moonModel;
 
 	_sunLight->SetDiffuse(mathf::vec3(SUN_DIFFUSE) * sunVal);
 	_sunLight->SetAmbient(mathf::vec3(SUN_AMBIENT) * sunVal);
-	mathf::vec3 sunDir = mathf::vec3(mathf::vec3(0.f, 0.f, 1.f) * mathf::quat(mathf::vec3(mathf::radians(sunAngle), 0.f, 0.f).to_glm()));
+	mathf::vec3 sunDir = mathf::vec3(mathf::vec3(0.f, 0.f, 1.f) * mathf::quat(mathf::vec3(mathf::radians(sunAngle), 0.f, 0.f)));
 	_sunLight->SetDirection(sunDir.normalize());
 
 	_moonLight->SetDiffuse(mathf::vec3(MOON_DIFFUSE) * moonVal);
 	_moonLight->SetAmbient(mathf::vec3(MOON_AMBIENT) * moonVal);
-	glm::vec3 moonDir = moonModel * glm::vec4(0.f, 0.f, 1.f, 0.f);
-	mathf::vec3 mD(moonDir);
-	_moonLight->SetDirection(mD.normalize());
+	mathf::vec3 moonDir = mathf::vec3(moonModel * mathf::vec4(0.f, 0.f, 1.f, 0.f));
+	_moonLight->SetDirection(moonDir.normalize());
 }
 
 void Skybox::Render() {
@@ -143,42 +143,8 @@ void Skybox::Render() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-// Shader* Skybox::Use(Camera* camera, float lerpVal, float runtime) {
-// 	// glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
-// 	// float currentTime = std::fmod(runtime, SECONDS_IN_A_DAY);
-// 	// float angle = currentTime / SECONDS_IN_A_DAY * 360.f;
-// 	// mathf::quat rotation = mathf::quat(mathf::vec3(mathf::radians(angle), 0.f, 0.f));
-// 	// glm::mat4 model = glm::identity<glm::mat4>() * glm::mat4_cast(rotation);
-
-// 	_shader->Use();
-// 	_geometry->Use();
-// 	_shader->SetMatrix4("model", model);
-// 	_shader->SetMatrix4("view", view);
-// 	//? Projection is set on camera change
-// 	_shader->SetFloat("lerpVal", lerpVal);
-// 	return _shader;
-// };
-
 void Skybox::ApplyDirLights(Shader* shader) {
 	_sunLight->ApplySelf(shader, 0);
 	_moonLight->ApplySelf(shader, 1);
 };
 
-// void Skybox::SetDirLights(float lerpVal, float runtime) {
-// 	const mathf::vec3 forwardLightDir = mathf::vec3(0.f, 0.f, 1.f);
-// 	const float currentTime = std::fmod(runtime, SECONDS_IN_A_DAY);
-// 	float sunAngleRad = currentTime / SECONDS_IN_A_DAY * 2 * glm::pi<float>();
-// 	// float moonAngleRad = currentTime / (SECONDS_IN_A_DAY * 30.f) * 2 * glm::pi<float>();
-
-// 	_sunLight->SetDiffuse(mathf::vec3(SUN_DIFFUSE) * lerpVal);
-// 	_sunLight->SetAmbient(mathf::vec3(SUN_AMBIENT) * lerpVal);
-// 	mathf::quat sunRotation = mathf::quat(mathf::vec3(sunAngleRad, 0.f, 0.f));
-// 	mathf::vec3 sunDir = forwardLightDir * sunRotation;
-// 	_sunLight->SetDirection(glm::normalize(sunDir));
-
-// 	_moonLight->SetDiffuse(mathf::vec3(MOON_DIFFUSE) * (1.f - lerpVal));
-// 	_moonLight->SetAmbient(mathf::vec3(MOON_AMBIENT) * (1.f - lerpVal));
-// 	_moonLight->SetDirection(glm::normalize(mathf::vec3(0.f, 1.f, 0.f)));
-// };
-
-// ShadowRenderer* Skybox::GetShadowRenderer() {return _shadows;};

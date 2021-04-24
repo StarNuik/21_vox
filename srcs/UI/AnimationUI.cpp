@@ -17,10 +17,10 @@ void UIController::UpdateAnimation() {
 void DrawSkeletonTree(AnimationSkeletonNode* node) {
 	if (ImGui::TreeNode(node->GetKey().c_str()))
 	{
-		glm::vec3 origScale = node->GetScale().to_glm();
+		mathf::vec3 origScale = node->GetScale();
 
-		glm::vec3 newScale = origScale;
-		ImGui::SliderFloat3("Scale", glm::value_ptr(newScale), 0.01f, 5.0f);
+		mathf::vec3 newScale = origScale;
+		ImGui::SliderFloat3("Scale", &(newScale.x), 0.01f, 5.0f);
 
 		if (newScale != origScale) {
 			node->SetScale(mathf::vec3(newScale));

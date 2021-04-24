@@ -264,6 +264,22 @@ namespace mathf
 			return res;
 		}
 
+		inline
+		static mat4x4 cast_mat3(const mat4x4& mat)
+		{
+			mat4x4 new_mat = mat;
+
+			new_mat[0][3] = 0.f;
+			new_mat[1][3] = 0.f;
+			new_mat[2][3] = 0.f;
+			new_mat[3][3] = 1.f;
+			new_mat[3][0] = 0.f;
+			new_mat[3][1] = 0.f;
+			new_mat[3][2] = 0.f;
+
+			return new_mat;
+		}
+
 
 		inline
 		static mat4x4 cast(const quat& q)

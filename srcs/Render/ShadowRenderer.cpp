@@ -36,8 +36,8 @@ void ShadowRenderer::PrepareData(float sunAngle) {
 	mathf::vec3 sunDir = mathf::vec3(0.f, 0.f, 1.f) * rotation;
 
 	mathf::vec3 playerPos = _player->GetPosition();
-	_view = glm::lookAt(playerPos.to_glm() + sunDir.to_glm(), playerPos.to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm());
-	_projection = glm::ortho(-32.f, 32.f, -32.f, 32.f, -32.f, 32.f);
+	_view = mathf::mat4x4::look_at(playerPos + sunDir, playerPos, mathf::vec3(0.f, 1.f, 0.f));
+	_projection = mathf::mat4x4::ortho(-32.f, 32.f, -32.f, 32.f, -32.f, 32.f);
 	_lightSpace = _projection * _view;
 }
 

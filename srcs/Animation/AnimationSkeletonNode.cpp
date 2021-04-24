@@ -96,16 +96,12 @@ mathf::mat4x4 AnimationSkeletonNode::CalculateModelOverride() {
 
 	mathf::vec3 position = mathf::vec3(mathf::vec3::lerp(pos0, pos1, 0.5f));
 	mathf::quat rotation = mathf::quat(mathf::quat::look_at((pos1 - pos0).normalize(), mathf::vec3(0.f, 1.f, 0.f)));
-	// mathf::quat rotation = mathf::quat(glm::quatLookAt((pos1 - pos0).normalize().to_glm(), mathf::vec3(0.f, 1.f, 0.f).to_glm()));
 	mathf::vec3 scale = mathf::vec3(LIMB_WIDTH, LIMB_WIDTH, mathf::vec3::distance(pos0, pos1));
 
 	mathf::mat4x4 result = mathf::mat4x4::identity();
 	result = mathf::mat4x4::translate(result, position);
 	result = result * mathf::mat4x4::cast(rotation);
 	result = mathf::mat4x4::scale(result, scale);
-	// result = glm::translate(result, position.to_glm());
-	// result = result * glm::mat4_cast(rotation.to_glm());
-	// result = glm::scale(result, scale.to_glm());
 	return result;
 }
 
