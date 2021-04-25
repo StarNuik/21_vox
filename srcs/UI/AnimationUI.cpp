@@ -19,7 +19,7 @@ void DrawSkeletonTree(AnimationSkeletonNode* node) {
 		mathf::vec3 origScale = node->GetScale();
 
 		float newScale = origScale.x;
-		ImGui::SliderFloat3("Scale", &newScale, 0.01f, 5.0f);
+		ImGui::SliderFloat("Scale", &newScale, 0.01f, 5.0f);
 
 		if (newScale != origScale.x) {
 			node->SetScale(mathf::vec3(newScale));
